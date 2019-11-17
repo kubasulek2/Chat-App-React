@@ -21,5 +21,5 @@ app.get('/express_backend', (req, res) => {
 let count = 0;
 
 io.on('connection', (client) => {
-	client.emit('countUpdated')
+	client.emit('countUpdated');
 });

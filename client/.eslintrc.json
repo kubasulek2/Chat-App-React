@@ -2,10 +2,12 @@
 	"env": {
 		"browser": true,
 		"es6": true,
-		"node": true
+		"node": true,
+		"jquery": true
 	},
 	"extends": [
-		"eslint:recommended"
+		"eslint:recommended",
+		"plugin:react/recommended"
 	],
 	"globals": {
 		"Atomics": "readonly",
@@ -16,14 +18,17 @@
 		"ecmaVersion": 2018,
 		"sourceType": "module"
 	},
+	"plugins": [
+		"react"
+	],
 	"rules": {
 		"no-unused-expressions": [
 			"error",
 			{
-				"allowTernary": true,
-				"allowShortCircuit": true
+				"allowTernary": true
 			}
 		],
+		"react/prop-types": 0,
 		"indent": [
 			2,
 			"tab",
@@ -50,6 +55,15 @@
 			2,
 			"always"
 		],
-		"no-undef": 0
+		"no-undef": 0,
+		"react/no-unescaped-entities": [
+			"error",
+			{
+				"forbid": [
+					">",
+					"}"
+				]
+			}
+		]
 	}
 }
