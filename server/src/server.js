@@ -17,9 +17,9 @@ app.get('/express_backend', (req, res) => {
 	res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' });
 });
 
-
 let count = 0;
 
 io.on('connection', (client) => {
-	client.emit('countUpdated');
+	console.log('object');
+	client.emit('countUpdated ', count);
 });
