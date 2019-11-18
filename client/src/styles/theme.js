@@ -5,9 +5,9 @@ const theme = createMuiTheme({
 	palette: {
 		type: 'dark',
 		background: {
-			default: '#37373D',
-			paper: '#333333',
-			darker: '#252526'
+			default: '#252526',
+			light: '#2a2a2b',
+			paper: '#333333'
 		},
 		primary: {
 			light: '#63a5da',
@@ -29,7 +29,7 @@ const theme = createMuiTheme({
 			secondary: blueGrey[ 100 ],
 			disabled: blueGrey[ 400 ],
 		},
-		divider: 'rgba(66, 66, 66, .8)'
+		divider: 'rgba(66, 66, 66, .5)'
 	},
 	typography: {
 		fontFamily: [
@@ -44,13 +44,7 @@ const theme = createMuiTheme({
 	shape: {
 		borderRadius: 4
 	},
-});
-console.log(theme);
-export default theme;
-
-
-/* 
-shadows: [
+	shadows: [
 		'none',
 		'0px 1px 3px 0px rgba(0,0,0,0.09),0px 1px 2px 0px rgba(0,0,0,0.05),0px 2px 5px -1px rgba(0,0,0,0.3)',
 		'0px 1px 5px 0px rgba(0,0,0,0.09),0px 2px 3px 0px rgba(0,0,0,0.05),0px 3px 7px -2px rgba(0,0,0,0.3)',
@@ -77,4 +71,6 @@ shadows: [
 		'0px 11px 14px -7px rgba(0,0,0,0.09),0px 23px 36px 3px rgba(0,0,0,0.05),0px 9px 44px 8px rgba(0,0,0,0.3)',
 		'0px 11px 15px -7px rgba(0,0,0,0.09),0px 24px 38px 3px rgba(0,0,0,0.05),0px 9px 46px 8px rgba(0,0,0,0.3)',
 	]
-*/
+});
+console.log(theme);
+export default theme;

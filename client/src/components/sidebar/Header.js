@@ -10,11 +10,15 @@ import MenuIcon from '@material-ui/icons/Menu';
 const useStyles = makeStyles(theme => ({
 	root: {
 		flexGrow: 1,
-		background: theme.palette.background.paper,
-		boxShadow: theme.shadows[0]
+		background: theme.palette.background.light,
+		boxShadow: theme.shadows[2],
+		zIndex: theme.zIndex.drawer + 1,
 	},
 	menuButton: {
 		marginRight: theme.spacing(2),
+		[ theme.breakpoints.up('sm') ]: {
+			display: 'none',
+		},
 	},
 	title: {
 		flexGrow: 1,
@@ -22,13 +26,18 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-const Header = () => {
+const Header = props => {
 	const classes = useStyles();
 
 	return (
-		<AppBar position="static" className={classes.root}>
+		<AppBar position="fixed" className={classes.root}>
 			<Toolbar>
-				<IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+				<IconButton 
+					edge="start" 
+					className={classes.menuButton}
+					aria-label="open drawer"
+					onClick={props.handleMobile} 
+				>
 					<MenuIcon />
 				</IconButton>
 				<Typography variant="h6" className={classes.title}>

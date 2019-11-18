@@ -1,12 +1,13 @@
 import React, { Fragment } from 'react';
 
 import WithStyles from '../hoc/withStyles';
-import Header from './Header';
+import Sidebar from './sidebar/Sidebar';
+
 
 const App = () => {
 	return (
 		<Fragment>
-			<Header />
+			<Sidebar />
 		</Fragment>
 	);
 };
