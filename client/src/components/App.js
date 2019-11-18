@@ -1,20 +1,13 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { Fragment } from 'react';
+
 import WithStyles from '../hoc/withStyles';
-
-
-const useStyles = makeStyles(({ palette }) => ({
-	app: {
-		color: palette.primary.main
-	}
-}));
+import Header from './Header';
 
 const App = () => {
-	const classes = useStyles();
 	return (
-		<div className={classes.app}>
-			App
-		</div>
+		<Fragment>
+			<Header />
+		</Fragment>
 	);
 };
 

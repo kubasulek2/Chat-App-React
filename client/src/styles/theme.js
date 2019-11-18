@@ -1,25 +1,35 @@
 import { createMuiTheme } from '@material-ui/core/styles';
-import { lightBlue, yellow, red } from '@material-ui/core/colors';
+import { blueGrey, deepOrange, deepPurple } from '@material-ui/core/colors';
 
 const theme = createMuiTheme({
 	palette: {
-		type: 'light',
+		type: 'dark',
 		background: {
-			default: '#f6f8fb',
-			paper: '#fff'
+			default: '#37373D',
+			paper: '#333333',
+			darker: '#252526'
 		},
 		primary: {
-			main: lightBlue[ 200 ],
-			dark: lightBlue[ 500 ]
+			light: '#63a5da',
+			main: '#417cab',
+			dark: '#315d80'
 		},
 		secondary: {
-			main: yellow[ 400 ],
-			dark: yellow[ 700 ]
+			light: deepPurple[ 200 ],
+			main: deepPurple[ 400 ],
+			dark: deepPurple[ 600 ]
 		},
-		error: { main: red.A200 },
+		error: {
+			light: deepOrange[ 'A200' ],
+			main: deepOrange[ 400 ],
+			dark: deepOrange[ 600 ],
+		},
 		text: {
-			primary: 'rgba(0,0,0,0.7)'
-		}
+			primary: blueGrey[ 200 ],
+			secondary: blueGrey[ 100 ],
+			disabled: blueGrey[ 400 ],
+		},
+		divider: 'rgba(66, 66, 66, .8)'
 	},
 	typography: {
 		fontFamily: [
@@ -34,7 +44,13 @@ const theme = createMuiTheme({
 	shape: {
 		borderRadius: 4
 	},
-	shadows: [
+});
+console.log(theme);
+export default theme;
+
+
+/* 
+shadows: [
 		'none',
 		'0px 1px 3px 0px rgba(0,0,0,0.09),0px 1px 2px 0px rgba(0,0,0,0.05),0px 2px 5px -1px rgba(0,0,0,0.3)',
 		'0px 1px 5px 0px rgba(0,0,0,0.09),0px 2px 3px 0px rgba(0,0,0,0.05),0px 3px 7px -2px rgba(0,0,0,0.3)',
@@ -61,6 +77,4 @@ const theme = createMuiTheme({
 		'0px 11px 14px -7px rgba(0,0,0,0.09),0px 23px 36px 3px rgba(0,0,0,0.05),0px 9px 44px 8px rgba(0,0,0,0.3)',
 		'0px 11px 15px -7px rgba(0,0,0,0.09),0px 24px 38px 3px rgba(0,0,0,0.05),0px 9px 46px 8px rgba(0,0,0,0.3)',
 	]
-});
-
-export default theme;
+*/
