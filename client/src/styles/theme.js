@@ -6,7 +6,7 @@ const theme = createMuiTheme({
 		type: 'dark',
 		background: {
 			default: '#252526',
-			light: '#2a2a2b',
+			light: '#2e2e2e',
 			paper: '#333333'
 		},
 		primary: {
@@ -29,7 +29,7 @@ const theme = createMuiTheme({
 			secondary: blueGrey[ 100 ],
 			disabled: blueGrey[ 400 ],
 		},
-		divider: 'rgba(66, 66, 66, .5)'
+		divider: 'rgba(66, 66, 66, .2)'
 	},
 	typography: {
 		fontFamily: [

@@ -3,18 +3,17 @@ import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import { makeStyles } from '@material-ui/core/styles';
 
-const drawerWidth = 240;
-
 const useStyles = makeStyles(theme => ({
 	root: {
-		[ theme.breakpoints.up('sm') ]: {
-			width: drawerWidth,
-			flexShrink: 0,
-		},
+		
 	},
 	toolbar: theme.mixins.toolbar,
 	drawerPaper: {
 		width: 300,
+		[ theme.breakpoints.down('sm') ]: {
+			width: 240,
+			flexShrink: 0,
+		},
 	}
 }));
 
@@ -30,7 +29,7 @@ const DrawerComponent = props => {
 
 	return (
 		<nav className={classes.root}>
-			<Hidden smUp implementation='css'>
+			<Hidden lgUp implementation='css'>
 				<Drawer
 					variant='temporary'
 					open={props.mobile}
@@ -45,7 +44,7 @@ const DrawerComponent = props => {
 					{drawer}
 				</Drawer>
 			</Hidden>
-			<Hidden xsDown implementation='css'>
+			<Hidden mdDown implementation='css'>
 				<Drawer
 					classes={{
 						paper: classes.drawerPaper,

@@ -12,13 +12,23 @@ const useStyles = makeStyles(theme => ({
 		flexGrow: 1,
 		background: theme.palette.background.light,
 		boxShadow: theme.shadows[2],
+		position: 'relative',
 		zIndex: theme.zIndex.drawer + 1,
 	},
 	menuButton: {
 		marginRight: theme.spacing(2),
-		[ theme.breakpoints.up('sm') ]: {
+		[ theme.breakpoints.up('lg') ]: {
 			display: 'none',
 		},
+		padding: 6
+	},
+	iconContainer: {
+		width: 35,
+		height: 35
+	},
+	menuIcon: {
+		width: '100%',
+		height: '100%'
 	},
 	title: {
 		flexGrow: 1,
@@ -30,20 +40,22 @@ const Header = props => {
 	const classes = useStyles();
 
 	return (
-		<AppBar position="fixed" className={classes.root}>
+		<AppBar className={classes.root}>
 			<Toolbar>
 				<IconButton 
-					edge="start" 
+					edge='start' 
 					className={classes.menuButton}
-					aria-label="open drawer"
+					aria-label='open drawer'
 					onClick={props.handleMobile} 
 				>
-					<MenuIcon />
+					<div className={classes.iconContainer}>
+						<MenuIcon className={classes.menuIcon}/>
+					</div>
 				</IconButton>
-				<Typography variant="h6" className={classes.title}>
+				<Typography variant='h6' className={classes.title}>
 					CHAT REACT
 				</Typography>
-				<Button color="inherit">Logout</Button>
+				<Button color='inherit'>Logout</Button>
 			</Toolbar>
 		</AppBar>
 	);
