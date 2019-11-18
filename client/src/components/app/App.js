@@ -2,15 +2,23 @@ import React, { Fragment } from 'react';
 
 import WithStyles from '../../hoc/withStyles';
 import Sidebar from '../layout/sidebar/Sidebar';
-import Board from '../layout/Board';
+import ChatBoard from '../layout/ChatBoard';
+import Footer from '../layout/Footer';
+import Login from '../UI/Login';
+
 
 
 const App = () => {
+	const loggedIn = false;
 	return (
-		<Fragment>
-			<Sidebar />
-			<Board />
-		</Fragment>
+		loggedIn ?
+			<Fragment>
+				<Sidebar />
+				<ChatBoard />
+				<Footer />
+			</Fragment> :
+			<Login />
+
 	);
 };
 

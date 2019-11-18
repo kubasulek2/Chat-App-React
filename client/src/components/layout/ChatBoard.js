@@ -18,7 +18,7 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => ({
 	}
 }));
 
-const Board = () => {
+const ChatBoard = () => {
 	const classes = useStyles();
 	const [ message, setMessage ] = useState('');
 	const [ sending, setSending ] = useState(false);
@@ -66,4 +66,4 @@ const Board = () => {
 	);
 };
 
-export default Board;
+export default ChatBoard;
