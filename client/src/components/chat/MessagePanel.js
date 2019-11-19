@@ -3,11 +3,13 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
 
 import { socket } from '../../server/socket';
 import { getLocation } from '../../utils/user';
 
-const useStyles = makeStyles(({ palette }) => ({
+const useStyles = makeStyles(({ spacing, palette }) => ({
 	form: {
 		width: '100%',
 		'& .MuiOutlinedInput-root': {
@@ -25,6 +27,25 @@ const useStyles = makeStyles(({ palette }) => ({
 	notchedOutline: {
 		borderWidth: '1px',
 		borderColor: 'rgba(66, 66, 66, .4) !important'
+	},
+	buttonGroup: {
+		borderRadius: 4
+	},
+	sendButton: {
+		fontWeight: 'bold',
+		color: palette.text.primary,
+		paddingLeft: 24,
+		paddingRight: 24,
+	},
+	locationButton: {
+		color: palette.text.primary,
+	},
+	textField: {
+		flex: '1 1 auto',
+		marginRight: spacing(1)
+	},
+	rightPanel: {
+		height: '100%'
 	}
 }));
 
@@ -61,36 +82,49 @@ const MessagePanel = () => {
 	return (
 		<form autoComplete='off' className={classes.form}>
 			<Grid container>
-				<Grid item xs={11}>
-					<TextField
-						placeholder='Your Message'
-						variant='outlined'
-						multiline
-						rows={5}
-						fullWidth
-						value={message}
-						onChange={e => setMessage(e.target.value)}
-						inputRef={textInput}
-						InputProps={{
-							classes: {
-								root: classes.cssOutlinedInput,
-								focused: classes.cssFocused,
-								notchedOutline: classes.notchedOutline,
-							},
-							inputMode: 'numeric'
-						}}
-					/>
-				</Grid>
-				<Grid item xs={1}>
-					<Button
-						variant='contained'
-						color='secondary'
-						size='large'
-						onClick={handleSubmit}
-						disabled={sending}
-					>send
-					</Button>
-				</Grid>
+				<TextField
+					className={classes.textField}
+					placeholder='Your Message'
+					variant='outlined'
+					multiline
+					rows={5}
+					value={message}
+					onChange={e => setMessage(e.target.value)}
+					inputRef={textInput}
+					InputProps={{
+						classes: {
+							root: classes.cssOutlinedInput,
+							focused: classes.cssFocused,
+							notchedOutline: classes.notchedOutline,
+						}
+					}}
+				/>
+				<div>
+					<Grid container alignItems='flex-end' className={classes.rightPanel}>
+						<ButtonGroup
+							size='large'
+							className={classes.buttonGroup}
+						>
+							<Button
+								color='primary'
+								variant='contained'
+								className={classes.sendButton}
+								onClick={handleSubmit}
+								disabled={sending}
+							> send
+							</Button>
+							<Button
+								className={classes.locationButton}
+								size='small'
+								variant='contained'
+								color='default'
+							>
+								<LocationOnIcon />
+							</Button>
+						</ButtonGroup>
+					</Grid>
+				</div>
+
 			</Grid>
 		</form>
 	);
