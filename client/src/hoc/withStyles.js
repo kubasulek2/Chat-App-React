@@ -4,7 +4,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import theme from '../styles/theme';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(({palette}) => ({
 	'@global': {
 		'html, body': {
 			height: '100%',
@@ -14,6 +14,12 @@ const useStyles = makeStyles(() => ({
 			display: 'flex',
 			'flex-flow': 'column',
 		},
+		a:{
+			'&,&:hover,&:active,&:visited': {
+				color: palette.primary.light,
+				textDecoration: 'none'
+			}
+		}
 	}
 }));
 

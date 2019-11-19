@@ -12,7 +12,8 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => ({
 			marginLeft: 0,
 			width: '100%',
 		},
-		padding: spacing(2)
+		padding: spacing(2),
+		paddingBottom: spacing(1)
 	}
 }));
 

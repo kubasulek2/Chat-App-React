@@ -42,7 +42,7 @@ const theme = createMuiTheme({
 	},
 	spacing: 8,
 	shape: {
-		borderRadius: 8
+		borderRadius: 4
 	},
 	shadows: [
 		'none',
