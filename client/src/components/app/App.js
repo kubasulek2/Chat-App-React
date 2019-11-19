@@ -4,7 +4,7 @@ import WithStyles from '../../hoc/withStyles';
 import Sidebar from '../layout/sidebar/Sidebar';
 import ChatBoard from '../layout/ChatBoard';
 import Footer from '../layout/Footer';
-import Login from '../UI/Login';
+import Login from '../UI/login/Login';
 
 
 
