@@ -29,7 +29,7 @@ const theme = createMuiTheme({
 			secondary: blueGrey[ 100 ],
 			disabled: blueGrey[ 400 ],
 		},
-		divider: 'rgba(66, 66, 66, .2)'
+		divider: 'rgba(66, 66, 66, .4)'
 	},
 	typography: {
 		fontFamily: [

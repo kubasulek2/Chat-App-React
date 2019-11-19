@@ -5,20 +5,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import { socket } from '../../server/socket';
 import { getLocation } from '../../utils/user';
 
-const useStyles = makeStyles(({ breakpoints, spacing }) => ({
+const useStyles = makeStyles(({ pallete }) => ({
 	root: {
-		marginLeft: 300,
-		width: 'calc(100% - 300px)',
-		flex: '1 1 auto',
-		[ breakpoints.down('md') ]: {
-			marginLeft: 0,
-			width: '100%',
-		},
-		padding: spacing(2)
+		
 	}
 }));
 
-const ChatBoard = () => {
+const MessagePanel = () => {
 	const classes = useStyles();
 	const [ message, setMessage ] = useState('');
 	const [ sending, setSending ] = useState(false);
@@ -50,14 +43,14 @@ const ChatBoard = () => {
 	return (
 		<Grid container className={classes.root}>
 			<form autoComplete='off'>
-				<input 
-					type="text" 
-					name="message" 
-					value={message} 
-					onChange={e => setMessage(e.target.value)} 
+				<input
+					type="text"
+					name="message"
+					value={message}
+					onChange={e => setMessage(e.target.value)}
 					ref={textInput}
 				/>
-				<button 
+				<button
 					onClick={handleSubmit}
 					disabled={sending}
 				>send</button>
@@ -66,4 +59,4 @@ const ChatBoard = () => {
 	);
 };
 
-export default ChatBoard;
+export default MessagePanel;

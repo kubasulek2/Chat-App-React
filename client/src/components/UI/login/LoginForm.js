@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
-const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
+const useStyles = makeStyles(({ palette, spacing }) => ({
 	inputContainer: {
 		marginBottom: spacing(1.5)
 	},

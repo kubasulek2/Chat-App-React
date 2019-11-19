@@ -1,22 +1,26 @@
 import React, { Fragment } from 'react';
+import Divider from '@material-ui/core/Divider';
 
 import WithStyles from '../../hoc/withStyles';
 import Sidebar from '../layout/sidebar/Sidebar';
-import ChatBoard from '../layout/ChatBoard';
+import ChatBoard from '../chat/MainBoard';
 import Footer from '../layout/Footer';
 import Login from '../UI/login/Login';
 
 
 
 const App = () => {
-	const loggedIn = false;
+	const loggedIn = true;
 	return (
 		loggedIn ?
-			<Fragment>
-				<Sidebar />
-				<ChatBoard />
-				<Footer />
-			</Fragment> :
+			(
+				<Fragment>
+					<Sidebar />
+					<ChatBoard />
+					<Divider />
+					<Footer />
+				</Fragment>
+			) :
 			<Login />
 
 	);

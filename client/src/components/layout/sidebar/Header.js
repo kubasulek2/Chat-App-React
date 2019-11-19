@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
 	root: {
 		flex:'0 1 auto',
 		background: theme.palette.background.light,
-		boxShadow: theme.shadows[2],
+		boxShadow: theme.shadows[0],
 		position: 'relative',
 		zIndex: theme.zIndex.drawer + 1,
 	},
