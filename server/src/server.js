@@ -3,6 +3,12 @@ const express = require('express');
 const socketIo = require('socket.io');
 const Filter = require('bad-words');
 const { generateMessage } = require('./utils/messages');
+const {
+	addUser,
+	getUser,
+	removeUser,
+	getUsersByRoom
+} = require('./utils/users')
 
 
 const app = express();
@@ -13,18 +19,24 @@ const port = process.env.PORT || 5000;
 server.listen(port, () => console.log('Running on port ' + port));
 
 io.on('connection', (client) => {
-	
-	client.on('login', userName => {
-		if (userName === 'Kubas'){
-			console.log('Login', userName);
-			client.emit('userError', 'User exists');
-		}  
-		else client.emit('login', userName);
+	client.on('login', ({ userName, room }, cb) => {
+		
+		const ip = client.request.connection.remoteAddress;
+		const { error, user } = addUser({ id: client.id, ip, userName, room });
+		if (error) {
+			return cb(error);
+		}
+
+		client.join(room);
+
+		client.emit('login', user.userName);
+		client.emit('welcome', generateMessage(', welcome!', user.userName, true));
+		client.broadcast.to(room).emit('welcome', generateMessage('has joined!', user.userName, true));
+
+		cb();
 	});
 
 
-	client.emit('welcome', generateMessage('Welcome!'));
-	client.broadcast.emit('welcome', generateMessage('New user has joined!'));
 
 	client.on('sendMessage', (message, cb) => {
 		const filter = new Filter();
@@ -33,7 +45,7 @@ io.on('connection', (client) => {
 			return cb('Profanity is not allowed');
 		}
 
-		io.emit('message',generateMessage(message));
+		io.emit('message', generateMessage(message));
 		cb();
 	});
 
@@ -43,8 +55,14 @@ io.on('connection', (client) => {
 	});
 
 	client.on('disconnect', () => {
-		console.log('client disconnected');
-		io.emit('message', generateMessage('A user has left'));
+
+		const user = removeUser(client.id);
+
+		if (user) {
+			console.log('client disconnected');
+			io.to(user.room).emit('message', generateMessage('has left.', user.userName, true));
+		}
+
 	});
 
 });
