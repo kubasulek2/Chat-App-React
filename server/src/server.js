@@ -8,7 +8,7 @@ const {
 	getUser,
 	removeUser,
 	getUsersByRoom
-} = require('./utils/users')
+} = require('./utils/users');
 
 
 const app = express();
@@ -20,7 +20,7 @@ server.listen(port, () => console.log('Running on port ' + port));
 
 io.on('connection', (client) => {
 	client.on('login', ({ userName, room }, cb) => {
-		
+
 		const ip = client.request.connection.remoteAddress;
 		const { error, user } = addUser({ id: client.id, ip, userName, room });
 		if (error) {
@@ -42,16 +42,24 @@ io.on('connection', (client) => {
 		const filter = new Filter();
 
 		if (filter.isProfane(message)) {
-			return cb('Profanity is not allowed');
+			return cb('Naughty, naughty!');
 		}
-
-		io.emit('message', generateMessage(message));
+		const user = getUser(client.id);
+		if (!user) {
+			return cb('User not found');
+		}
+		io.to(user.room).emit('message', generateMessage(message, user.userName));
 		cb();
 	});
 
 	client.on('sendLocation', ({ latitude, longitude }, cb) => {
-		io.emit('locationMessage', generateMessage(`https://google.com/maps?q=${ latitude },${ longitude }`));
-		cb('Location shared');
+		const user = getUser(client.id);
+
+		if (!user) {
+			return cb('User not found');
+		}
+		io.to(user.room).emit('locationMessage', generateMessage(`https://google.com/maps?q=${ latitude },${ longitude }`, user.userName));
+		cb();
 	});
 
 	client.on('disconnect', () => {
