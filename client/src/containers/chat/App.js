@@ -15,9 +15,21 @@ const App = () => {
 	const [ pending, setPending ] = useState(false);
 	const [ messages, setMessages ] = useState([]);
 	const [ error, setError ] = useState('');
+	//const [ user, setUser ] = useState('');
 
 	useEffect(() => {
+		socket.on('login', user => {
+			setLogged(true);
+		});
 
+		socket.on('welcome', message => {
+			setMessages(messageArray => [ ...messageArray, message ]);
+		});
+		
+		socket.on('message', message => {
+			setMessages(messageArray => [ ...messageArray, message ]);
+		});
+		
 		socket.on('locationMessage', link => {
 			setMessages(messageArray => [
 				...messageArray,
@@ -28,12 +40,6 @@ const App = () => {
 			]);
 		});
 
-		socket.on('message', message => {
-			setMessages(messageArray => [ ...messageArray, message ]);
-		});
-		socket.on('welcome', message => {
-			setMessages(messageArray => [ ...messageArray, message ]);
-		});
 
 		return () => socket.disconnect();
 	}, []);
@@ -54,6 +60,8 @@ const App = () => {
 				</Fragment>
 			) :
 			<Login
+				pending={pending}
+				setPending={setPending}
 				setLogged={setLogged}
 			/>
 

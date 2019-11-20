@@ -34,7 +34,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 		height: '50px'
 	},
 	welcome: {
-		margin: '16px 0 24px',
+		margin: '16px 0 0',
 		fontSize: 26,
 		fontWeight: 'bold',
 		[xxs]: {
@@ -45,7 +45,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 	
 }));
 
-const Login = () => {
+const Login = ({pending, setPending}) => {
 	const classes = useStyles();
 	return (
 		<div className={classes.root}>
@@ -61,7 +61,10 @@ const Login = () => {
 					color='textSecondary' 
 				>Welcome to React Chat</Typography>
 				<CardContent>
-					<LoginForm />
+					<LoginForm 
+						pending={pending}
+						setPending={setPending}
+					/>
 				</CardContent>
 			</Card>
 		</div>

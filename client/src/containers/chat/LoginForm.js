@@ -7,8 +7,12 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 
 import { socket } from '../../server/socket';
 import Tooltip from '../../components/UI/Tooltip';
+import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
+	errorMessage: {
+		margin: 8
+	},
 	inputContainer: {
 		marginBottom: spacing(1.5)
 	},
@@ -36,23 +40,39 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 	border: { borderRadius: 4 },
 }));
 
-const LoginForm = () => {
+const LoginForm = ({ pending, setPending }) => {
 	const classes = useStyles();
-	const [ user, setUser ] = useState('');
+	const [ userName, setUserName ] = useState('');
 	const [ disabled, setDisabled ] = useState(true);
+	const [ disableMessage, setDisableMessage ] = useState('User name must have at least 5 characters');
+	const [ loginError, setLoginError ] = useState('');
 
 	useEffect(() => {
-
-		return () => socket.removeAllListeners('user');
+		socket.on('userError', error => {
+			setLoginError(error);
+			setPending(false);
+		});
+		return () => socket.removeAllListeners('userError');
 	}, []);
 
 	const handleLogin = evt => {
 		evt.preventDefault();
+		setDisabled(true);
+		setLoginError('');
+		socket.emit('login', userName);
 	};
 	const handleChange = evt => {
-		if (disabled && evt.target.value.length >= 5) setDisabled(false);
-		else if (!disabled && evt.target.value.length < 5) setDisabled(true);
-		setUser(evt.target.value);
+
+		if (disabled && evt.target.value.length >= 5) {
+			setDisabled(false);
+			setDisableMessage('');
+		}
+		else if (!disabled && evt.target.value.length < 5) {
+			setDisabled(true);
+			setDisableMessage('User name must have at least 5 characters');
+		}
+
+		setUserName(evt.target.value);
 	};
 
 	const button = (
@@ -69,7 +89,7 @@ const LoginForm = () => {
 
 	const buttonWithTooltip = (
 		<Tooltip
-			message={'User name must have at least 5 characters'}
+			message={disableMessage}
 		>
 			<div>
 				{button}
@@ -79,9 +99,18 @@ const LoginForm = () => {
 
 	return (
 		<form>
+			<Typography
+				className={classes.errorMessage}
+				color='error'
+				variant='subtitle2'
+				align='center'
+			>
+				{loginError}&nbsp;
+			</Typography>
 			<div className={classes.inputContainer}>
 				<TextField
-					value={user}
+					disabled={pending}
+					value={userName}
 					onChange={handleChange}
 					className={classes.textField}
 					placeholder="User name"
@@ -101,7 +130,7 @@ const LoginForm = () => {
 					}}
 				/>
 			</div>
-			{disabled ? buttonWithTooltip : button}
+			{disableMessage ? buttonWithTooltip : button}
 		</form>
 	);
 };
