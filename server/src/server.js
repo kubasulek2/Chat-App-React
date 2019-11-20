@@ -13,6 +13,15 @@ const port = process.env.PORT || 5000;
 server.listen(port, () => console.log('Running on port ' + port));
 
 io.on('connection', (client) => {
+	
+	client.on('login', userName => {
+		if (userName === 'Kubas'){
+			console.log('Login', userName);
+			client.emit('userError', 'User exists');
+		}  
+		else client.emit('login', userName);
+	});
+
 
 	client.emit('welcome', generateMessage('Welcome!'));
 	client.broadcast.emit('welcome', generateMessage('New user has joined!'));
@@ -37,4 +46,5 @@ io.on('connection', (client) => {
 		console.log('client disconnected');
 		io.emit('message', generateMessage('A user has left'));
 	});
+
 });
