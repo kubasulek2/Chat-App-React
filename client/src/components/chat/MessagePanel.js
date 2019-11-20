@@ -1,17 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
 
 import { socket } from '../../server/socket';
-import { getLocation } from '../../utils/user';
+import { getLocation } from '../../utils';
+import PanelButtons from '../UI/buttons/PanelButtons';
 
 const useStyles = makeStyles(({ spacing, palette }) => ({
 	form: {
 		width: '100%',
+		display: 'flex'
 	},
 	cssOutlinedInput: {
 		caretColor: palette.primary.dark,
@@ -26,32 +25,22 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 		borderWidth: '1px',
 		borderColor: 'rgba(66, 66, 66, .4) !important'
 	},
-	sendButton: {
-		fontWeight: 'bold',
-		color: palette.text.primary,
-		paddingLeft: 30,
-		paddingRight: 30,
-	},
-	locationButton: {
-		color: palette.text.primary,
-	},
 	textField: {
 		flex: '1 1 auto',
-		marginBottom: spacing(1)
+		marginBottom: spacing(1),
+		background: palette.background.light
 	}
 }));
 
-const MessagePanel = () => {
+const MessagePanel = ({ pending, setPending }) => {
 	const classes = useStyles();
 	const [ message, setMessage ] = useState('');
-	const [ pending, setPending ] = useState(false);
 
 	const textInput = useRef();
 
 	useEffect(() => {
-		console.log(textInput.current);
 		textInput.current.focus();
-	});
+	}, []);
 
 	const handleSubmit = (evt) => {
 		evt.preventDefault();
@@ -65,12 +54,15 @@ const MessagePanel = () => {
 	};
 
 	const handleLocation = async () => {
-
+		setPending(true);
 		try {
 			const location = await getLocation();
 			const { coords: { latitude, longitude } } = location;
 			socket.emit('sendLocation', { latitude, longitude }, () => {
-				setPending(false);
+				setTimeout(() => {
+					setPending(false);
+
+				}, 5000);
 			});
 		} catch (error) {
 			// set error state to true
@@ -80,8 +72,8 @@ const MessagePanel = () => {
 	};
 
 	return (
-		<form autoComplete='off' className={classes.form}>
-			<Grid container>
+		<Grid container>
+			<form autoComplete='off' className={classes.form} id='message-from'>
 				<TextField
 					disabled={pending}
 					className={classes.textField}
@@ -100,36 +92,18 @@ const MessagePanel = () => {
 						}
 					}}
 				/>
+			</form>
 
-				<Grid container justify='flex-end' className={classes.bottomPanel}>
-					<ButtonGroup
-						size='large'
-						className={classes.buttonGroup}
-					>
-						<Button
-							color='secondary'
-							variant='contained'
-							className={classes.sendButton}
-							onClick={handleSubmit}
-							disabled={pending}
-						> send
-						</Button>
-						<Button
-							className={classes.locationButton}
-							size='small'
-							variant='contained'
-							color='secondary'
-							onClick={handleLocation}
-							disabled={pending}
-						>
-							<LocationOnIcon />
-						</Button>
-					</ButtonGroup>
-				</Grid>
-
-
+			<Grid container justify='flex-end' className={classes.bottomPanel}>
+				<PanelButtons
+					handleLocation={handleLocation}
+					handleSubmit={handleSubmit}
+					pending={pending}
+				/>
 			</Grid>
-		</form>
+
+
+		</Grid>
 	);
 };
 

@@ -4,8 +4,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import { socket } from '../../server/socket';
+import {formatTime} from '../../utils';
 
-const useStyles = makeStyles(({ breakpoints, spacing }) => ({
+const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
 	root: {
 		marginLeft: 300,
 		width: 'calc(100% - 300px)',
@@ -15,7 +16,10 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => ({
 			width: '100%',
 		},
 		padding: spacing(2),
-		display: 'block'
+		display: 'block',
+		'& b': {
+			color: palette.primary.light
+		}
 	}
 }));
 
@@ -25,7 +29,7 @@ const ChatBoard = () => {
 	useEffect(() => {
 		
 		socket.on('locationMessage', link => {
-			setMessages(messageArray => [...messageArray, <a key={link} rel='noopener noreferrer' target='_blank' href={link}>location</a>]);
+			setMessages(messageArray => [...messageArray, <a key={link} rel='noopener noreferrer' target='_blank' href={link}>My location</a>]);
 		});
 		
 		socket.on('message', message => {
@@ -37,7 +41,8 @@ const ChatBoard = () => {
 	}, []);
 
 
-	const messageComponents = messages.map((message, i) => <Typography key={i}>{message}</Typography>);
+	const messageComponents = messages.map((message, i) => <Typography key={i}><b>{formatTime(message.timestamp)}</b> - {message.text}</Typography>);
+
 	return (
 		<Grid container className={classes.root}>
 			{messageComponents}
