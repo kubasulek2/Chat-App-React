@@ -34,6 +34,7 @@ io.on('connection', (client) => {
 	});
 
 	client.on('disconnect', () => {
+		console.log('client disconnected');
 		io.emit('message', generateMessage('A user has left'));
 	});
 });
