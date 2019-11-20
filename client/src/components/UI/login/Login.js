@@ -6,7 +6,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
 import { ReactComponent as LogoIcon } from '../../../assets/logo.svg';
-import LoginForm from './LoginForm';
+import LoginForm from '../../../containers/chat/LoginForm';
 
 const xxs = '@media (max-width:400px)';
 const useStyles = makeStyles(({ spacing }) => ({

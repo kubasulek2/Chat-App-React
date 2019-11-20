@@ -19,8 +19,8 @@ const useStyles = makeStyles(({ mixins, palette, breakpoints }) => ({
 		bottom: 0,
 		left: 0,
 		width: 300,
-		height: 206,
-		background: palette.background.light,
+		height: 207,
+		background: palette.background.default,
 		[ breakpoints.down('sm') ]: {
 			width: 240,
 		},

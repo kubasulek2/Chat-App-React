@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
-import MessagePanel from '../chat/MessagePanel';
+import MessagePanel from '../../containers/chat/MessagePanel';
 
 const useStyles = makeStyles(({ breakpoints, spacing}) => ({
 	root: {
