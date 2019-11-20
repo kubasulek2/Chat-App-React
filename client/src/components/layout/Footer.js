@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import MessagePanel from '../chat/MessagePanel';
 
-const useStyles = makeStyles(({ breakpoints, spacing }) => ({
+const useStyles = makeStyles(({ breakpoints, spacing}) => ({
 	root: {
 		marginLeft: 300,
 		width: 'calc(100% - 300px)',

@@ -7,17 +7,17 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(({palette, shadows, breakpoints, zIndex, spacing}) => ({
 	root: {
 		flex:'0 1 auto',
-		background: theme.palette.background.default,
-		boxShadow: theme.shadows[1],
+		background: palette.background.default,
+		boxShadow: shadows[1],
 		position: 'relative',
-		zIndex: theme.zIndex.drawer + 1,
+		zIndex: zIndex.drawer + 1,
 	},
 	menuButton: {
-		marginRight: theme.spacing(2),
-		[ theme.breakpoints.up('lg') ]: {
+		marginRight: spacing(2),
+		[ breakpoints.up('lg') ]: {
 			display: 'none',
 		},
 		padding: 6
