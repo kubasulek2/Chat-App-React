@@ -4,26 +4,26 @@ import Grid from '@material-ui/core/Grid';
 import { socket } from '../../server/socket';
 import { getLocation } from '../../utils';
 import PanelButtons from '../../components/UI/buttons/PanelButtons';
-import MessageForm from '../../components/layout/MessageForm';
+import MessageForm from '../../components/chat/MessageForm';
+import BottomPanel from '../../components/chat/BottomPanel';
 
 
+const MessagePanel = ({ pending, setPending, setError }) => {
 
-const MessagePanel = ({ pending, setPending }) => {
-	
 	const [ message, setMessage ] = useState('');
 
 
 	const handleSubmit = (evt) => {
 		evt.preventDefault();
-		
-		if(!message.length) return;
-		
+
+		if (!message.length) return;
+
 		setPending(true);
 		setMessage('');
 
 		socket.emit('sendMessage', message, error => {
-			if (error) return console.log(error);
 			setPending(false);
+			if (error) return setError(error);
 		});
 	};
 
@@ -32,15 +32,13 @@ const MessagePanel = ({ pending, setPending }) => {
 		try {
 			const location = await getLocation();
 			const { coords: { latitude, longitude } } = location;
-			socket.emit('sendLocation', { latitude, longitude }, () => {
-				setTimeout(() => {
-					setPending(false);
-
-				}, 5000);
+			socket.emit('sendLocation', { latitude, longitude }, error => {
+				if (error) setError(error);
+				setPending(false);
 			});
 		} catch (error) {
-			// set error state to true
-			console.log(error.message);
+			setPending(false);
+			setError(error.message);
 		}
 
 	};
@@ -53,6 +51,7 @@ const MessagePanel = ({ pending, setPending }) => {
 				pending={pending}
 			/>
 			<Grid container justify='flex-end'>
+				<BottomPanel />
 				<PanelButtons
 					handleLocation={handleLocation}
 					handleSubmit={handleSubmit}

@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import { ReactComponent as LogoIcon } from '../../../assets/logo.svg';
 import LoginForm from '../../../containers/chat/LoginForm';
 
+
 const xxs = '@media (max-width:400px)';
 const useStyles = makeStyles(({ spacing }) => ({
 	root: {
@@ -17,7 +18,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 		width: '100vw',
 		height: '100vh',
 	},
-	card: {		
+	card: {
 		width: 345,
 		padding: `${ spacing(3) }px ${ spacing(1) }px`,
 		[ xxs ]: {
@@ -29,7 +30,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 		display: 'flex',
 		justifyContent: 'center',
 	},
-	icon:{
+	icon: {
 		width: '50px',
 		height: '50px'
 	},
@@ -37,15 +38,15 @@ const useStyles = makeStyles(({ spacing }) => ({
 		margin: '16px 0 0',
 		fontSize: 26,
 		fontWeight: 'bold',
-		[xxs]: {
+		[ xxs ]: {
 			fontSize: 24,
 		}
 	}
 
-	
+
 }));
 
-const Login = ({pending, setPending}) => {
+const Login = ({ pending, setPending }) => {
 	const classes = useStyles();
 	return (
 		<div className={classes.root}>
@@ -53,15 +54,15 @@ const Login = ({pending, setPending}) => {
 				<CardMedia
 					className={classes.media}
 				>
-					<LogoIcon className={classes.icon}/>
+					<LogoIcon className={classes.icon} />
 				</CardMedia>
 				<Typography
 					className={classes.welcome}
 					align='center'
-					color='textSecondary' 
+					color='textSecondary'
 				>Welcome to React Chat</Typography>
 				<CardContent>
-					<LoginForm 
+					<LoginForm
 						pending={pending}
 						setPending={setPending}
 					/>

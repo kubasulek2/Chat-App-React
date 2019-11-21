@@ -1,13 +1,17 @@
 import React from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
+import Divider from '@material-ui/core/Divider';
 import { makeStyles } from '@material-ui/core/styles';
+
+import RoomsList from '../../chat/lists/RoomsList';
+import UsersList from '../../chat/lists/UsersList';
 
 const useStyles = makeStyles(({ mixins, palette, breakpoints }) => ({
 	toolbar: mixins.toolbar,
 	drawerPaper: {
 		width: 300,
-		[ breakpoints.down('sm') ]: {
+		[breakpoints.down('sm')]: {
 			width: 240,
 			flexShrink: 0,
 		},
@@ -21,7 +25,7 @@ const useStyles = makeStyles(({ mixins, palette, breakpoints }) => ({
 		width: 300,
 		height: 207,
 		background: palette.background.default,
-		[ breakpoints.down('sm') ]: {
+		[breakpoints.down('sm')]: {
 			width: 240,
 		},
 	}
@@ -34,6 +38,9 @@ const DrawerComponent = props => {
 	const drawer = (
 		<div>
 			<div className={classes.toolbar} />
+			<RoomsList />
+			<Divider />
+			<UsersList />
 			<div className={classes.footer}></div>
 		</div>
 	);

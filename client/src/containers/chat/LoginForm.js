@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -8,8 +8,10 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import { socket } from '../../server/socket';
 import Tooltip from '../../components/UI/Tooltip';
 import { Typography } from '@material-ui/core';
+import Loader from '../../components/UI/Loader';
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
+	root: { position: 'relative' },
 	errorMessage: {
 		margin: 8
 	},
@@ -46,30 +48,37 @@ const LoginForm = ({ pending, setPending }) => {
 	const [ disabled, setDisabled ] = useState(true);
 	const [ disableMessage, setDisableMessage ] = useState('User name must have at least 5 characters');
 	const [ loginError, setLoginError ] = useState('');
+	const [ validate ] = useState(/^[^\t\s]{5,}$/);
 
-	useEffect(() => {
-		socket.on('userError', error => {
-			setLoginError(error);
-			setPending(false);
-		});
-		return () => socket.removeAllListeners('userError');
-	}, []);
 
 	const handleLogin = evt => {
+
 		evt.preventDefault();
+
+		if (!validate.test(userName)) return;
+
+		setPending(true);
 		setDisabled(true);
 		setLoginError('');
-		socket.emit('login', userName);
+		setUserName('');
+
+		socket.emit('login', { userName: userName, room: 'public' }, (error) => {
+			if (error) {
+				setLoginError(error);
+				return setPending(false);
+			}
+			console.log('loggedIn');
+		});
+
 	};
 	const handleChange = evt => {
-
-		if (disabled && evt.target.value.length >= 5) {
+		if (disabled && validate.test(evt.target.value)) {
 			setDisabled(false);
 			setDisableMessage('');
 		}
-		else if (!disabled && evt.target.value.length < 5) {
+		else if (!disabled && !validate.test(evt.target.value)) {
 			setDisabled(true);
-			setDisableMessage('User name must have at least 5 characters');
+			setDisableMessage('User name must have at least 5 characters, and contain no spaces');
 		}
 
 		setUserName(evt.target.value);
@@ -77,11 +86,12 @@ const LoginForm = ({ pending, setPending }) => {
 
 	const button = (
 		<Button
+			form={'login-form'}
+			type='submit'
 			disabled={disabled}
 			variant='contained'
 			color='secondary'
 			className={classes.button}
-			onClick={handleLogin}
 		>
 			continue
 		</Button>
@@ -98,7 +108,8 @@ const LoginForm = ({ pending, setPending }) => {
 	);
 
 	return (
-		<form>
+		<form className={classes.root} onSubmit={handleLogin} id='login-form'>
+			{pending ? <Loader color='#313132' /> : null}
 			<Typography
 				className={classes.errorMessage}
 				color='error'

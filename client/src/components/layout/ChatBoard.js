@@ -3,10 +3,12 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import Loader from '../UI/Loader';
 import { formatTime } from '../../utils';
 
 const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
 	root: {
+		position: 'relative',
 		marginLeft: 300,
 		width: 'calc(100% - 300px)',
 		flex: '1 1 auto',
@@ -22,13 +24,27 @@ const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
 	}
 }));
 
-const ChatBoard = ({ messages }) => {
+const ChatBoard = ({ messages, pending }) => {
 	const classes = useStyles();
 
-	const messageComponents = messages.map((message, i) => <Typography key={i}><b>{formatTime(message.timestamp)}</b> - {message.text}</Typography>);
+	const messageComponents = messages.map((message, i) => {
+
+		if (message.special) return (
+			<Typography key={i}>
+				<b>{formatTime(message.timestamp)}
+				</b>: <b className='user'>{message.user} </b>{message.text}
+			</Typography>);
+
+		else return (
+			<Typography key={i}>
+				<b>{formatTime(message.timestamp)}</b>
+				-<b className='user'>{message.user}</b>: {message.text}
+			</Typography>);
+	});
 
 	return (
 		<Grid container className={classes.root}>
+			{pending ? <Loader color='rgba(66, 66, 66, .4)' /> : null}
 			{messageComponents}
 		</Grid>
 	);
