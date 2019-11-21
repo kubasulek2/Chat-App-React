@@ -19,6 +19,9 @@ const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
 		padding: spacing(2),
 		display: 'block',
 		'& b': {
+			color: palette.secondary.light
+		},
+		'& span': {
 			color: palette.primary.light
 		}
 	}
@@ -31,14 +34,14 @@ const ChatBoard = ({ messages, pending }) => {
 
 		if (message.special) return (
 			<Typography key={i}>
-				<b>{formatTime(message.timestamp)}
-				</b>: <b className='user'>{message.user} </b>{message.text}
+				<span>{formatTime(message.timestamp)}
+				</span> - <b>{message.user} </b>{message.text}
 			</Typography>);
 
 		else return (
 			<Typography key={i}>
-				<b>{formatTime(message.timestamp)}</b>
-				-<b className='user'>{message.user}</b>: {message.text}
+				<span>{formatTime(message.timestamp)}</span>
+				:<b>{message.user}</b> - {message.text}
 			</Typography>);
 	});
 

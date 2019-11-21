@@ -27,21 +27,32 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 	}
 }));
 
-const MessageForm = ({message, setMessage, pending}) => {
+const MessageForm = ({ message, setMessage, pending, handleSubmit }) => {
 	const classes = useStyles();
 	const textInput = useRef();
+	const form = useRef();
 
 	useEffect(() => {
 		textInput.current.focus();
 	});
+	const sendEvent = (evt) => {
+		if (evt.key === 'Enter' && evt.shiftKey && document.activeElement.id === textInput.current.id){
+			return;
+		}
+		else if (evt.key === 'Enter' && document.activeElement.id === textInput.current.id) {
+			handleSubmit(evt);
+		}
+	};
 
 	return (
-		<form autoComplete='off' className={classes.form} id='message-from'>
+		<form autoComplete='off' className={classes.form} id='message-from' ref={form} onSubmit={(e) => handleSubmit(e)}>
 			<TextField
+				id='messagePanelInput'
 				disabled={pending}
 				className={classes.textField}
 				label='Your Message'
 				variant='outlined'
+				onKeyDown={sendEvent}
 				multiline
 				rows={5}
 				value={message}

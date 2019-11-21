@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Grid from '@material-ui/core/Grid';
 
 import { socket } from '../../server/socket';
@@ -10,31 +10,27 @@ import BottomPanel from '../../components/chat/BottomPanel';
 
 const MessagePanel = ({ pending, setPending, setError }) => {
 
-	const [ message, setMessage ] = useState('');
+	const [message, setMessage] = useState('');
 
 
-	const handleSubmit = (evt) => {
+	const handleSubmit = useCallback((evt) => {
 		evt.preventDefault();
-
+		console.log('handle');
 		if (!message.length) return;
 
-		setPending(true);
 		setMessage('');
 
 		socket.emit('sendMessage', message, error => {
-			setPending(false);
 			if (error) return setError(error);
 		});
-	};
+	}, [message, setError]);
 
 	const handleLocation = async () => {
-		setPending(true);
 		try {
 			const location = await getLocation();
 			const { coords: { latitude, longitude } } = location;
 			socket.emit('sendLocation', { latitude, longitude }, error => {
 				if (error) setError(error);
-				setPending(false);
 			});
 		} catch (error) {
 			setPending(false);
@@ -49,6 +45,7 @@ const MessagePanel = ({ pending, setPending, setError }) => {
 				message={message}
 				setMessage={setMessage}
 				pending={pending}
+				handleSubmit={handleSubmit}
 			/>
 			<Grid container justify='flex-end'>
 				<BottomPanel />

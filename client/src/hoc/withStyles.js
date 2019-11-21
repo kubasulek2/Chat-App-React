@@ -20,10 +20,6 @@ const useStyles = makeStyles(({ palette }) => ({
 				textDecoration: 'none'
 			}
 		},
-		'#root b.user': {
-			color: palette.secondary.dark
-		},
-
 		'*::-webkit-scrollbar': {
 			width: '0.4em'
 		},
