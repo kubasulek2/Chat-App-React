@@ -3,12 +3,9 @@ const express = require('express');
 const socketIo = require('socket.io');
 const Filter = require('bad-words');
 const { generateMessage } = require('./utils/messages');
-const {
-	addUser,
-	getUser,
-	removeUser,
-	getUsersByRoom
-} = require('./utils/users');
+const { addUser, getUser, removeUser, getUsersByRoom } = require('./utils/users');
+const { addUserToRoom, fetchPublicRooms, removeUserFromRoom } = require('./utils/rooms');
+
 
 
 const app = express();
@@ -19,17 +16,26 @@ const port = process.env.PORT || 5000;
 server.listen(port, () => console.log('Running on port ' + port));
 
 io.on('connection', (client) => {
+
 	client.on('login', ({ userName, room }, cb) => {
 
-		const ip = client.request.connection.remoteAddress;
-		const { error, user } = addUser({ id: client.id, ip, userName, room });
-		if (error) {
-			return cb(error);
+		const { userError, user } = addUser({ id: client.id, userName, room });
+		
+		if (userError) {
+			return cb(userError);
+		}
+		console.log(user);
+		const { roomError, roomName } = addUserToRoom(room, user.id);
+		
+		if (roomError) {
+			return cb(roomError);
 		}
 
-		client.join(room);
-
-		client.emit('login', user.userName);
+		client.join(roomName);
+		client.emit('login');
+		client.emit('joinRoom', roomName);
+		client.emit('roomsList', fetchPublicRooms());
+		client.emit('usersList', getUsersByRoom(roomName));
 		client.emit('welcome', generateMessage(', welcome!', user.userName, true));
 		client.broadcast.to(room).emit('welcome', generateMessage('has joined!', user.userName, true));
 
