@@ -9,7 +9,12 @@ import UsersList from '../../chat/lists/UsersList';
 import NewRoomButton from '../../UI/buttons/NewRoomButton';
 
 const useStyles = makeStyles(({ mixins, palette, breakpoints }) => ({
-	toolbar: mixins.toolbar,
+	toolbar: {
+		...mixins.toolbar,
+		[breakpoints.down('md')]: {
+			display: 'none'
+		}
+	},
 	drawerPaper: {
 		width: 300,
 		[breakpoints.down('sm')]: {
@@ -32,6 +37,9 @@ const useStyles = makeStyles(({ mixins, palette, breakpoints }) => ({
 		[breakpoints.down('sm')]: {
 			width: 240,
 		},
+		[breakpoints.down('md')]: {
+			height: 'initial'
+		}
 	}
 }));
 

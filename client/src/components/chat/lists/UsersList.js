@@ -10,11 +10,14 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import CommentIcon from '@material-ui/icons/Comment';
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
+const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
 	root: {
 		flex: '1 1 auto',
 		overflowY: 'auto',
 		paddingBottom: 206,
+		[breakpoints.down('md')]: {
+			paddingBottom: spacing(2)
+		}
 		
 	},
 	listTitle: {
