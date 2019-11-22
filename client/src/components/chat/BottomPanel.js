@@ -1,10 +1,11 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import ColorizeIcon from '@material-ui/icons/Colorize';
 import EmojiIcon from '@material-ui/icons/EmojiEmotions';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
 
 import IconButton from '../UI/buttons/IconButton';
+import ColorPicker from '../UI/ColorPicker';
+
 
 const useStyles = makeStyles(({ spacing, palette }) => ({
 	root: {
@@ -36,9 +37,7 @@ const BottomPanel = (props) => {
 			>
 				<TextFieldsIcon className={classes.caseIcon} />
 			</IconButton>
-			<IconButton>
-				<ColorizeIcon className={classes.icon} />
-			</IconButton>
+			<ColorPicker />
 			<IconButton>
 				<EmojiIcon className={classes.icon} />
 			</IconButton>

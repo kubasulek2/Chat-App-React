@@ -35,7 +35,7 @@ const MessageForm = ({ message, setMessage, pending, handleSubmit, uppercaseMode
 	useEffect(() => {
 		console.log(textInput.current);
 		setTimeout(() => textInput.current.focus(), 200);
-	}, []);
+	});
 
 	const handleKeyDown = (evt) => {
 		evt = evt || window.event;
