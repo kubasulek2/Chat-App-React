@@ -54,6 +54,7 @@ const LoginForm = ({ pending, setPending }) => {
 	useEffect(() => loginInput.current.focus(),[]);
 
 	const handleLogin = evt => {
+		evt = evt || window.event;
 
 		evt.preventDefault();
 

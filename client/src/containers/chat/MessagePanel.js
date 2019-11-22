@@ -11,11 +11,14 @@ import BottomPanel from '../../components/chat/BottomPanel';
 const MessagePanel = ({ pending, setPending, setError }) => {
 
 	const [message, setMessage] = useState('');
+	const [uppercaseMode, setUppercaseMode] = useState(false);
 
 
 	const handleSubmit = useCallback((evt) => {
+		evt = evt || window.event;
+		
 		evt.preventDefault();
-		console.log('handle');
+		
 		if (!message.length) return;
 
 		setMessage('');
@@ -46,9 +49,14 @@ const MessagePanel = ({ pending, setPending, setError }) => {
 				setMessage={setMessage}
 				pending={pending}
 				handleSubmit={handleSubmit}
+				uppercaseMode={uppercaseMode}
+				setUppercaseMode={setUppercaseMode}
 			/>
 			<Grid container justify='flex-end'>
-				<BottomPanel />
+				<BottomPanel
+					setUppercaseMode={setUppercaseMode}
+					uppercaseMode={uppercaseMode}
+				/>
 				<PanelButtons
 					handleLocation={handleLocation}
 					handleSubmit={handleSubmit}

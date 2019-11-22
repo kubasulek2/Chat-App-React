@@ -51,7 +51,7 @@ const PanelButtons = ({ handleLocation, handleSubmit, pending }) => {
 			</Button>
 		</ButtonGroup>
 	);
-}
+};
 
 export default PanelButtons;
 

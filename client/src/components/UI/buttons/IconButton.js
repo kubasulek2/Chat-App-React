@@ -5,7 +5,7 @@ import Fab from '@material-ui/core/Fab';
 const useStyles = makeStyles(({ spacing, palette, shadows, breakpoints }) => ({
 	fab: {
 		margin: spacing(.5),
-		background: palette.primary.dark,
+		background: props => props.color ? props.color : palette.primary.dark,
 		height: 36,
 		width: 36,
 		boxShadow: shadows[0],
@@ -20,11 +20,12 @@ const useStyles = makeStyles(({ spacing, palette, shadows, breakpoints }) => ({
 }));
 
 const IconButton = (props) => {
-	const classes = useStyles();
+	const classes = useStyles(props);
 
+	const {clicked, children} = props;
 	return (
-		<Fab className={classes.fab} color='primary'>
-			{props.children}
+		<Fab className={classes.fab} color='primary' onClick={clicked}>
+			{children}
 		</Fab>
 	);
 }
