@@ -1,8 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import EmojiIcon from '@material-ui/icons/EmojiEmotions';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
 
+import EmojiPicker from '../UI/EmojiPicker';
 import IconButton from '../UI/buttons/IconButton';
 import ColorPicker from '../UI/ColorPicker';
 
@@ -24,7 +24,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 
 const BottomPanel = (props) => {
 	const classes = useStyles(props);
-	const { setUppercaseMode, color, setColor } = props;
+	const { setUppercaseMode, color, setColor, setMessage, setMessageObj } = props;
 	
 	const handleCase = () => {
 		setUppercaseMode(prevMode => !prevMode);
@@ -41,9 +41,9 @@ const BottomPanel = (props) => {
 				color={color}
 				setColor={setColor}
 			/>
-			<IconButton>
-				<EmojiIcon className={classes.icon} />
-			</IconButton>
+			<EmojiPicker
+				setMessage={setMessage}
+			/>
 		</div>
 	);
 };

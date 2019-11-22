@@ -2,8 +2,8 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import { Emoji } from 'emoji-mart';
 
-import Loader from '../UI/Loader';
 import { formatTime } from '../../utils';
 
 const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
@@ -27,7 +27,7 @@ const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
 	}
 }));
 
-const ChatBoard = ({ messages, pending }) => {
+const ChatBoard = ({ messages }) => {
 	const classes = useStyles();
 
 	const messageComponents = messages.map((message, i) => {
@@ -46,7 +46,6 @@ const ChatBoard = ({ messages, pending }) => {
 
 	return (
 		<Grid container className={classes.root}>
-			{pending ? <Loader color='rgba(66, 66, 66, .4)' /> : null}
 			{messageComponents}
 		</Grid>
 	);

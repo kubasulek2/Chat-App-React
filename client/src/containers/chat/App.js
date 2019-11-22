@@ -14,13 +14,13 @@ import { socket } from '../../server/socket';
 
 const App = () => {
 
-	const [ logged, setLogged ] = useState(false);
-	const [ pending, setPending ] = useState(false);
-	const [ messages, setMessages ] = useState([]);
-	const [ error, setError ] = useState(false);
+	const [logged, setLogged] = useState(false);
+	const [pending, setPending] = useState(false);
+	const [messages, setMessages] = useState([]);
+	const [error, setError] = useState(false);
 
 	useEffect(() => {
-		
+
 		socket.on('login', () => {
 			setLogged(true);
 			setPending(false);
@@ -29,22 +29,22 @@ const App = () => {
 		socket.on('joinRoom', room => {
 			console.log(room);
 		});
-		
+
 		socket.on('roomsList', rooms => {
 			console.log(rooms);
 		});
-		
+
 		socket.on('usersList', users => {
 			console.log(users);
 		});
 
 		socket.on('welcome', message => {
-			setMessages(messageArray => [ ...messageArray, message ]);
+			setMessages(messageArray => [...messageArray, message]);
 		});
 
 		socket.on('message', message => {
 			console.log('message');
-			setMessages(messageArray => [ ...messageArray, message ]);
+			setMessages(messageArray => [...messageArray, message]);
 		});
 
 		socket.on('locationMessage', link => {
@@ -65,14 +65,13 @@ const App = () => {
 
 	return (
 		<Fragment>
-			<ErrorModal error={error} handleOpen={setError}/>
+			<ErrorModal error={error} handleOpen={setError} />
 			{logged ?
 				(
 					<Fragment>
 						<Sidebar />
 						<ChatBoard
 							messages={messages}
-							pending={pending}
 						/>
 						<Divider />
 						<Footer

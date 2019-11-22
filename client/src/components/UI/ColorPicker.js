@@ -44,7 +44,7 @@ const ColorPicker = (props) => {
 	};
 
 	const open = Boolean(anchorEl);
-	const id = open ? 'simple-popover' : undefined;
+	const id = open ? 'color-popover' : undefined;
 
 	const handleColorChange = (evt) => {
 		evt = evt || window.evt;

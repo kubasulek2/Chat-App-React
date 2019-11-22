@@ -18,10 +18,10 @@ const MessagePanel = ({ pending, setPending, setError }) => {
 
 	const handleSubmit = useCallback((evt) => {
 		evt = evt || window.event;
-		
 		evt.preventDefault();
 		
 		if (!message.length) return;
+		setPending(true);
 
 		setMessage('');
 
@@ -32,6 +32,7 @@ const MessagePanel = ({ pending, setPending, setError }) => {
 
 	const handleLocation = async () => {
 		try {
+			setPending(true);
 			const location = await getLocation();
 			const { coords: { latitude, longitude } } = location;
 			socket.emit('sendLocation', { latitude, longitude }, error => {
@@ -57,10 +58,12 @@ const MessagePanel = ({ pending, setPending, setError }) => {
 			/>
 			<Grid container justify='flex-end'>
 				<BottomPanel
+					setMe
 					color={color}
 					setColor={setColor}
 					setUppercaseMode={setUppercaseMode}
 					uppercaseMode={uppercaseMode}
+					setMessage={setMessage}
 				/>
 				<PanelButtons
 					handleLocation={handleLocation}
