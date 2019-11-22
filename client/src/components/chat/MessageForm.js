@@ -33,7 +33,7 @@ const MessageForm = (props) => {
 	const textInput = useRef();
 	const form = useRef();
 
-	const { message, setMessage, pending, handleSubmit, uppercaseMode} = props;
+	const { message, setMessage, pending, handleSubmit, uppercaseMode } = props;
 
 	useEffect(() => {
 		setTimeout(() => textInput.current.focus(), 200);

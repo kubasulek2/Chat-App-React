@@ -8,4 +8,15 @@ export const getLocation = () => {
 
 export const formatTime = timestamp => moment(timestamp).format('h:mm a');
 
+export const formatText = (text, emojiInfo) => {
+	if (!emojiInfo) return [text];
+
+	const formattedText = [];
+	let currentIndex = 0;
+	emojiInfo.forEach(emoji => {
+		text = text.slice(currentIndex, emojiInfo[emoji].index);
+	});
+	return formattedText;
+};
+
 

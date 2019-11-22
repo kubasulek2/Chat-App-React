@@ -11,6 +11,7 @@ import BottomPanel from '../../components/chat/BottomPanel';
 const MessagePanel = ({ pending, setPending, setError }) => {
 
 	const [message, setMessage] = useState('');
+	const [emojiInfo, setEmojiInfo] = useState([]);
 	const [uppercaseMode, setUppercaseMode] = useState(false);
 	const [color, setColor] = useState('#b0bec5');
 
@@ -19,16 +20,18 @@ const MessagePanel = ({ pending, setPending, setError }) => {
 	const handleSubmit = useCallback((evt) => {
 		evt = evt || window.event;
 		evt.preventDefault();
-		
+
 		if (!message.length) return;
 		setPending(true);
 
-		setMessage('');
 
-		socket.emit('sendMessage', message, error => {
+		socket.emit('sendMessage', { message, emojiInfo, color }, error => {
 			if (error) return setError(error);
 		});
-	}, [message, setError]);
+		
+		setMessage('');
+
+	}, [message, setError, setPending]);
 
 	const handleLocation = async () => {
 		try {
@@ -58,7 +61,7 @@ const MessagePanel = ({ pending, setPending, setError }) => {
 			/>
 			<Grid container justify='flex-end'>
 				<BottomPanel
-					setMe
+					setEmojiInfo={setEmojiInfo}
 					color={color}
 					setColor={setColor}
 					setUppercaseMode={setUppercaseMode}

@@ -2,9 +2,9 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { Emoji } from 'emoji-mart';
 
-import { formatTime } from '../../utils';
+
+import { formatTime, formatText } from '../../utils';
 
 const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
 	root: {
@@ -31,16 +31,18 @@ const ChatBoard = ({ messages }) => {
 	const classes = useStyles();
 
 	const messageComponents = messages.map((message, i) => {
+		console.log(message);
+		const formatedText = formatText(message.text, message.emojiInfo);
 
 		if (message.special) return (
 			<Typography key={i}>
 				<span>{formatTime(message.timestamp)}
-				</span> - <b>{message.user} </b>{message.text}
+				</span> - <b>{message.user} </b><span style={{color: message.color}}>{formatText}</span>
 			</Typography>);
 
 		else return (
 			<Typography key={i}>
-				<span>{formatTime(message.timestamp)}</span> :<b>{message.user}</b> - {message.text}
+				<span>{formatTime(message.timestamp)}</span> :<b>{message.user}</b> - <span style={{color: message.color}}>{formatText}</span>
 			</Typography>);
 	});
 

@@ -62,7 +62,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 }));
 
 
-const EmojiPickerComp = ({ setMessage, setMessageObj }) => {
+const EmojiPickerComp = ({ setMessage, setEmojiInfo }) => {
 	const classes = useStyles();
 	const [anchorEl, setAnchorEl] = useState(null);
 
@@ -80,10 +80,10 @@ const EmojiPickerComp = ({ setMessage, setMessageObj }) => {
 
 	const addEmoji = (emoji) => {
 		let inputVal = document.getElementById('messagePanelInput').value;
+		const emojiObj = {id: emoji.id, index: inputVal.length};
 		inputVal += emoji.native;
 		setMessage(inputVal);
-		setMessageObj();
-		console.log(emoji);
+		setEmojiInfo(arr => [...arr,emojiObj]);
 	};
 
 	return (

@@ -43,7 +43,7 @@ const App = () => {
 		});
 
 		socket.on('message', message => {
-			console.log('message');
+			console.log(message);
 			setMessages(messageArray => [...messageArray, message]);
 		});
 
