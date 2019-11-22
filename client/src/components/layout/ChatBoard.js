@@ -40,8 +40,7 @@ const ChatBoard = ({ messages, pending }) => {
 
 		else return (
 			<Typography key={i}>
-				<span>{formatTime(message.timestamp)}</span>
-				:<b>{message.user}</b> - {message.text}
+				<span>{formatTime(message.timestamp)}</span> :<b>{message.user}</b> - {message.text}
 			</Typography>);
 	});
 

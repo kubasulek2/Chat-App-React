@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -49,7 +49,9 @@ const LoginForm = ({ pending, setPending }) => {
 	const [ disableMessage, setDisableMessage ] = useState('User name must have at least 5 characters');
 	const [ loginError, setLoginError ] = useState('');
 	const [ validate ] = useState(/^[^\t\s]{5,}$/);
+	const loginInput = useRef();
 
+	useEffect(() => loginInput.current.focus(),[]);
 
 	const handleLogin = evt => {
 
@@ -120,6 +122,7 @@ const LoginForm = ({ pending, setPending }) => {
 			</Typography>
 			<div className={classes.inputContainer}>
 				<TextField
+					inputRef={loginInput}
 					disabled={pending}
 					value={userName}
 					onChange={handleChange}
