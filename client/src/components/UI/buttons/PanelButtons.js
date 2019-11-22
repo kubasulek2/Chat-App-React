@@ -4,19 +4,23 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 
-const useStyles = makeStyles(({palette}) => ({
+const useStyles = makeStyles(({ palette, breakpoints }) => ({
 	sendButton: {
 		fontWeight: 'bold',
 		color: palette.text.primary,
 		paddingLeft: 30,
 		paddingRight: 30,
+		[breakpoints.down('xs')]: {
+			paddingLeft: 23,
+			paddingRight: 23,
+		}
 	},
 	locationButton: {
 		color: palette.text.primary,
 	},
 }));
 
-const PanelButtons = ({handleLocation, handleSubmit, pending}) => {
+const PanelButtons = ({ handleLocation, handleSubmit, pending }) => {
 	const classes = useStyles();
 
 

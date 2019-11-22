@@ -11,7 +11,7 @@ const Sidebar = () => {
 
 	return (
 		<Fragment>
-			<Header handleMobile={handleDrawerToggle}/>
+			<Header handleMobile={handleDrawerToggle} />
 			<Drawer mobile={mobileOpen} handleMobile={handleDrawerToggle}/>
 		</Fragment>
 	);

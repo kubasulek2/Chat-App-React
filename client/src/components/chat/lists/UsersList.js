@@ -16,7 +16,7 @@ const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
 		overflowY: 'auto',
 		paddingBottom: 206,
 		[breakpoints.down('md')]: {
-			paddingBottom: spacing(2)
+			paddingBottom: 67 + spacing(2)
 		}
 		
 	},

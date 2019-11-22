@@ -7,22 +7,24 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
-const useStyles = makeStyles(({palette, shadows, breakpoints, zIndex, spacing}) => ({
+import { ReactComponent as LogoIcon } from '../../assets/logo.svg';
+
+const useStyles = makeStyles(({ palette, shadows, breakpoints, zIndex, spacing }) => ({
 	root: {
-		flex:'0 1 auto',
+		flex: '0 1 auto',
 		background: palette.background.default,
 		boxShadow: shadows[1],
 		position: 'relative',
 		zIndex: zIndex.drawer + 1,
 	},
 	menuButton: {
-		marginRight: spacing(2),
-		[ breakpoints.up('lg') ]: {
+		marginRight: spacing(1.5),
+		[breakpoints.up('lg')]: {
 			display: 'none',
 		},
 		padding: 6
 	},
-	iconContainer: {
+	menuIconContainer: {
 		width: 35,
 		height: 35
 	},
@@ -30,32 +32,54 @@ const useStyles = makeStyles(({palette, shadows, breakpoints, zIndex, spacing}) 
 		width: '100%',
 		height: '100%'
 	},
-	title: {
+	logoContainer: {
 		flexGrow: 1,
-		fontWeight: 700
+		display: 'flex',
+		justifyContent: 'flex-start',
+		alignItems: 'center',
+		[breakpoints.down('md')]: {
+			justifyContent: 'center',
+		}
+	},
+	logoIcon: {
+		width: 35,
+		height: 35,
+		marginRight: spacing(1)
+	},
+	logoTitle: {
+		fontWeight: 700,
+		[breakpoints.down('xs')]: {
+			fontSize: 16
+		}
 	},
 }));
 
-const Header = props => {
+const Header = ({ handleMobile }) => {
 	const classes = useStyles();
 
+	const handleLogOut = () => {
+		window.location.reload();
+	};
 	return (
 		<AppBar className={classes.root}>
 			<Toolbar>
-				<IconButton 
-					edge='start' 
+				<IconButton
+					edge='start'
 					className={classes.menuButton}
 					aria-label='open drawer'
-					onClick={props.handleMobile} 
+					onClick={handleMobile}
 				>
-					<div className={classes.iconContainer}>
-						<MenuIcon className={classes.menuIcon}/>
+					<div className={classes.menuIconContainer}>
+						<MenuIcon className={classes.menuIcon} />
 					</div>
 				</IconButton>
-				<Typography variant='h6' className={classes.title}>
-					CHAT REACT
-				</Typography>
-				<Button color='inherit'>Logout</Button>
+				<div className={classes.logoContainer}>
+					<LogoIcon className={classes.logoIcon} />
+					<Typography variant='h6' className={classes.logoTitle}>
+						CHAT REACT
+					</Typography>
+				</div>
+				<Button color='primary' onClick={handleLogOut} >Logout</Button>
 			</Toolbar>
 		</AppBar>
 	);
