@@ -17,7 +17,7 @@ const useStyles = makeStyles(({ palette }) => ({
 		a: {
 			'&,&:hover,&:active,&:visited': {
 				color: palette.primary.light,
-				textDecoration: 'none'
+				//textDecoration: 'none'
 			}
 		},
 		'*::-webkit-scrollbar': {

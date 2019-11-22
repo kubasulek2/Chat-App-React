@@ -1,24 +1,40 @@
-import React, {Fragment, useState} from 'react';
+import React, { Fragment, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Popover from '@material-ui/core/Popover';
 
 import ColorizeIcon from '@material-ui/icons/Colorize';
 import IconButton from './buttons/IconButton';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(({ spacing, palette }) => ({
 	icon: {
-		color: '#b0bec5'
+		color: props => props.color
 	},
+	popover: {
+		padding: spacing(1.5),
+		paddingBottom: spacing(2),
+		display: 'flex',
+		flexWrap: 'wrap',
+		justifyContent: 'center',
+		width: 170
+	},
+	color: {
+		cursor: 'pointer',
+		margin: spacing(.6),
+		width: 25,
+		height: 25,
+		border: '1px solid ' + palette.grey[500],
+		borderRadius: 4,
+	}
 }));
 
 
 
-const ColorPicker = () => {
-	const classes = useStyles();
+const ColorPicker = (props) => {
+	const classes = useStyles(props);
+	const { setColor } = props;
 	const [anchorEl, setAnchorEl] = useState(null);
 
 	const handleClick = evt => {
-		console.log('there');
 		evt = evt || window.event;
 		setAnchorEl(evt.currentTarget);
 	};
@@ -29,7 +45,13 @@ const ColorPicker = () => {
 
 	const open = Boolean(anchorEl);
 	const id = open ? 'simple-popover' : undefined;
-	
+
+	const handleColorChange = (evt) => {
+		evt = evt || window.evt;
+		setColor(evt.target.style.background);
+		setAnchorEl(null);
+	};
+
 	return (
 		<Fragment>
 			<IconButton
@@ -38,6 +60,10 @@ const ColorPicker = () => {
 				<ColorizeIcon className={classes.icon} />
 			</IconButton>
 			<Popover
+				className={classes.popover}
+				classes={{
+					paper: classes.popover
+				}}
 				id={id}
 				open={open}
 				anchorEl={anchorEl}
@@ -55,7 +81,18 @@ const ColorPicker = () => {
 					left: 0
 				}}
 			>
-				Blala
+				<div className={classes.color} onClick={handleColorChange} style={{ background: '#b0bec5' }}></div>
+				<div className={classes.color} onClick={handleColorChange} style={{ background: '#f44336' }}></div>
+				<div className={classes.color} onClick={handleColorChange} style={{ background: '#ff9800' }}></div>
+				<div className={classes.color} onClick={handleColorChange} style={{ background: '#ffeb3b' }}></div>
+				<div className={classes.color} onClick={handleColorChange} style={{ background: '#ab47bc' }}></div>
+				<div className={classes.color} onClick={handleColorChange} style={{ background: '#03a9f4' }}></div>
+				<div className={classes.color} onClick={handleColorChange} style={{ background: '#00bcd4' }}></div>
+				<div className={classes.color} onClick={handleColorChange} style={{ background: '#00c853' }}></div>
+				<div className={classes.color} onClick={handleColorChange} style={{ background: '#1de9b6' }}></div>
+				<div className={classes.color} onClick={handleColorChange} style={{ background: '#c6ff00' }}></div>
+				<div className={classes.color} onClick={handleColorChange} style={{ background: '#795548' }}></div>
+				<div className={classes.color} onClick={handleColorChange} style={{ background: '#fff' }}></div>
 			</Popover>
 		</Fragment>
 	);

@@ -8,7 +8,8 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 		display: 'flex'
 	},
 	cssOutlinedInput: {
-		caretColor: palette.primary.dark,
+		caretColor: props => props.color,
+		color: props => props.color,
 		'&$cssFocused $notchedOutline': {
 			borderColor: 'rgba(66, 66, 66, .4) !important',
 		}
@@ -27,13 +28,14 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 	}
 }));
 
-const MessageForm = ({ message, setMessage, pending, handleSubmit, uppercaseMode }) => {
-	const classes = useStyles();
+const MessageForm = (props) => {
+	const classes = useStyles(props);
 	const textInput = useRef();
 	const form = useRef();
 
+	const { message, setMessage, pending, handleSubmit, uppercaseMode} = props;
+
 	useEffect(() => {
-		console.log(textInput.current);
 		setTimeout(() => textInput.current.focus(), 200);
 	});
 
@@ -54,7 +56,7 @@ const MessageForm = ({ message, setMessage, pending, handleSubmit, uppercaseMode
 			const length = value.length;
 			const upperCaseChar = value.slice(length - 1, length).toUpperCase();
 
-			value = value.slice(0,-1) + upperCaseChar;
+			value = value.slice(0, -1) + upperCaseChar;
 		}
 
 		setMessage(value);

@@ -24,7 +24,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 
 const BottomPanel = (props) => {
 	const classes = useStyles(props);
-	const { setUppercaseMode } = props;
+	const { setUppercaseMode, color, setColor } = props;
 	
 	const handleCase = () => {
 		setUppercaseMode(prevMode => !prevMode);
@@ -37,7 +37,10 @@ const BottomPanel = (props) => {
 			>
 				<TextFieldsIcon className={classes.caseIcon} />
 			</IconButton>
-			<ColorPicker />
+			<ColorPicker
+				color={color}
+				setColor={setColor}
+			/>
 			<IconButton>
 				<EmojiIcon className={classes.icon} />
 			</IconButton>

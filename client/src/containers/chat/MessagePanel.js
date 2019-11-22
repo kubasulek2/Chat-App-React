@@ -12,6 +12,8 @@ const MessagePanel = ({ pending, setPending, setError }) => {
 
 	const [message, setMessage] = useState('');
 	const [uppercaseMode, setUppercaseMode] = useState(false);
+	const [color, setColor] = useState('#b0bec5');
+
 
 
 	const handleSubmit = useCallback((evt) => {
@@ -51,9 +53,12 @@ const MessagePanel = ({ pending, setPending, setError }) => {
 				handleSubmit={handleSubmit}
 				uppercaseMode={uppercaseMode}
 				setUppercaseMode={setUppercaseMode}
+				color={color}
 			/>
 			<Grid container justify='flex-end'>
 				<BottomPanel
+					color={color}
+					setColor={setColor}
 					setUppercaseMode={setUppercaseMode}
 					uppercaseMode={uppercaseMode}
 				/>
