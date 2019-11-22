@@ -13,7 +13,7 @@ const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
 		width: 'calc(100% - 300px)',
 		flex: '1 1 auto',
 		[ breakpoints.down('md') ]: {
-			marginLeft: 0,
+			marginLeft: 0, 
 			width: '100%',
 		},
 		padding: spacing(2),
@@ -37,12 +37,12 @@ const ChatBoard = ({ messages }) => {
 		if (message.special) return (
 			<Typography key={i}>
 				<span>{formatTime(message.timestamp)}
-				</span> - <b>{message.user} </b><span style={{color: message.color}}>{formatText}</span>
+				</span> - <b>{message.user} </b><span style={{color: message.color}}>{formatedText}</span>
 			</Typography>);
 
 		else return (
 			<Typography key={i}>
-				<span>{formatTime(message.timestamp)}</span> :<b>{message.user}</b> - <span style={{color: message.color}}>{formatText}</span>
+				<span>{formatTime(message.timestamp)}</span> :<b>{message.user}</b> - <span style={{color: message.color}}>{formatedText}</span>
 			</Typography>);
 	});
 

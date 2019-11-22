@@ -8,7 +8,7 @@ import MessageForm from '../../components/chat/MessageForm';
 import BottomPanel from '../../components/chat/BottomPanel';
 
 
-const MessagePanel = ({ pending, setPending, setError }) => {
+const MessagePanel = ({ pending, setError }) => {
 
 	const [message, setMessage] = useState('');
 	const [emojiInfo, setEmojiInfo] = useState([]);
@@ -22,27 +22,24 @@ const MessagePanel = ({ pending, setPending, setError }) => {
 		evt.preventDefault();
 
 		if (!message.length) return;
-		setPending(true);
-
 
 		socket.emit('sendMessage', { message, emojiInfo, color }, error => {
 			if (error) return setError(error);
 		});
 		
 		setMessage('');
+		setEmojiInfo([]);
 
-	}, [message, setError, setPending]);
+	}, [message, setError]);
 
 	const handleLocation = async () => {
 		try {
-			setPending(true);
 			const location = await getLocation();
 			const { coords: { latitude, longitude } } = location;
 			socket.emit('sendLocation', { latitude, longitude }, error => {
 				if (error) setError(error);
 			});
 		} catch (error) {
-			setPending(false);
 			setError(error.message);
 		}
 
