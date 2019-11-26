@@ -18,7 +18,7 @@ const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
 		[breakpoints.down('md')]: {
 			paddingBottom: 67 + spacing(2)
 		}
-		
+
 	},
 	listTitle: {
 		background: palette.background.light,
@@ -40,31 +40,42 @@ const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
 	}
 }));
 
-const UsersList = () => {
-	const users = ['Kuba', 'Franio666', 'Karo1', 'BigButt','22edd','2fgh','hanka','stasio'];
+const UsersList = ({ users, myself }) => {
 	const classes = useStyles();
-	const roomList = users.map((user) => {
-		return (
-			<ListItem key={user} className={classes.user} button>
-				<ListItemText secondary={user} />
-				<ListItemSecondaryAction>
-					<IconButton edge="end" aria-label="private-conversation">
-						<CommentIcon color='primary' />
-					</IconButton>
-				</ListItemSecondaryAction>
-			</ListItem>
-		);
+	
+	const usersList = [myself, ...users].map((user, i) => {
+		if (myself){
+			const button = (i !== 0
+				? <IconButton edge="end" aria-label="private-conversation">
+					<CommentIcon color='primary' />
+				</IconButton>
+				: null);
+
+			return (
+				<ListItem
+					key={user.id + i}
+					className={classes.user}
+					button selected={i === 0}
+				>
+					<ListItemText secondary={user.userName} />
+					<ListItemSecondaryAction>
+						{button}
+					</ListItemSecondaryAction>
+				</ListItem>
+			);
+		}
+		
 	});
 
 	return (
 		<div className={classes.root}>
 			<div className={classes.listTitle}>
-				<UserIcon className={classes.titleIcon}/>
+				<UserIcon className={classes.titleIcon} />
 				<Typography variant='h5' color='textSecondary' className={classes.titleCaption}>Users</Typography>
 			</div>
 			<Divider />
 			<List component="nav">
-				{roomList}
+				{usersList}
 			</List>
 		</div>
 	);

@@ -24,7 +24,7 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 	},
 	listItem: {
 		textTransform: 'uppercase',
-		
+
 	},
 	active: {
 		fontWeight: 'bold',
@@ -42,8 +42,8 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 	}
 }));
 
-const RoomsList = () => {
-	const rooms = ['general', 'private', 'blabla', 'small talks','abc','cde0','ef5', '12345'];
+const RoomsList = ({ rooms }) => {
+
 	const classes = useStyles();
 
 	const roomList = rooms.map((room) => {

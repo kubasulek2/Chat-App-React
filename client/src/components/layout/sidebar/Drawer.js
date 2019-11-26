@@ -43,16 +43,16 @@ const useStyles = makeStyles(({ mixins, palette, breakpoints }) => ({
 	}
 }));
 
-const DrawerComponent = props => {
+const DrawerComponent = ({mobile, handleMobile, users, rooms, myself}) => {
 
 	const classes = useStyles();
 
 	const drawer = (
 		<div>
 			<div className={classes.toolbar} />
-			<RoomsList />
+			<RoomsList rooms={rooms} myself={myself} />
 			<Divider />
-			<UsersList />
+			<UsersList users={users} myself={myself} />
 			<div className={classes.footer}>
 				<NewRoomButton />
 			</div>
@@ -64,8 +64,8 @@ const DrawerComponent = props => {
 			<Hidden lgUp implementation='css'>
 				<Drawer
 					variant='temporary'
-					open={props.mobile}
-					onClose={props.handleMobile}
+					open={mobile}
+					onClose={handleMobile}
 					classes={{
 						paper: classes.drawerPaper,
 					}}

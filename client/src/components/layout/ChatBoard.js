@@ -42,7 +42,7 @@ const ChatBoard = ({ messages }) => {
 
 		else return (
 			<Typography key={i}>
-				<span>{formatTime(message.timestamp)}</span> :<b>{message.user}</b> - <span style={{color: message.color}}>{formatedText}</span>
+				<span>{formatTime(message.timestamp)}</span> - <b>{message.user}</b>: <span style={{color: message.color}}>{formatedText}</span>
 			</Typography>);
 	});
 

@@ -36,7 +36,7 @@ const MessageForm = (props) => {
 	const { message, setMessage, pending, handleSubmit, uppercaseMode } = props;
 
 	useEffect(() => {
-		setTimeout(() => textInput.current.focus(), 200);
+		setTimeout(() => textInput.current.focus(), 100);
 	});
 
 	const handleKeyDown = (evt) => {

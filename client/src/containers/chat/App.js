@@ -17,25 +17,31 @@ const App = () => {
 	const [logged, setLogged] = useState(false);
 	const [pending, setPending] = useState(false);
 	const [messages, setMessages] = useState([]);
+	const [rooms, setRooms] = useState([]);
+	const [users, setUsers] = useState([]);
+	const [myself, setMyself] = useState(null);
 	const [error, setError] = useState(false);
 
 	useEffect(() => {
-
-		socket.on('login', () => {
+		console.log('here');
+		socket.on('login', (user) => {
 			setLogged(true);
 			setPending(false);
+			setMyself(user);
 		});
 
 		socket.on('joinRoom', room => {
 			console.log(room);
 		});
 
-		socket.on('roomsList', rooms => {
-			console.log(rooms);
+		socket.on('roomsList', roomsList => {
+			console.log(roomsList);
+			setRooms(roomsList);
 		});
 
-		socket.on('usersList', users => {
-			console.log(users);
+		socket.on('usersList', usersList => {
+			console.log('here');
+			setUsers(usersList);
 		});
 
 		socket.on('welcome', message => {
@@ -63,13 +69,18 @@ const App = () => {
 		return () => socket.disconnect();
 	}, []);
 
+
 	return (
 		<Fragment>
 			<ErrorModal error={error} handleOpen={setError} />
 			{logged ?
 				(
 					<Fragment>
-						<Sidebar />
+						<Sidebar
+							myself={myself}
+							rooms={rooms}
+							users={users}
+						/>
 						<ChatBoard
 							messages={messages}
 						/>

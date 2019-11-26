@@ -77,7 +77,7 @@ const EmojiPickerComp = ({ setMessage, setEmojiInfo }) => {
 		setTimeout(() => {
 			textarea.focus();
 			textarea.setSelectionRange(textarea.value.length, textarea.value.length);
-		}, 200);
+		}, 100);
 	};
 
 	const open = Boolean(anchorEl);
