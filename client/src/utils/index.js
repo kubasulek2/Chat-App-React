@@ -19,19 +19,16 @@ export const formatTime = timestamp => moment(timestamp).format('h:mm a');
  * @var emojiRegex - used for splitting the string with "1944__{{__emoji__}}__1944" delimiter.
  */
 
-const emojiRegex = /1944__\{\{__emoji__\}\}__1944/;
+const emojiRegex = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/;
 
 export const formatText = (text, emojiInfo) => {
+	
+	text = text.replace(/ /g, '\xa0');
 
 	if (!emojiInfo) return text;
-
-	emojiInfo.forEach(emoji => {
-		text = text.replace(emoji.native, '1944__{{__emoji__}}__1944');
-	});
-
-	const formatedText = text.split(emojiRegex);
+	
+	const formatedText = text.split(emojiRegex).filter(el => !emojiRegex.test(el) && el !== '');
 	let counter = 1;
-	console.log(formatedText);
 
 	emojiInfo.forEach((emoji, index) => {
 		formatedText.splice(index + counter, 0, <Emoji key={emoji.id + index} emoji={emoji.id} size={22} />);

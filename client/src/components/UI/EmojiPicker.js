@@ -51,9 +51,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 				background: palette.background.light,
 			}
 		},
-		'.emoji-mart-preview': {
-			display: 'none',
-		},
+		
 		'.emoji-mart-skin-swatches': {
 			borderColor: 'rgba(66,66,66,.6)',
 			background: palette.background.light,
@@ -123,7 +121,7 @@ const EmojiPickerComp = ({ setMessage, setEmojiInfo }) => {
 					left: 0
 				}}
 			>
-				<NimblePicker onSelect={addEmoji} set='messenger' title='Pick your emoji…' data={data} />
+				<NimblePicker onSelect={addEmoji} set='messenger' title='Pick your emoji…' data={data} showSkinTones={false} skin={2}/>
 			</Popover>
 		</Fragment>
 	);
