@@ -9,9 +9,6 @@ import Login from '../../components/UI/login/Login';
 import ErrorModal from '../../components/UI/ErrorModal';
 import { socket } from '../../server/socket';
 
-// const privatePattern = /^__private__/;
-// if (privatePattern.test(room)) return { error: 'This name is restricted.' };
-
 const App = () => {
 
 	const [logged, setLogged] = useState(false);

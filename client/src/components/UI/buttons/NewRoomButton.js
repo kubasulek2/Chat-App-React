@@ -7,12 +7,14 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 const useStyles = makeStyles(({ spacing }) => ({
 	button: {
-		margin: spacing(1.5),
+		marginBottom: spacing(1.5),
+		paddingLeft: 24,
+		paddingRight: 24,
 	},
 
 }));
 
-const NewRoomButton = () => {
+const NewRoomButton = ({clicked}) => {
 	const classes = useStyles();
 	return (
 		<Button
@@ -24,6 +26,7 @@ const NewRoomButton = () => {
 				/>
 			}
 			size='large'
+			onClick={clicked}
 		>
 			Add room
 		</Button>

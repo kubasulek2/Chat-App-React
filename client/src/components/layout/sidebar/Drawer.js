@@ -6,7 +6,7 @@ import Divider from '@material-ui/core/Divider';
 
 import RoomsList from '../../chat/lists/RoomsList';
 import UsersList from '../../chat/lists/UsersList';
-import NewRoomButton from '../../UI/buttons/NewRoomButton';
+import NewRoom from '../../chat/NewRoom';
 
 const useStyles = makeStyles(({ mixins, palette, breakpoints }) => ({
 	toolbar: {
@@ -54,7 +54,7 @@ const DrawerComponent = ({mobile, handleMobile, users, rooms, myself}) => {
 			<Divider />
 			<UsersList users={users} myself={myself} />
 			<div className={classes.footer}>
-				<NewRoomButton />
+				<NewRoom />
 			</div>
 		</div>
 	);
