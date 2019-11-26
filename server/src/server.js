@@ -3,7 +3,7 @@ const express = require('express');
 const socketIo = require('socket.io');
 const Filter = require('bad-words');
 const { generateMessage } = require('./utils/messages');
-const { addUser, getUser, removeUser, getUsersByRoom } = require('./utils/users');
+const { addUser, getUser, removeUser, getUsersByRoom, updateUserRoom } = require('./utils/users');
 const { addUserToRoom, fetchPublicRooms, removeUserFromRoom } = require('./utils/rooms');
 
 
@@ -20,31 +20,39 @@ io.on('connection', (client) => {
 	client.on('login', ({ userName, room }, cb) => {
 
 		const { userError, user } = addUser({ id: client.id, userName, room });
-		
+
 		if (userError) {
 			return cb(userError);
 		}
-		console.log(user);
+
 		const { roomError, roomName } = addUserToRoom(room, user.id);
-		
+
 		if (roomError) {
 			return cb(roomError);
 		}
+		const options = {
+			message: ', welcome!',
+			user: user.userName,
+			special: true
+		};
 
 		client.join(roomName);
-		client.emit('login');
+		client.emit('login', user);
 		client.emit('joinRoom', roomName);
 		client.emit('roomsList', fetchPublicRooms());
-		client.emit('usersList', getUsersByRoom(roomName));
-		client.emit('welcome', generateMessage(', welcome!', user.userName, true));
-		client.broadcast.to(room).emit('welcome', generateMessage('has joined!', user.userName, true));
+		io.to(roomName).emit('usersList', getUsersByRoom(roomName));
+		client.emit('welcome', generateMessage(options));
+
+		options.message = 'has joined!';
+
+		client.broadcast.to(room).emit('welcome', generateMessage(options));
 
 		cb();
 	});
 
 
 
-	client.on('sendMessage', (message, cb) => {
+	client.on('sendMessage', ({ message, emojiInfo, color }, cb) => {
 		const filter = new Filter();
 
 		if (filter.isProfane(message)) {
@@ -54,7 +62,16 @@ io.on('connection', (client) => {
 		if (!user) {
 			return cb('User not found');
 		}
-		io.to(user.room).emit('message', generateMessage(message, user.userName));
+
+
+		const options = {
+			message,
+			emojiInfo,
+			color,
+			user: user.userName
+		};
+
+		io.to(user.room).emit('message', generateMessage(options));
 		cb();
 	});
 
@@ -68,13 +85,57 @@ io.on('connection', (client) => {
 		cb();
 	});
 
+	client.on('createRoom', (roomName, cb) => {
+		const user = getUser(client.id);
+
+		if (!user) {
+			return cb('User not found');
+		}
+		
+		client.leave(user.room);
+		client.join(roomName);
+		removeUserFromRoom(user.id, user.room);
+
+		const options = {
+			message: ', welcome!',
+			user: user.userName,
+			special: true
+		};
+		
+		const updatedUser = updateUserRoom(client.id, roomName);
+		
+		addUserToRoom(updatedUser.id, updatedUser.room);
+
+		client.emit('login', updatedUser);
+		client.emit('joinRoom', roomName);
+		io.emit('roomsList', fetchPublicRooms());
+		io.to(roomName).emit('usersList', getUsersByRoom(roomName));
+		client.emit('welcome', generateMessage(options));
+
+
+		options.message = 'has joined!';
+
+		client.broadcast.to(roomName).emit('welcome', generateMessage(options));
+
+		cb();
+
+
+	});
+
 	client.on('disconnect', () => {
 
 		const user = removeUser(client.id);
-
+		
 		if (user) {
-			console.log('client disconnected');
-			io.to(user.room).emit('message', generateMessage('has left.', user.userName, true));
+			removeUserFromRoom(user.id, user.room);
+			const options = {
+				message: 'has left.',
+				special: true,
+				user: user.userName
+			};
+			io.to(user.room).emit('message', generateMessage(options));
+			io.to(user.room).emit('usersList', getUsersByRoom(user.room));
+			io.emit('roomsList', fetchPublicRooms());
 		}
 
 	});

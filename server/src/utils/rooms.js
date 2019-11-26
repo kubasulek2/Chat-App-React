@@ -8,9 +8,7 @@ const addUserToRoom = (room, id) => {
 	room = room.toLowerCase();
 
 	if (!rooms[room]) rooms[room] = [];
-
 	if (rooms[room].includes(id)) return { error: 'User already in room.' };
-
 	if (privatePattern.test(room) && rooms[room].length === 2) return { error: 'No more than two persons in private rooms.' };
 
 	rooms[room].push(id);
@@ -19,6 +17,7 @@ const addUserToRoom = (room, id) => {
 };
 
 const removeUserFromRoom = (room, id) => {
+
 	if (!rooms[room]) return { error: 'Room not found' };
 	if (!rooms[room].includes(id)) return { error: 'User not found in room.' };
 

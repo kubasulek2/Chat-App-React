@@ -1,7 +1,7 @@
 const users = [];
 
 const addUser = ({ id, userName, room }) => {
-	const validate = /^[^\t\s]{5,}$/;
+	const validate = /^(?=.*[a-z])[^\t\s]{5,}$/;
 	room = room.toLowerCase();
 
 	if (!userName || !validate.test(userName)) return { userError: 'Invalid Username.' };
@@ -15,7 +15,12 @@ const addUser = ({ id, userName, room }) => {
 
 	return { user };
 
-};	
+};
+const updateUserRoom = (id, room) =>	{
+	const index = users.findIndex(user => user.id === id);
+	users[index].room = room;
+	return users[index];
+};
 
 
 const removeUser = id => {
@@ -27,12 +32,13 @@ const removeUser = id => {
 
 const getUser = id => users.find(user => user.id === id);
 
-const getUsersByRoom = room => users.filter(user => user.room === room);
+const getUsersByRoom = (room) => users.filter(user => user.room === room);
 
 
 module.exports = {
 	addUser,
 	getUser,
+	updateUserRoom,
 	removeUser,
 	getUsersByRoom
 };
