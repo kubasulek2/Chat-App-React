@@ -12,21 +12,36 @@ export const getLocation = () => {
 
 export const formatTime = timestamp => moment(timestamp).format('h:mm a');
 
+
+
+/**
+ * @type {regex}
+ * @var emojiRegex - used for splitting the string with "1944__{{__emoji__}}__1944" delimiter.
+ */
+
+const emojiRegex = /1944__\{\{__emoji__\}\}__1944/;
+
 export const formatText = (text, emojiInfo) => {
-	
+
 	if (!emojiInfo) return text;
-	
-	const formattedText = text.split('');
-	console.log(formattedText);
-	
+
 	emojiInfo.forEach(emoji => {
-		formattedText[emoji.index] = <Emoji key={emoji.id + emoji.index} emoji={emoji.id} size={16} />;
-		formattedText.splice(emoji.index + 1, 1);
+		text = text.replace(emoji.native, '1944__{{__emoji__}}__1944');
 	});
 
-	console.log(formattedText);
+	const formatedText = text.split(emojiRegex);
+	let counter = 1;
+	console.log(formatedText);
 
-	return formattedText;
+	emojiInfo.forEach((emoji, index) => {
+		formatedText.splice(index + counter, 0, <Emoji key={emoji.id + index} emoji={emoji.id} size={22} />);
+		counter++;
+	});
+
+
+	// 
+
+	return formatedText;
 };
 
 

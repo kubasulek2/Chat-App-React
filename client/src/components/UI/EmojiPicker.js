@@ -41,17 +41,17 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 			borderColor: 'rgba(66,66,66,.6)',
 			background: palette.background.light,
 		},
-		'.emoji-mart-bar':{
+		'.emoji-mart-bar': {
 			borderColor: 'rgba(66,66,66,.4)',
 			background: palette.background.light,
 		},
-		'.emoji-mart-search':{
+		'.emoji-mart-search': {
 			'& #emoji-mart-search-1': {
 				borderColor: 'rgba(66,66,66,.4)',
 				background: palette.background.light,
 			}
 		},
-		'.emoji-mart-preview':{
+		'.emoji-mart-preview': {
 			display: 'none',
 		},
 		'.emoji-mart-skin-swatches': {
@@ -72,7 +72,14 @@ const EmojiPickerComp = ({ setMessage, setEmojiInfo }) => {
 	};
 
 	const handleClose = () => {
+		const textarea = document.getElementById('messagePanelInput');
+		
 		setAnchorEl(null);
+		
+		setTimeout(() => {
+			textarea.focus();
+			textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+		}, 200);
 	};
 
 	const open = Boolean(anchorEl);
@@ -80,10 +87,11 @@ const EmojiPickerComp = ({ setMessage, setEmojiInfo }) => {
 
 	const addEmoji = (emoji) => {
 		let inputVal = document.getElementById('messagePanelInput').value;
-		const emojiObj = {id: emoji.id, index: inputVal.length};
+		const emojiObj = { id: emoji.id, native: emoji.native };
 		inputVal += emoji.native;
+
 		setMessage(inputVal);
-		setEmojiInfo(arr => [...arr,emojiObj]);
+		setEmojiInfo(arr => [...arr, emojiObj]);
 	};
 
 	return (
@@ -115,10 +123,10 @@ const EmojiPickerComp = ({ setMessage, setEmojiInfo }) => {
 					left: 0
 				}}
 			>
-				<NimblePicker onSelect={addEmoji} set='messenger' title='Pick your emoji…' data={data}/>
+				<NimblePicker onSelect={addEmoji} set='messenger' title='Pick your emoji…' data={data} />
 			</Popover>
 		</Fragment>
 	);
-}
+};
 
 export default EmojiPickerComp;

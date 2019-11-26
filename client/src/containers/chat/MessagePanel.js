@@ -22,7 +22,7 @@ const MessagePanel = ({ pending, setError }) => {
 		evt.preventDefault();
 
 		if (!message.length) return;
-
+		
 		socket.emit('sendMessage', { message, emojiInfo, color }, error => {
 			if (error) return setError(error);
 		});
@@ -30,7 +30,7 @@ const MessagePanel = ({ pending, setError }) => {
 		setMessage('');
 		setEmojiInfo([]);
 
-	}, [message, setError]);
+	}, [message, setError, emojiInfo, color]);
 
 	const handleLocation = async () => {
 		try {
