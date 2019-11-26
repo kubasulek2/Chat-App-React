@@ -20,6 +20,10 @@ const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
 		}
 
 	},
+	me: {
+		fontWeight: 'bold',
+		color: palette.primary.main
+	},
 	listTitle: {
 		background: palette.background.light,
 		padding: spacing(2),
@@ -42,30 +46,36 @@ const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
 
 const UsersList = ({ users, myself }) => {
 	const classes = useStyles();
+	let usersList = null;
 	
-	const usersList = [myself, ...users].map((user, i) => {
-		if (myself){
-			const button = (i !== 0
-				? <IconButton edge="end" aria-label="private-conversation">
-					<CommentIcon color='primary' />
-				</IconButton>
-				: null);
+	if (myself && users.length) {
+		usersList = [...users];
+		const index = usersList.findIndex(el => el.id === myself.id);
+		const me = usersList.splice(index, 1);
+		usersList.unshift(...me);
 
-			return (
-				<ListItem
-					key={user.id + i}
-					className={classes.user}
-					button selected={i === 0}
-				>
-					<ListItemText secondary={user.userName} />
-					<ListItemSecondaryAction>
-						{button}
-					</ListItemSecondaryAction>
-				</ListItem>
-			);
-		}
-		
-	});
+		const button = (
+			<IconButton edge="end" aria-label="private-conversation">
+				<CommentIcon color='primary' />
+			</IconButton>
+		);
+
+
+		usersList = usersList.map((user, i) => (
+			<ListItem
+				key={user.id + i}
+				className={classes.user}
+				button
+			>
+				<ListItemText secondary={<span className={i === 0 ? classes.me : null} >{user.userName}</span>} />
+				<ListItemSecondaryAction>
+					{i === 0 ? null : button}
+				</ListItemSecondaryAction>
+			</ListItem>
+		));
+	}
+
+
 
 	return (
 		<div className={classes.root}>

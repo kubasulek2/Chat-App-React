@@ -31,7 +31,7 @@ const ChatBoard = ({ messages }) => {
 	const classes = useStyles();
 
 	const messageComponents = messages.map((message, i) => {
-		console.log(message);
+	
 		const formatedText = formatText(message.text, message.emojiInfo);
 
 		if (message.special) return (

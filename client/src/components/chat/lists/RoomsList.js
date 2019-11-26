@@ -42,21 +42,17 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 	}
 }));
 
-const RoomsList = ({ rooms }) => {
+const RoomsList = ({ rooms, myself }) => {
 
 	const classes = useStyles();
 
-	const roomList = rooms.map((room) => {
-		const active = room === 'private' ? true : false;
-
-		return (
-			<ListItem key={room} className={`${ classes.room }`} button selected={active}>
-				<ListItemText primary={room} classes={{
-					primary: active ? `${ classes.active } ${ classes.listItem }` : classes.listItem
-				}} />
-			</ListItem>
-		);
-	});
+	const roomsList = rooms.map((room) => (
+		<ListItem key={room} className={`${ classes.room }`} button >
+			<ListItemText primary={room} classes={{
+				primary: room === myself.room ? `${ classes.active } ${ classes.listItem }` : classes.listItem
+			}} />
+		</ListItem>
+	));
 
 	return (
 		<div className={classes.root}>
@@ -74,7 +70,7 @@ const RoomsList = ({ rooms }) => {
 			</div>
 			<Divider />
 			<List component="nav">
-				{roomList}
+				{roomsList}
 			</List>
 		</div>
 	);

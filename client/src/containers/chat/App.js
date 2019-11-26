@@ -23,7 +23,6 @@ const App = () => {
 	const [error, setError] = useState(false);
 
 	useEffect(() => {
-		console.log('here');
 		socket.on('login', (user) => {
 			setLogged(true);
 			setPending(false);
@@ -35,12 +34,10 @@ const App = () => {
 		});
 
 		socket.on('roomsList', roomsList => {
-			console.log(roomsList);
 			setRooms(roomsList);
 		});
 
 		socket.on('usersList', usersList => {
-			console.log('here');
 			setUsers(usersList);
 		});
 
