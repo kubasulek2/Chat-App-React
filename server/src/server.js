@@ -70,15 +70,17 @@ io.on('connection', (client) => {
 
 	client.on('switchRoom', (roomName, cb) => {
 		const user = getUser(client.id);
-		const { roomError, newRoom } = addUserToRoom(user.id, roomName);
-
+		
 		if (!user) return cb('User not found');
-		if (roomError) return cb(roomError);
-
+		
+		const { roomError, room: newRoom } = addUserToRoom(user.id, roomName);
 		const { room: oldRoom } = user;
+		
+		if (roomError) return cb(roomError);
 
 		client.leave(oldRoom);
 		client.join(newRoom);
+
 		removeUserFromRoom(user.id, oldRoom);
 		updateUserRoomField(client.id, newRoom);
 
@@ -103,7 +105,7 @@ io.on('connection', (client) => {
 
 			io.to(user.room).emit('usersList', getUsersByRoom(user.room));
 			io.emit('roomsList', fetchPublicRooms());
-			
+
 			handleLeaveMessage(client, user.userName, user.room);
 		}
 	});
