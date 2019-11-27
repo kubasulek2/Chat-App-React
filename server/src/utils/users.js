@@ -1,6 +1,6 @@
 const users = [];
 
-const addUser = ({ id, userName, room }) => {
+const addUser = (id, userName, room) => {
 	const validate = /^(?=.*[a-z])[^\t\s]{5,}$/;
 	room = room.toLowerCase();
 
@@ -16,7 +16,7 @@ const addUser = ({ id, userName, room }) => {
 	return { user };
 
 };
-const updateUserRoomField = (id, room) =>	{
+const updateUserRoomField = (id, room) => {
 	const index = users.findIndex(user => user.id === id);
 	users[index].room = room;
 	return users[index];
