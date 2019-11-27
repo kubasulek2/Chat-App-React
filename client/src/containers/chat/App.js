@@ -20,14 +20,11 @@ const App = () => {
 	const [error, setError] = useState(false);
 
 	useEffect(() => {
-		socket.on('login', (user) => {
+		socket.on('joinRoom', (user) => {
+			setMessages([]);
 			setLogged(true);
 			setPending(false);
 			setMyself(user);
-		});
-
-		socket.on('joinRoom', room => {
-			console.log(room);
 		});
 
 		socket.on('roomsList', roomsList => {
@@ -74,6 +71,7 @@ const App = () => {
 							myself={myself}
 							rooms={rooms}
 							users={users}
+							setError={setError}
 						/>
 						<ChatBoard
 							messages={messages}

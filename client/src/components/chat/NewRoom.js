@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import Zoom from '@material-ui/core/Zoom';
 
 import NewRoomButton from '../UI/buttons/NewRoomButton';
+import { socket } from '../../server/socket';
 
 
 const useStyles = makeStyles(({ spacing, palette }) => ({
@@ -26,7 +27,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 			borderColor: 'rgba(66, 66, 66, .4) !important',
 		}
 	},
-	input:{
+	input: {
 		padding: '11.5px 5px',
 	},
 	cssFocused: {},
@@ -51,28 +52,41 @@ const NewRoom = () => {
 	const [displayInput, setDisplayInput] = useState(false);
 	const textInput = useRef();
 
-	const handleInputChange =  (evt) => {
+	const handleInputChange = (evt) => {
 		evt = evt || window.event;
 		setRoomName(evt.target.value);
 	};
 
 	const handleSubmit = (evt) => {
 		evt.preventDefault();
-		
+
 		const privatePattern = /^__private__/;
+
+		if (privatePattern.test(roomName)) {
+			return setError('This name is reserved.');
 		
-		if (privatePattern.test(roomName)) return setError('This name is reserved.');
-		else if (roomName.length < 3) return setError('At least 3 characters.');
-		setError(false);
-		setDisplayInput(false);
-		setRoomName('');
+		} else if (roomName.length < 3) {
+			return setError('At least 3 characters.');
+		}	
+
+		socket.emit('switchRoom', { roomName, createNew: true }, (error) => {
+
+			if (error) {
+				return setError(error);
+			}	
+
+			setError(false);
+			setDisplayInput(false);
+			setRoomName('');
+		});
+
 	};
 
 	const handleClick = (evt) => {
 		evt = evt || window.event;
 
-		if(!displayInput){
-			
+		if (!displayInput) {
+
 			setDisplayInput(true);
 			setTimeout(() => {
 				textInput.current.focus();
@@ -103,10 +117,10 @@ const NewRoom = () => {
 					}}
 				/>
 			</Zoom>
-			<NewRoomButton clicked={handleClick}/>	
+			<NewRoomButton clicked={handleClick} />
 		</form>
 	);
-}
+};
 
 export default NewRoom;
 

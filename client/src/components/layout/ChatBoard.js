@@ -12,8 +12,8 @@ const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
 		marginLeft: 300,
 		width: 'calc(100% - 300px)',
 		flex: '1 1 auto',
-		[ breakpoints.down('md') ]: {
-			marginLeft: 0, 
+		[breakpoints.down('md')]: {
+			marginLeft: 0,
 			width: '100%',
 		},
 		padding: spacing(2),
@@ -31,19 +31,21 @@ const ChatBoard = ({ messages }) => {
 	const classes = useStyles();
 
 	const messageComponents = messages.map((message, i) => {
-	
+
 		const formatedText = formatText(message.text, message.emojiInfo);
 
-		if (message.special) return (
-			<Typography key={i}>
-				<span>{formatTime(message.timestamp)}
-				</span> - <b>{message.user} </b><span style={{color: message.color}}>{formatedText}</span>
-			</Typography>);
-
-		else return (
-			<Typography key={i}>
-				<span>{formatTime(message.timestamp)}</span> - <b>{message.user}</b>: <span style={{color: message.color}}>{formatedText}</span>
-			</Typography>);
+		if (message.special) {
+			return (
+				<Typography key={i}>
+					<span>{formatTime(message.timestamp)}
+					</span> - <b>{message.user} </b><span style={{ color: message.color }}>{formatedText}</span>
+				</Typography>);
+		} else {
+			return (
+				<Typography key={i}>
+					<span>{formatTime(message.timestamp)}</span> - <b>{message.user}</b>: <span style={{ color: message.color }}>{formatedText}</span>
+				</Typography>);
+		}
 	});
 
 	return (

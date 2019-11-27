@@ -21,10 +21,14 @@ const MessagePanel = ({ pending, setError }) => {
 		evt = evt || window.event;
 		evt.preventDefault();
 
-		if (!message.length) return;
+		if (!message.length) {
+			return;
+		}
 		
 		socket.emit('sendMessage', { message, emojiInfo, color }, error => {
-			if (error) return setError(error);
+			if (error) {
+				return setError(error);
+			}	
 		});
 		
 		setMessage('');

@@ -7,6 +7,8 @@ import Divider from '@material-ui/core/Divider';
 import ChatIcon from '@material-ui/icons/Apps';
 import ListItemText from '@material-ui/core/ListItemText';
 
+import { socket } from '../../../server/socket';
+
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
 	root: {
@@ -42,12 +44,26 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 	}
 }));
 
-const RoomsList = ({ rooms, myself }) => {
-
+const RoomsList = ({ rooms, myself, setError }) => {
 	const classes = useStyles();
 
+	const handleRoomClick = (room) => {
+
+		socket.emit('switchRoom', { roomName: room, createNew: false }, (error) => {
+
+			if (error) {
+				return setError(error);
+			}
+		});
+	};
+
 	const roomsList = rooms.map((room) => (
-		<ListItem key={room} className={`${ classes.room }`} button >
+		<ListItem
+			key={room}
+			className={`${ classes.room }`}
+			button
+			onClick={room === myself.room ? () => { } : () => handleRoomClick(room)}
+		>
 			<ListItemText primary={room} classes={{
 				primary: room === myself.room ? `${ classes.active } ${ classes.listItem }` : classes.listItem
 			}} />

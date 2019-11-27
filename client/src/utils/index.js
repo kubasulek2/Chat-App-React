@@ -4,7 +4,11 @@ import { Emoji } from 'emoji-mart';
 
 
 export const getLocation = () => {
-	if (!navigator.geolocation) return { error: 'Geolocation not supported' };
+	
+	if (!navigator.geolocation) {
+		return { error: 'Geolocation not supported' };
+	}
+
 	return new Promise((resolve, reject) => {
 		navigator.geolocation.getCurrentPosition(resolve, reject);
 	});
@@ -25,7 +29,9 @@ export const formatText = (text, emojiInfo) => {
 	
 	text = text.replace(/ /g, '\xa0');
 
-	if (!emojiInfo) return text;
+	if (!emojiInfo) {
+		return text;
+	}
 	
 	const formatedText = text.split(emojiRegex).filter(el => !emojiRegex.test(el) && el !== '');
 	let counter = 1;

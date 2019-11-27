@@ -58,14 +58,16 @@ const LoginForm = ({ pending, setPending }) => {
 
 		evt.preventDefault();
 
-		if (!validate.test(userName)) return;
+		if (!validate.test(userName)) {
+			return;
+		}
 
 		setPending(true);
 		setDisabled(true);
 		setLoginError('');
 		setUserName('');
 
-		socket.emit('login', { userName: userName, room: 'public' }, (error) => {
+		socket.emit('login', { userName: userName, roomName: 'public' }, (error) => {
 			if (error) {
 				setLoginError(error);
 				return setPending(false);

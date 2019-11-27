@@ -43,16 +43,16 @@ const useStyles = makeStyles(({ mixins, palette, breakpoints }) => ({
 	}
 }));
 
-const DrawerComponent = ({mobile, handleMobile, users, rooms, myself}) => {
+const DrawerComponent = ({ mobile, handleMobile, users, rooms, myself, setError }) => {
 
 	const classes = useStyles();
 
 	const drawer = (
 		<div>
 			<div className={classes.toolbar} />
-			<RoomsList rooms={rooms} myself={myself} />
+			<RoomsList rooms={rooms} myself={myself} setError={setError}/>
 			<Divider />
-			<UsersList users={users} myself={myself} />
+			<UsersList users={users} myself={myself} setError={setError}/>
 			<div className={classes.footer}>
 				<NewRoom />
 			</div>

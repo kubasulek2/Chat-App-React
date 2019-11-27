@@ -44,7 +44,7 @@ const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
 	}
 }));
 
-const UsersList = ({ users, myself }) => {
+const UsersList = ({ users, myself, setError }) => {
 	const classes = useStyles();
 	let usersList = null;
 	
