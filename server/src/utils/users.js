@@ -4,11 +4,15 @@ const addUser = (id, userName, room) => {
 	const validate = /^(?=.*[a-z])[^\t\s]{5,}$/;
 	room = room.toLowerCase();
 
-	if (!userName || !validate.test(userName)) return { userError: 'Invalid Username.' };
+	if (!userName || !validate.test(userName)) {
+		return { userError: 'Invalid Username.' };
+	}	
 
 	const existingUser = users.find(user => user.userName.toLowerCase() === userName.toLowerCase());
 
-	if (existingUser) return { userError: 'User already exists.' };
+	if (existingUser) {
+		return { userError: 'User already exists.' };
+	}
 
 	const user = { id, userName, room };
 	users.push(user);
@@ -28,7 +32,9 @@ const updateUserRoomField = (id, room) => {
 const removeUser = id => {
 	const index = users.findIndex(user => user.id === id);
 
-	if (index !== -1) return users.splice(index, 1)[0];
+	if (index !== -1) {
+		return users.splice(index, 1)[0];
+	}	
 };
 
 const getUser = id => users.find(user => user.id === id);

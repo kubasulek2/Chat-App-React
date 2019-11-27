@@ -25,10 +25,16 @@ io.on('connection', (client) => {
 		 */
 
 		const { userError, user } = addUser(client.id, userName, roomName);
+
+		if (userError) {
+			return cb(userError);
+		}
+
 		const { roomError, room } = addUserToRoom(user.id, roomName);
 
-		if (userError) return cb(userError);
-		if (roomError) return cb(roomError);
+		if (roomError) {
+			return cb(roomError);
+		}
 
 
 
@@ -46,8 +52,13 @@ io.on('connection', (client) => {
 		const user = getUser(client.id);
 		const filter = new Filter();
 
-		if (!user) return cb('User not found');
-		if (filter.isProfane(message)) return cb('Naughty, naughty!');
+		if (!user) {
+			return cb('User not found');
+		}
+		
+		if (filter.isProfane(message)) {
+			return cb('Naughty, naughty!');
+		}
 
 		const options = { message, emojiInfo, color, user: user.userName };
 
@@ -60,7 +71,9 @@ io.on('connection', (client) => {
 	client.on('sendLocation', ({ latitude, longitude }, cb) => {
 		const user = getUser(client.id);
 
-		if (!user) return cb('User not found');
+		if (!user) {
+			return cb('User not found');
+		}
 
 		io.to(user.room).emit('locationMessage', generateMessage(`https://google.com/maps?q=${ latitude },${ longitude }`, user.userName));
 
@@ -68,15 +81,29 @@ io.on('connection', (client) => {
 	});
 
 
-	client.on('switchRoom', (roomName, cb) => {
+	client.on('switchRoom', ({roomName, createNew}, cb) => {
+		
+		if (createNew){
+			const existingRooms = fetchPublicRooms();
+			
+			if (existingRooms.includes(roomName.toLowerCase())) {
+				return cb('Room already exists.');
+			}
+		}
+
 		const user = getUser(client.id);
-		
-		if (!user) return cb('User not found');
-		
+
+		if (!user) {
+			return cb('User not found');
+		}
+
 		const { roomError, room: newRoom } = addUserToRoom(user.id, roomName);
 		const { room: oldRoom } = user;
-		
-		if (roomError) return cb(roomError);
+
+		if (roomError) {
+			return cb(roomError);
+		}
+
 
 		client.leave(oldRoom);
 		client.join(newRoom);
