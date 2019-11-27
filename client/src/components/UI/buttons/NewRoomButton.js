@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import CancelIcon from '@material-ui/icons/Cancel';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 
@@ -14,21 +15,23 @@ const useStyles = makeStyles(({ spacing }) => ({
 
 }));
 
-const NewRoomButton = ({clicked}) => {
+const NewRoomButton = ({clicked, text, dismiss}) => {
 	const classes = useStyles();
+	const icon =(
+		dismiss
+			? <CancelIcon color='secondary'/>
+			: <AddCircleIcon color='secondary'/>
+	);
+	
 	return (
 		<Button
 			variant="outlined"
 			className={classes.button}
-			endIcon={
-				<AddCircleIcon
-					color='secondary'
-				/>
-			}
+			endIcon={icon}
 			size='large'
 			onClick={clicked}
 		>
-			Add room
+			{text}
 		</Button>
 	);
 };

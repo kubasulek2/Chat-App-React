@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -12,6 +12,7 @@ const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
 		marginLeft: 300,
 		width: 'calc(100% - 300px)',
 		flex: '1 1 auto',
+		overflowY: 'scroll',
 		[breakpoints.down('md')]: {
 			marginLeft: 0,
 			width: '100%',
@@ -29,7 +30,18 @@ const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
 
 const ChatBoard = ({ messages }) => {
 	const classes = useStyles();
-
+	const boardRef = useRef();
+	useEffect(() => {
+		if (boardRef.current.lastElementChild) {
+			const elHeight = boardRef.current.clientHeight;
+			const elScrollTop = boardRef.current.scrollTop;
+			const lastChildOffset = boardRef.current.lastChild.offsetTop;
+			
+			if ((lastChildOffset >= elHeight - 10) && (elHeight + elScrollTop > lastChildOffset - 30)) {
+				boardRef.current.lastChild.scrollIntoView();
+			}
+		}
+	}, [messages]);
 	const messageComponents = messages.map((message, i) => {
 
 		const formatedText = formatText(message.text, message.emojiInfo);
@@ -49,7 +61,7 @@ const ChatBoard = ({ messages }) => {
 	});
 
 	return (
-		<Grid container className={classes.root}>
+		<Grid container className={classes.root} ref={boardRef}>
 			{messageComponents}
 		</Grid>
 	);

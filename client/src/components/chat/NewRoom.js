@@ -10,7 +10,7 @@ import { socket } from '../../server/socket';
 const useStyles = makeStyles(({ spacing, palette }) => ({
 	form: {
 		width: '100%',
-		minHeight: 154.4,
+		minHeight: 138.4,
 		display: 'flex',
 		flexDirection: 'column',
 		alignItems: 'center',
@@ -19,6 +19,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 	error: {
 		color: palette.error.main,
 		height: 20,
+		margin: 8
 	},
 	cssOutlinedInput: {
 		marginBottom: 0,
@@ -50,7 +51,7 @@ const NewRoom = () => {
 	const [roomName, setRoomName] = useState('');
 	const [error, setError] = useState(null);
 	const [displayInput, setDisplayInput] = useState(false);
-	const textInput = useRef();
+	const inputRef = useRef();
 
 	const handleInputChange = (evt) => {
 		evt = evt || window.event;
@@ -64,16 +65,16 @@ const NewRoom = () => {
 
 		if (privatePattern.test(roomName)) {
 			return setError('This name is reserved.');
-		
+
 		} else if (roomName.length < 3) {
 			return setError('At least 3 characters.');
-		}	
+		}
 
 		socket.emit('switchRoom', { roomName, createNew: true }, (error) => {
 
 			if (error) {
 				return setError(error);
-			}	
+			}
 
 			setError(false);
 			setDisplayInput(false);
@@ -89,12 +90,21 @@ const NewRoom = () => {
 
 			setDisplayInput(true);
 			setTimeout(() => {
-				textInput.current.focus();
+				inputRef.current.focus();
 			}, 400);
 		} else {
 			handleSubmit(evt);
 		}
 	};
+
+	const handleDismiss = () => {
+		
+		setError(false);
+		setDisplayInput(false);
+		setRoomName('');
+	};
+
+	const dismiss = displayInput === true && roomName.length === 0;
 
 	return (
 		<form autoComplete='off' className={classes.form} onSubmit={handleSubmit}>
@@ -106,7 +116,7 @@ const NewRoom = () => {
 					placeholder='Room name'
 					variant='outlined'
 					value={roomName}
-					inputRef={textInput}
+					inputRef={inputRef}
 					InputProps={{
 						classes: {
 							root: classes.cssOutlinedInput,
@@ -117,7 +127,7 @@ const NewRoom = () => {
 					}}
 				/>
 			</Zoom>
-			<NewRoomButton clicked={handleClick} />
+			<NewRoomButton clicked={dismiss? handleDismiss : handleClick} dismiss={dismiss} text={dismiss ? 'cancel' : 'add room'} />
 		</form>
 	);
 };
