@@ -3,7 +3,7 @@ const express = require('express');
 const socketIo = require('socket.io');
 const Filter = require('bad-words');
 const { generateMessage } = require('./utils/messages');
-const { addUser, getUser, removeUser, getUsersByRoom, updateUserRoom } = require('./utils/users');
+const { addUser, getUser, removeUser, getUsersByRoom, updateUserRoomField } = require('./utils/users');
 const { addUserToRoom, fetchPublicRooms, removeUserFromRoom } = require('./utils/rooms');
 
 
@@ -47,10 +47,10 @@ io.on('connection', (client) => {
 
 		client.broadcast.to(room).emit('welcome', generateMessage(options));
 
-		cb();
-	});
-
-
+Room
+Room
+Room
+Room
 
 	client.on('sendMessage', ({ message, emojiInfo, color }, cb) => {
 		const filter = new Filter();
@@ -96,13 +96,14 @@ io.on('connection', (client) => {
 		client.join(roomName);
 		removeUserFromRoom(user.id, user.room);
 
+		const updatedUser = updateUserRoomField(client.id, roomName);
+		
 		const options = {
 			message: ', welcome!',
 			user: user.userName,
 			special: true
 		};
 		
-		const updatedUser = updateUserRoom(client.id, roomName);
 		
 		addUserToRoom(updatedUser.id, updatedUser.room);
 

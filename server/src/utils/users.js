@@ -16,7 +16,7 @@ const addUser = ({ id, userName, room }) => {
 	return { user };
 
 };
-const updateUserRoom = (id, room) =>	{
+const updateUserRoomField = (id, room) =>	{
 	const index = users.findIndex(user => user.id === id);
 	users[index].room = room;
 	return users[index];
@@ -38,7 +38,7 @@ const getUsersByRoom = (room) => users.filter(user => user.room === room);
 module.exports = {
 	addUser,
 	getUser,
-	updateUserRoom,
+	updateUserRoomField,
 	removeUser,
 	getUsersByRoom
 };
