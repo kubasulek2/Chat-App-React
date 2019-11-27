@@ -6,7 +6,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
 import { socket } from '../../server/socket';
-import Tooltip from '../../components/UI/Tooltip';
+import Tooltip from '../../components/UI/feedback/Tooltip';
 import { Typography } from '@material-ui/core';
 import Loader from '../../components/UI/Loader';
 

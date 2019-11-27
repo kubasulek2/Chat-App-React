@@ -6,7 +6,8 @@ import Sidebar from '../../components/layout/sidebar/Sidebar';
 import ChatBoard from '../../components/layout/ChatBoard';
 import Footer from '../../components/layout/Footer';
 import Login from '../../components/UI/login/Login';
-import ErrorModal from '../../components/UI/ErrorModal';
+import ErrorModal from '../../components/UI/feedback/ErrorModal';
+import InfoToast from '../../components/UI/feedback/InfoToast';
 import { socket } from '../../server/socket';
 
 const App = () => {
@@ -18,6 +19,8 @@ const App = () => {
 	const [users, setUsers] = useState([]);
 	const [myself, setMyself] = useState(null);
 	const [error, setError] = useState(false);
+	const [toast, setToast] = useState({ open: false, message: null });
+
 
 	useEffect(() => {
 		socket.on('joinRoom', (user) => {
@@ -25,6 +28,13 @@ const App = () => {
 			setLogged(true);
 			setPending(false);
 			setMyself(user);
+			
+			setTimeout(() => {
+				setToast({ 
+					open: true, 
+					message: <span>You have joined <span style={{ color: '#417cab', textTransform: 'uppercase', fontWeight: 'bold' }}>{user.room}</span> room.</span> 
+				});	
+			}, 400);
 		});
 
 		socket.on('roomsList', roomsList => {
@@ -82,6 +92,7 @@ const App = () => {
 							setPending={setPending}
 							setError={setError}
 						/>
+						<InfoToast toast={toast} setToast={setToast} />
 					</Fragment>
 				) :
 				<Login
