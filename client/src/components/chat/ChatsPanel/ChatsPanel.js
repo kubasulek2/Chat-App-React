@@ -4,28 +4,29 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Collapse from '@material-ui/core/Collapse';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MessageIcon from '@material-ui/icons/Message';
+import Badge from '@material-ui/core/Badge';
 
 
-const useStyles = makeStyles(({ transitions }) => ({
+const useStyles = makeStyles(({ shadows, palette }) => ({
 	card: {
-		maxWidth: 345,
-		minWidth: 345,
+		width: 200,
 		position: 'absolute',
-		bottom: 0,
-		right: 10
+		bottom: 2,
+		right: 5,
+		overflow: 'visible',
 	},
 	expand: {
-		transform: 'rotate(180deg)',
-		marginLeft: 'auto',
-		transition: transitions.create('transform', {
-			duration: transitions.duration.shortest
-		})
+		cursor: 'pointer',
+		display: 'flex',
+		justifyContent: 'space-between',
 	},
-	expandOpen: {
-		transform: 'rotate(0deg)'
+	chatBadge: {
+		color: 'white !important'
+	},
+	badgeIcon: {
+		color: palette.text.primary
 	}
 }));
 
@@ -47,17 +48,20 @@ const ChatList = ({ privateChats }) => {
 						<Typography paragraph>
 							Heat 1/2 cup of the broth in a pot until simmering, add saffron and
 							set aside for 10 minutes.
-          			</Typography>
+						</Typography>
 					</CardContent>
 				</Collapse>
-				<CardActions disableSpacing>
-					<IconButton
-						className={expanded ? classes.expand : classes.expandOpen}
-						onClick={handleExpandClick}
-						aria-expanded={expanded}
-					>
-						<ExpandMoreIcon />
-					</IconButton>
+				<CardActions onClick={handleExpandClick} className={classes.expand}>
+					<Typography variant='body1' color='primary'>Chats</Typography>
+					<Badge
+						color='secondary'
+						badgeContent={1}
+						invisible={expanded}
+						classes={{
+							badge:classes.chatBadge
+						}}>
+						<MessageIcon className={classes.badgeIcon} />
+					</Badge>
 				</CardActions>
 			</Card>
 			: null

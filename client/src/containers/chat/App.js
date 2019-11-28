@@ -69,7 +69,8 @@ const App = () => {
 		});
 
 		socket.on('privateChat', ({ userName, id }) => {
-			setPrivateChats({ userName, id, messages: [], ignored: false });
+			console.log(userName, id);
+			setPrivateChats([{ userName, id, messages: [], ignored: false }]);
 		});
 
 

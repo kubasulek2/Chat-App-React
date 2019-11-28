@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-import ChatList from '../chat/lists/ChatList';
+import ChatList from '../chat/ChatsPanel/ChatsPanel';
 import { formatTime, formatText } from '../../utils';
 
 const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
