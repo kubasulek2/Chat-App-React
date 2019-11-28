@@ -46,16 +46,17 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 }));
 
 
-const NewRoom = () => {
+const NewRoom = ({ setError }) => {
 	const classes = useStyles();
 	const [roomName, setRoomName] = useState('');
-	const [error, setError] = useState(null);
+	const [localError, setLocalError] = useState(null);
 	const [displayInput, setDisplayInput] = useState(false);
 	const inputRef = useRef();
 
 	const handleInputChange = (evt) => {
 		evt = evt || window.event;
 		setRoomName(evt.target.value);
+		setLocalError(false);
 	};
 
 	const handleSubmit = (evt) => {
@@ -64,19 +65,22 @@ const NewRoom = () => {
 		const privatePattern = /^__private__/;
 
 		if (privatePattern.test(roomName)) {
-			return setError('This name is reserved.');
+			return setLocalError('This name is reserved.');
 
 		} else if (roomName.length < 3) {
-			return setError('At least 3 characters.');
+			return setLocalError('At least 3 characters.');
 		}
 
 		socket.emit('switchRoom', { roomName, createNew: true }, (error) => {
 
 			if (error) {
-				return setError(error);
+				if (error.message){
+					return setError(error.message);
+				}
+				return setLocalError(error);
 			}
 
-			setError(false);
+			setLocalError(false);
 			setDisplayInput(false);
 			setRoomName('');
 		});
@@ -98,8 +102,8 @@ const NewRoom = () => {
 	};
 
 	const handleDismiss = () => {
-		
-		setError(false);
+
+		setLocalError(false);
 		setDisplayInput(false);
 		setRoomName('');
 	};
@@ -108,7 +112,7 @@ const NewRoom = () => {
 
 	return (
 		<form autoComplete='off' className={classes.form} onSubmit={handleSubmit}>
-			<p className={classes.error}>{error}</p>
+			<p className={classes.error}>{localError}</p>
 			<Zoom in={displayInput} timeout={300}>
 				<TextField
 					onChange={handleInputChange}
@@ -127,7 +131,7 @@ const NewRoom = () => {
 					}}
 				/>
 			</Zoom>
-			<NewRoomButton clicked={dismiss? handleDismiss : handleClick} dismiss={dismiss} text={dismiss ? 'cancel' : 'add room'} />
+			<NewRoomButton clicked={dismiss ? handleDismiss : handleClick} dismiss={dismiss} text={dismiss ? 'cancel' : 'add room'} />
 		</form>
 	);
 };

@@ -48,7 +48,7 @@ const LoginForm = ({ pending, setPending }) => {
 	const [ disabled, setDisabled ] = useState(true);
 	const [disableMessage, setDisableMessage] = useState('User name must have at least 5 characters, at least one letter, and contain no spaces');
 	const [ loginError, setLoginError ] = useState('');
-	const [validate] = useState(/^(?=.*[a-z])[^\t\s]{5,}$/);
+	const [validate] = useState(/^(?=.*[a-zA-Z])[^\t\s]{5,}$/);
 	const loginInput = useRef();
 
 	useEffect(() => loginInput.current.focus(),[]);

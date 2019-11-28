@@ -10,6 +10,8 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import CommentIcon from '@material-ui/icons/Comment';
 
+import { socket } from '../../../server/socket';
+
 const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
 	root: {
 		flex: '1 1 auto',
@@ -47,19 +49,28 @@ const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
 const UsersList = ({ users, myself, setError }) => {
 	const classes = useStyles();
 	let usersList = null;
-	
+
+	const handlePrivateChat = (evt) => {
+		evt = evt || window.event;
+
+		const id = evt.currentTarget.dataset.id;
+
+		socket.emit('privateChat', id, (error) => {
+			setError(error.message);
+		});
+	};
+
+	const button = (id) => (
+		<IconButton edge="end" aria-label="private-conversation" onClick={handlePrivateChat} data-id={id}>
+			<CommentIcon color='primary' />
+		</IconButton>
+	);
+
 	if (myself && users.length) {
 		usersList = [...users];
 		const index = usersList.findIndex(el => el.id === myself.id);
 		const me = usersList.splice(index, 1);
 		usersList.unshift(...me);
-
-		const button = (
-			<IconButton edge="end" aria-label="private-conversation">
-				<CommentIcon color='primary' />
-			</IconButton>
-		);
-
 
 		usersList = usersList.map((user, i) => (
 			<ListItem
@@ -69,7 +80,7 @@ const UsersList = ({ users, myself, setError }) => {
 			>
 				<ListItemText secondary={<span className={i === 0 ? classes.me : null} >{user.userName}</span>} />
 				<ListItemSecondaryAction>
-					{i === 0 ? null : button}
+					{i === 0 ? null : button(user.id)}
 				</ListItemSecondaryAction>
 			</ListItem>
 		));

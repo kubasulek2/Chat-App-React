@@ -20,6 +20,8 @@ const App = () => {
 	const [myself, setMyself] = useState(null);
 	const [error, setError] = useState(false);
 	const [toast, setToast] = useState({ open: false, message: null });
+	const [privateChats, setPrivateChats] = useState([]);
+
 
 
 	useEffect(() => {
@@ -28,12 +30,12 @@ const App = () => {
 			setLogged(true);
 			setPending(false);
 			setMyself(user);
-			
+
 			setTimeout(() => {
-				setToast({ 
-					open: true, 
-					message: <span>You have joined <span style={{ color: '#417cab', textTransform: 'uppercase', fontWeight: 'bold' }}>{user.room}</span> room.</span> 
-				});	
+				setToast({
+					open: true,
+					message: <span>You have joined <span style={{ color: '#417cab', textTransform: 'uppercase', fontWeight: 'bold' }}>{user.room}</span> room.</span>
+				});
 			}, 400);
 		});
 
@@ -66,6 +68,10 @@ const App = () => {
 			]);
 		});
 
+		socket.on('privateChat', ({ userName, id }) => {
+			setPrivateChats({ userName, id, messages: [], ignored: false });
+		});
+
 
 		return () => socket.disconnect();
 	}, []);
@@ -88,6 +94,7 @@ const App = () => {
 						/>
 						<Divider />
 						<Footer
+							privateChats={privateChats}
 							pending={pending}
 							setPending={setPending}
 							setError={setError}

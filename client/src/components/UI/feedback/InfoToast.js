@@ -8,7 +8,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 
 const useStyles = makeStyles(({spacing, palette}) => ({
 	root: {
-		bottom: 10,
+		bottom: 65,
 		left: 10
 	},
 	toast: {

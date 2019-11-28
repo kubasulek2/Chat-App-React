@@ -27,7 +27,7 @@ const useStyles = makeStyles(({ mixins, palette, breakpoints }) => ({
 		borderRight: '1px solid rgba(66, 66, 66, .4)',
 		position: 'fixed',
 		justifyContent: 'center',
-		alignItems: 'flex-start',
+		alignItems: 'flex-end',
 		display: 'flex',
 		bottom: 0,
 		left: 0,
@@ -54,7 +54,7 @@ const DrawerComponent = ({ mobile, handleMobile, users, rooms, myself, setError 
 			<Divider />
 			<UsersList users={users} myself={myself} setError={setError}/>
 			<div className={classes.footer}>
-				<NewRoom />
+				<NewRoom setError={setError}/>
 			</div>
 		</div>
 	);

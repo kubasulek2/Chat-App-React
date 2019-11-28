@@ -1,3 +1,5 @@
 - lazy loading chat component,
 - performance updating,
-- implement redux,
+- testing,
+- js doc
+

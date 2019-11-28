@@ -52,7 +52,7 @@ const RoomsList = ({ rooms, myself, setError }) => {
 		socket.emit('switchRoom', { roomName: room, createNew: false }, (error) => {
 
 			if (error) {
-				return setError(error);
+				return setError(error.message);
 			}
 		});
 	};

@@ -27,7 +27,7 @@ const MessagePanel = ({ pending, setError }) => {
 		
 		socket.emit('sendMessage', { message, emojiInfo, color }, error => {
 			if (error) {
-				return setError(error);
+				return setError(error.message);
 			}	
 		});
 		
@@ -41,7 +41,7 @@ const MessagePanel = ({ pending, setError }) => {
 			const location = await getLocation();
 			const { coords: { latitude, longitude } } = location;
 			socket.emit('sendLocation', { latitude, longitude }, error => {
-				if (error) setError(error);
+				if (error) setError(error.message);
 			});
 		} catch (error) {
 			setError(error.message);
