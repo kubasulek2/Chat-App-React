@@ -123,6 +123,11 @@ io.on('connection', (client) => {
 		cb();
 	});
 
+	client.on('privateChat', (requestedId) => {
+		io.to(`${ requestedId }`).emit('privateMessage', 'I just met you');
+
+	});
+
 	client.on('disconnect', () => {
 
 		const user = removeUser(client.id);
