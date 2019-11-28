@@ -90,11 +90,11 @@ const App = () => {
 							setError={setError}
 						/>
 						<ChatBoard
+							privateChats={privateChats}
 							messages={messages}
 						/>
 						<Divider />
-						<Footer
-							privateChats={privateChats}
+						<Footer			
 							pending={pending}
 							setPending={setPending}
 							setError={setError}

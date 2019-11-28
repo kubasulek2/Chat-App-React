@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-
+import ChatList from '../chat/lists/ChatList';
 import { formatTime, formatText } from '../../utils';
 
 const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
@@ -28,7 +28,7 @@ const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
 	}
 }));
 
-const ChatBoard = ({ messages }) => {
+const ChatBoard = ({ messages, privateChats }) => {
 	const classes = useStyles();
 	const boardRef = useRef();
 	useEffect(() => {
@@ -63,6 +63,7 @@ const ChatBoard = ({ messages }) => {
 	return (
 		<Grid container className={classes.root} ref={boardRef}>
 			{messageComponents}
+			<ChatList privateChats={privateChats}/>
 		</Grid>
 	);
 };
