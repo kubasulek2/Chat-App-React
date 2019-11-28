@@ -47,6 +47,8 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 const RoomsList = ({ rooms, myself, setError }) => {
 	const classes = useStyles();
 
+	myself = myself || {};
+
 	const handleRoomClick = (room) => {
 
 		socket.emit('switchRoom', { roomName: room, createNew: false }, (error) => {

@@ -93,6 +93,7 @@ const App = () => {
 						<ChatBoard
 							privateChats={privateChats}
 							messages={messages}
+							myself={myself}
 						/>
 						<Divider />
 						<Footer			

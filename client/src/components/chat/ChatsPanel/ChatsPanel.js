@@ -8,8 +8,9 @@ import Typography from '@material-ui/core/Typography';
 import MessageIcon from '@material-ui/icons/Message';
 import Badge from '@material-ui/core/Badge';
 
+import ChatList from './ChatList.js';
 
-const useStyles = makeStyles(({ shadows, palette }) => ({
+const useStyles = makeStyles(({ palette }) => ({
 	card: {
 		width: 200,
 		position: 'absolute',
@@ -21,17 +22,22 @@ const useStyles = makeStyles(({ shadows, palette }) => ({
 		cursor: 'pointer',
 		display: 'flex',
 		justifyContent: 'space-between',
+		background: palette.background.light
 	},
 	chatBadge: {
 		color: 'white !important'
 	},
 	badgeIcon: {
 		color: palette.text.primary
+	},
+	content: {
+		padding: 8,
+		background: palette.background.light
 	}
 }));
 
 
-const ChatList = ({ privateChats }) => {
+const ChatsPanel = ({ privateChats, myself }) => {
 	const classes = useStyles();
 	const [expanded, setExpanded] = useState(false);
 
@@ -42,13 +48,9 @@ const ChatList = ({ privateChats }) => {
 	return (
 		privateChats.length
 			? <Card className={classes.card}>
-				<Collapse in={expanded} timeout='auto' unmountOnExit>
-					<CardContent>
-						<Typography paragraph>Method:</Typography>
-						<Typography paragraph>
-							Heat 1/2 cup of the broth in a pot until simmering, add saffron and
-							set aside for 10 minutes.
-						</Typography>
+				<Collapse in={expanded} timeout='auto'>
+					<CardContent className={classes.content}>
+						<ChatList privateChats={privateChats} myself={myself} />
 					</CardContent>
 				</Collapse>
 				<CardActions onClick={handleExpandClick} className={classes.expand}>
@@ -58,7 +60,7 @@ const ChatList = ({ privateChats }) => {
 						badgeContent={1}
 						invisible={expanded}
 						classes={{
-							badge:classes.chatBadge
+							badge: classes.chatBadge
 						}}>
 						<MessageIcon className={classes.badgeIcon} />
 					</Badge>
@@ -68,4 +70,4 @@ const ChatList = ({ privateChats }) => {
 	);
 };
 
-export default ChatList;
+export default ChatsPanel;
