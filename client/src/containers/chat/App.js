@@ -8,19 +8,25 @@ import Footer from '../../components/layout/Footer';
 import Login from '../../components/UI/login/Login';
 import ErrorModal from '../../components/UI/feedback/ErrorModal';
 import InfoToast from '../../components/UI/feedback/InfoToast';
+import ChatsPanel from '../../components/chat/ChatsPanel/ChatsPanel';
 import { socket } from '../../server/socket';
 
-const App = () => {
 
+const App = () => {
 	const [logged, setLogged] = useState(false);
 	const [pending, setPending] = useState(false);
+	
+	const [myself, setMyself] = useState(null);
 	const [messages, setMessages] = useState([]);
+	const [privateChats, setPrivateChats] = useState([]);
+	const [activeChat, setActiveChat] = useState('');
+	const [ignoredIPs, setIgnoredIPs] = useState([]);
+	
 	const [rooms, setRooms] = useState([]);
 	const [users, setUsers] = useState([]);
-	const [myself, setMyself] = useState(null);
+	
 	const [error, setError] = useState(false);
 	const [toast, setToast] = useState({ open: false, message: null });
-	const [privateChats, setPrivateChats] = useState([]);
 
 
 
@@ -30,6 +36,7 @@ const App = () => {
 			setLogged(true);
 			setPending(false);
 			setMyself(user);
+			setActiveChat(user.room);
 
 			setTimeout(() => {
 				setToast({
@@ -52,7 +59,7 @@ const App = () => {
 		});
 
 		socket.on('message', message => {
-
+			
 			setMessages(messageArray => [...messageArray, message]);
 		});
 
@@ -69,8 +76,8 @@ const App = () => {
 		});
 
 		socket.on('privateChat', ({ userName, id }) => {
-			console.log(userName, id);
-			setPrivateChats([{ userName, id, messages: [], ignored: false }]);
+			
+			setPrivateChats(chats => [...chats, { userName, id, messages: []}]);
 		});
 
 
@@ -91,12 +98,14 @@ const App = () => {
 							setError={setError}
 						/>
 						<ChatBoard
-							privateChats={privateChats}
 							messages={messages}
-							myself={myself}
 						/>
 						<Divider />
-						<Footer			
+						<ChatsPanel
+							privateChats={privateChats}
+							myself={myself}
+						/>
+						<Footer
 							pending={pending}
 							setPending={setPending}
 							setError={setError}

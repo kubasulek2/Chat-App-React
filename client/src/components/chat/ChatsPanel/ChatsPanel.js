@@ -7,16 +7,20 @@ import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
 import MessageIcon from '@material-ui/icons/Message';
 import Badge from '@material-ui/core/Badge';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 import ChatList from './ChatList.js';
 
-const useStyles = makeStyles(({ palette }) => ({
+const useStyles = makeStyles(({ palette, breakpoints }) => ({
 	card: {
 		width: 200,
 		position: 'absolute',
-		bottom: 2,
+		bottom: 212,
 		right: 5,
 		overflow: 'visible',
+		[breakpoints.down('xs')]: {
+			bottom: 210,
+		}	
 	},
 	expand: {
 		cursor: 'pointer',
@@ -44,28 +48,35 @@ const ChatsPanel = ({ privateChats, myself }) => {
 	const handleExpandClick = () => {
 		setExpanded(!expanded);
 	};
+	const handleClickAway = () => {
+		if (expanded){
+			setExpanded(false);
+		}
+	};
 
 	return (
 		privateChats.length
-			? <Card className={classes.card}>
-				<Collapse in={expanded} timeout='auto'>
-					<CardContent className={classes.content}>
-						<ChatList privateChats={privateChats} myself={myself} />
-					</CardContent>
-				</Collapse>
-				<CardActions onClick={handleExpandClick} className={classes.expand}>
-					<Typography variant='body1' color='primary'>Chats</Typography>
-					<Badge
-						color='secondary'
-						badgeContent={1}
-						invisible={expanded}
-						classes={{
-							badge: classes.chatBadge
-						}}>
-						<MessageIcon className={classes.badgeIcon} />
-					</Badge>
-				</CardActions>
-			</Card>
+			? <ClickAwayListener onClickAway={handleClickAway}>
+				<Card className={classes.card}>
+					<Collapse in={expanded} timeout='auto'>
+						<CardContent className={classes.content}>
+							<ChatList privateChats={privateChats} myself={myself} />
+						</CardContent>
+					</Collapse>
+					<CardActions onClick={handleExpandClick} className={classes.expand}>
+						<Typography variant='body1' color='primary'>Chats</Typography>
+						<Badge
+							color='secondary'
+							badgeContent={1}
+							invisible={expanded}
+							classes={{
+								badge: classes.chatBadge
+							}}>
+							<MessageIcon className={classes.badgeIcon} />
+						</Badge>
+					</CardActions>
+				</Card>
+			</ClickAwayListener>
 			: null
 	);
 };

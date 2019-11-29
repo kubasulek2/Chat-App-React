@@ -22,7 +22,6 @@ const useStyles = makeStyles(({palette}) => ({
 		paddingLeft: 4,
 		paddingRight: 4,
 		color: palette.text.primary,
-		background: palette.background.paper,
 		marginBottom: 4
 	},
 	action: {

@@ -3,7 +3,6 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-import ChatsPanel from '../chat/ChatsPanel/ChatsPanel';
 import { formatTime, formatText } from '../../utils';
 
 const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
@@ -28,7 +27,7 @@ const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
 	}
 }));
 
-const ChatBoard = ({ messages, privateChats, myself }) => {
+const ChatBoard = ({ messages }) => {
 	const classes = useStyles();
 	const boardRef = useRef();
 	useEffect(() => {
@@ -38,6 +37,7 @@ const ChatBoard = ({ messages, privateChats, myself }) => {
 			const lastChildOffset = boardRef.current.lastChild.offsetTop;
 			
 			if ((lastChildOffset >= elHeight - 10) && (elHeight + elScrollTop > lastChildOffset - 30)) {
+				console.log('here');
 				boardRef.current.lastChild.scrollIntoView();
 			}
 		}
@@ -63,7 +63,6 @@ const ChatBoard = ({ messages, privateChats, myself }) => {
 	return (
 		<Grid container className={classes.root} ref={boardRef}>
 			{messageComponents}
-			<ChatsPanel privateChats={privateChats} myself={myself}/>
 		</Grid>
 	);
 };
