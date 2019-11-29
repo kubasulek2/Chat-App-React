@@ -18,7 +18,6 @@ const MessagePanel = ({ pending, setError }) => {
 
 
 	const handleSubmit = useCallback((evt) => {
-		evt = evt || window.event;
 		evt.preventDefault();
 
 		if (!message.length) {

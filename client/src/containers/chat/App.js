@@ -14,21 +14,20 @@ import { socket } from '../../server/socket';
 
 const App = () => {
 	const [logged, setLogged] = useState(false);
-	const [pending, setPending] = useState(false);
-
+	
 	const [myself, setMyself] = useState(null);
 	const [messages, setMessages] = useState([]);
 	const [privateChats, setPrivateChats] = useState({});
 	const [activeChat, setActiveChat] = useState('');
 	const [ignoredIPs, setIgnoredIPs] = useState([]);
 	const [unreadMessages, setUnreadMessages] = useState(0);
-
+	
 	const [rooms, setRooms] = useState([]);
 	const [users, setUsers] = useState([]);
-
+	
+	const [pending, setPending] = useState(false);
 	const [error, setError] = useState(false);
 	const [toast, setToast] = useState({ open: false, message: null });
-
 
 
 	useEffect(() => {
@@ -74,7 +73,7 @@ const App = () => {
 		});
 
 		socket.on('locationMessage', link => {
-			console.log(link.text);
+	
 			setMessages(messageArray => [
 				...messageArray,
 				{
@@ -118,10 +117,12 @@ const App = () => {
 							setError={setError}
 						/>
 						<ChatBoard
+							activeChat={activeChat}
 							messages={activeMessages()}
 						/>
 						<Divider />
 						<ChatsPanel
+							setActiveChat={setActiveChat}
 							privateChats={privateChats}
 							myself={myself}
 						/>

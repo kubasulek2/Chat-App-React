@@ -41,7 +41,7 @@ const useStyles = makeStyles(({ palette, breakpoints }) => ({
 }));
 
 
-const ChatsPanel = ({ privateChats, myself }) => {
+const ChatsPanel = ({ privateChats, myself,  }) => {
 	const classes = useStyles();
 	const [expanded, setExpanded] = useState(false);
 

@@ -54,7 +54,6 @@ const NewRoom = ({ setError }) => {
 	const inputRef = useRef();
 
 	const handleInputChange = (evt) => {
-		evt = evt || window.event;
 		setRoomName(evt.target.value);
 		setLocalError(false);
 	};
@@ -88,7 +87,6 @@ const NewRoom = ({ setError }) => {
 	};
 
 	const handleClick = (evt) => {
-		evt = evt || window.event;
 
 		if (!displayInput) {
 

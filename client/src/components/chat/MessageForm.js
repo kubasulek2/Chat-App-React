@@ -40,7 +40,6 @@ const MessageForm = (props) => {
 	});
 
 	const handleKeyDown = (evt) => {
-		evt = evt || window.event;
 
 		if (evt.key === 'Enter' && evt.shiftKey && document.activeElement.id === textInput.current.id) {
 			return;

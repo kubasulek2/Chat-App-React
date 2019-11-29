@@ -27,9 +27,11 @@ const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
 	}
 }));
 
-const ChatBoard = ({ messages }) => {
+const ChatBoard = ({ messages, activeChat }) => {
 	const classes = useStyles();
 	const boardRef = useRef();
+	
+	/* Scroll to last message when new message arrive and user has not scrolled up. */
 	useEffect(() => {
 		if (boardRef.current.lastElementChild) {
 			const elHeight = boardRef.current.clientHeight;
@@ -37,13 +39,20 @@ const ChatBoard = ({ messages }) => {
 			const lastChildOffset = boardRef.current.lastChild.offsetTop;
 			
 			if ((lastChildOffset >= elHeight - 10) && (elHeight + elScrollTop > lastChildOffset - 30)) {
-				console.log('here');
 				boardRef.current.lastChild.scrollIntoView();
 			}
 		}
 	}, [messages]);
+
+	/* Scroll to last message when activeChat is changed. */
+	useEffect(() => {	
+		boardRef.current.lastChild.scrollIntoView();
+	},[activeChat]);
+
+	/* Map messages to create message board. */
 	const messageComponents = messages.map((message, i) => {
 		
+		/* if message is location type handle it separately. */
 		if(message.location){
 			return (
 				<Typography key={i}>
@@ -51,8 +60,12 @@ const ChatBoard = ({ messages }) => {
 					{message.text} 
 				</Typography>);
 		}
+
+		/* Format message with utility function. */
 		const formatedText = formatText(message.text, message.emojiInfo);
 
+
+		/* if message is special type (system messages) handle it separately. */
 		if (message.special) {
 			return (
 				<Typography key={i}>

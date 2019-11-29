@@ -65,7 +65,6 @@ const EmojiPickerComp = ({ setMessage, setEmojiInfo }) => {
 	const [anchorEl, setAnchorEl] = useState(null);
 
 	const handleClick = evt => {
-		evt = evt || window.event;
 		setAnchorEl(evt.currentTarget);
 	};
 

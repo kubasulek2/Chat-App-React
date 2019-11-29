@@ -35,7 +35,6 @@ const ColorPicker = (props) => {
 	const [anchorEl, setAnchorEl] = useState(null);
 
 	const handleClick = evt => {
-		evt = evt || window.event;
 		setAnchorEl(evt.currentTarget);
 	};
 
@@ -47,7 +46,6 @@ const ColorPicker = (props) => {
 	const id = open ? 'color-popover' : undefined;
 
 	const handleColorChange = (evt) => {
-		evt = evt || window.evt;
 		setColor(evt.target.style.background);
 		setAnchorEl(null);
 	};
