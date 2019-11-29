@@ -31,14 +31,14 @@ const useStyles = makeStyles(({palette}) => ({
 
 const ChatList = ({ privateChats, myself }) => {
 	const classes = useStyles();
-	const list = privateChats.map((chat) => {
+	const list = Object.keys(privateChats).map((key) => {
 		return (
-			<ListItem key={chat.id} button className={classes.item}>
+			<ListItem key={key} button className={classes.item}>
 				<Typography
 					color='textPrimary'
 					variant='body2'
 				>
-					{chat.userName}
+					{privateChats[key].userName}
 				</Typography>	
 				<ListItemSecondaryAction className={classes.action}>
 					<IconButton edge='end' aria-label='block' size='small'>

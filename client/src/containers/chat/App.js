@@ -18,9 +18,10 @@ const App = () => {
 
 	const [myself, setMyself] = useState(null);
 	const [messages, setMessages] = useState([]);
-	const [privateChats, setPrivateChats] = useState([]);
+	const [privateChats, setPrivateChats] = useState({});
 	const [activeChat, setActiveChat] = useState('');
 	const [ignoredIPs, setIgnoredIPs] = useState([]);
+	const [unreadMessages, setUnreadMessages] = useState(0);
 
 	const [rooms, setRooms] = useState([]);
 	const [users, setUsers] = useState([]);
@@ -36,7 +37,6 @@ const App = () => {
 			setLogged(true);
 			setPending(false);
 			setMyself(user);
-			setActiveChat(user.room);
 
 			setTimeout(() => {
 				setToast({
@@ -97,6 +97,13 @@ const App = () => {
 		return () => socket.disconnect();
 	}, []);
 
+	const activeMessages = () => {
+		
+		if(activeChat){
+			return privateChats[activeChat].messages;
+		}	
+		return messages;
+	};
 
 	return (
 		<Fragment>
@@ -111,7 +118,7 @@ const App = () => {
 							setError={setError}
 						/>
 						<ChatBoard
-							messages={messages}
+							messages={activeMessages()}
 						/>
 						<Divider />
 						<ChatsPanel

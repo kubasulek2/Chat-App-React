@@ -55,7 +55,7 @@ const ChatsPanel = ({ privateChats, myself }) => {
 	};
 
 	return (
-		privateChats.length
+		Object.keys(privateChats).length && myself
 			? <ClickAwayListener onClickAway={handleClickAway}>
 				<Card className={classes.card}>
 					<Collapse in={expanded} timeout='auto'>
