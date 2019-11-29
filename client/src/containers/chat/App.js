@@ -15,16 +15,16 @@ import { socket } from '../../server/socket';
 const App = () => {
 	const [logged, setLogged] = useState(false);
 	const [pending, setPending] = useState(false);
-	
+
 	const [myself, setMyself] = useState(null);
 	const [messages, setMessages] = useState([]);
 	const [privateChats, setPrivateChats] = useState([]);
 	const [activeChat, setActiveChat] = useState('');
 	const [ignoredIPs, setIgnoredIPs] = useState([]);
-	
+
 	const [rooms, setRooms] = useState([]);
 	const [users, setUsers] = useState([]);
-	
+
 	const [error, setError] = useState(false);
 	const [toast, setToast] = useState({ open: false, message: null });
 
@@ -59,8 +59,18 @@ const App = () => {
 		});
 
 		socket.on('message', message => {
-			
-			setMessages(messageArray => [...messageArray, message]);
+			if (message.mutual) {
+				const isUserIgnored = ignoredIPs.find(ip => ip === message.userID);
+
+				if (!isUserIgnored) {
+					const privateChat = {...privateChats[message.userID]};
+					privateChat.messages = [... privateChat.messages, message];
+					
+					setPrivateChats(chats => ({ ...chats, [message.userID]: privateChat }));
+				}
+			} else {
+				setMessages(messageArray => [...messageArray, message]);
+			}
 		});
 
 		socket.on('locationMessage', link => {
@@ -76,8 +86,10 @@ const App = () => {
 		});
 
 		socket.on('privateChat', ({ userName, id }) => {
-			
-			setPrivateChats(chats => [...chats, { userName, id, messages: []}]);
+
+			if (!ignoredIPs.includes(id) && !(id in privateChats)) {
+				setPrivateChats(chats => ({ ...chats, [id]: { userName, messages: [] } }));
+			}
 		});
 
 
