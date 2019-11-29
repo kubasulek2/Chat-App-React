@@ -2,7 +2,6 @@ const rooms = {
 	public: []
 };
 
-const privatePattern = /^__private__/;
 
 const addUserToRoom = (userId, room) => {
 	room = room.toLowerCase();
@@ -15,13 +14,9 @@ const addUserToRoom = (userId, room) => {
 		return { roomError: 'User already in room.' };
 	}
 
-	if (privatePattern.test(room) && rooms[room].length === 2) {
-		return { roomError: 'No more than two persons in private rooms.' };
-	}	
-
 	rooms[room].push(userId);
 
-	return { room: room };
+	return { room };
 };
 
 const removeUserFromRoom = (userId, room) => {
@@ -40,10 +35,10 @@ const removeUserFromRoom = (userId, room) => {
 		delete rooms[room];
 	}
 	
-	return { room: room };
+	return { room };
 };
 
-const fetchPublicRooms = () => Object.keys(rooms).filter(name => !privatePattern.test(name));
+const fetchPublicRooms = () => Object.keys(rooms);
 
 module.exports = {
 	addUserToRoom,

@@ -48,44 +48,58 @@ io.on('connection', (client) => {
 	});
 
 
-	client.on('sendMessage', ({ message, emojiInfo, color }, cb) => {
+	client.on('sendMessage', ({ message, emojiInfo, color, activeChat }, cb) => {
 		const user = getUser(client.id);
 		const filter = new Filter();
+		const mutual = Boolean(activeChat);
 
 		if (!user) {
-			return cb('User not found');
+			return cb({ message: 'Client not found', type: 401 });
 		}
-		
+
 		if (filter.isProfane(message)) {
-			return cb('Naughty, naughty!');
+			return cb({ message: 'Naughty, naughty!', type: 403 });
+		}
+		
+		activeChat = activeChat || user.room;
+
+		const options = { message, emojiInfo, color, userID: user.id, user: user.userName, mutual };
+		const msg = generateMessage(options);
+		
+		io.to(`${activeChat}`).emit('message', msg);
+
+		if(mutual){
+			client.emit('message',{...msg, userID: activeChat});
 		}
 
-		const options = { message, emojiInfo, color, user: user.userName };
-
-		io.to(user.room).emit('message', generateMessage(options));
 
 		cb();
 	});
 
 
-	client.on('sendLocation', ({ latitude, longitude }, cb) => {
+	client.on('sendLocation', ({ latitude, longitude, activeChat }, cb) => {
 		const user = getUser(client.id);
+		const mutual = Boolean(activeChat);
 
 		if (!user) {
-			return cb('User not found');
+			return cb({ message: 'Client not found', type: 401 });
 		}
 
-		io.to(user.room).emit('locationMessage', generateMessage(`https://google.com/maps?q=${ latitude },${ longitude }`, user.userName));
+		activeChat = activeChat || user.room;
+
+		const options = { message: `https://google.com/maps?q=${ latitude },${ longitude }`, userID: user.id, user: user.userName, mutual };
+
+		io.to(`${activeChat}`).emit('locationMessage', generateMessage(options));
 
 		cb();
 	});
 
 
-	client.on('switchRoom', ({roomName, createNew}, cb) => {
-		
-		if (createNew){
+	client.on('switchRoom', ({ roomName, createNew }, cb) => {
+
+		if (createNew) {
 			const existingRooms = fetchPublicRooms();
-			
+
 			if (existingRooms.includes(roomName.toLowerCase())) {
 				return cb('Room already exists.');
 			}
@@ -94,7 +108,7 @@ io.on('connection', (client) => {
 		const user = getUser(client.id);
 
 		if (!user) {
-			return cb('User not found');
+			return cb({ message: 'Client not found', type: 401 });
 		}
 
 		const { roomError, room: newRoom } = addUserToRoom(user.id, roomName);
@@ -123,8 +137,19 @@ io.on('connection', (client) => {
 		cb();
 	});
 
-	client.on('privateChat', (requestedId) => {
-		io.to(`${ requestedId }`).emit('privateMessage', 'I just met you');
+	client.on('openPrivateChat', (requestedId) => {
+		const user = getUser(client.id);
+		const requestedUser = getUser(requestedId);
+
+		if (!user) {
+			return cb({ message: 'Client not found', type: 401 });
+		}
+
+		if (!requestedUser) {
+			return cb({ message: 'Requested user not found', type: 404 });
+		}
+		client.emit('privateChat', { userName: requestedUser.userName, id: requestedUser.id });
+		io.to(`${ requestedId }`).emit('privateChat', { userName: user.userName, id: user.id });
 
 	});
 

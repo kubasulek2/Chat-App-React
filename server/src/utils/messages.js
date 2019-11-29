@@ -1,26 +1,25 @@
-const generateMessage = ({ user, special, color, emojiInfo, message }) => {
-	special = special || false;
-	color = color || '#b0bec5';
-	emojiInfo = emojiInfo || [];
-	
+const generateMessage = ({ user, userID, special = false, color = '#b0bec5', emojiInfo = [], message, mutual }) => {
+
 	return {
 		text: message,
 		user,
+		userID,
 		color,
 		emojiInfo,
 		special,
+		mutual,
 		timestamp: new Date().getTime()
 	};
 };
 
 handleWelcomeMessages = (socket, userName, room) => {
-	
+
 	const options = {
 		message: ', welcome!',
 		user: userName,
 		special: true
 	};
-	
+
 	socket.emit('welcome', generateMessage(options));
 
 	options.message = 'has joined!';

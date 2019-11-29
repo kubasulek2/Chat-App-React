@@ -1,7 +1,7 @@
 const users = [];
 
 const addUser = (id, userName, room) => {
-	const validate = /^(?=.*[a-z])[^\t\s]{5,}$/;
+	const validate = /^(?=.*[a-zA-Z])[^\t\s]{5,12}$/;
 	room = room.toLowerCase();
 
 	if (!userName || !validate.test(userName)) {
