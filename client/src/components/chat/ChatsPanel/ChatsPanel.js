@@ -35,13 +35,16 @@ const useStyles = makeStyles(({ palette, breakpoints }) => ({
 		color: palette.text.primary
 	},
 	content: {
-		padding: 8,
-		background: palette.background.light
+		padding: 8,	
+		background: palette.background.light,
+		'&:last-child': {
+			paddingBottom: 8
+		}
 	}
 }));
 
 
-const ChatsPanel = ({ privateChats, myself,  }) => {
+const ChatsPanel = ({ privateChats, myself, setActiveChat }) => {
 	const classes = useStyles();
 	const [expanded, setExpanded] = useState(false);
 
@@ -60,7 +63,12 @@ const ChatsPanel = ({ privateChats, myself,  }) => {
 				<Card className={classes.card}>
 					<Collapse in={expanded} timeout='auto'>
 						<CardContent className={classes.content}>
-							<ChatList privateChats={privateChats} myself={myself} />
+							
+							<ChatList 
+								privateChats={privateChats} 
+								myself={myself} 
+								setActiveChat={setActiveChat}
+							/>
 						</CardContent>
 					</Collapse>
 					<CardActions onClick={handleExpandClick} className={classes.expand}>

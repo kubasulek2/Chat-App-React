@@ -8,7 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import BlockIcon from '@material-ui/icons/Block';
 import CloseIcon from '@material-ui/icons/Close';
 
-const useStyles = makeStyles(({palette}) => ({
+const useStyles = makeStyles(({ palette }) => ({
 	root: {
 		flexGrow: 1,
 		maxHeight: 200,
@@ -29,23 +29,32 @@ const useStyles = makeStyles(({palette}) => ({
 	}
 }));
 
-const ChatList = ({ privateChats, myself }) => {
+const ChatList = ({ privateChats, myself, setActiveChat }) => {
 	const classes = useStyles();
+
+	const handleChatSelection = (chat) => {
+		setActiveChat(chat);
+	};
+
 	const list = Object.keys(privateChats).map((key) => {
 		return (
-			<ListItem key={key} button className={classes.item}>
+			<ListItem 
+				key={key} 
+				button className={classes.item}
+				onClick={() => handleChatSelection(key)}
+			>
 				<Typography
 					color='textPrimary'
 					variant='body2'
 				>
 					{privateChats[key].userName}
-				</Typography>	
+				</Typography>
 				<ListItemSecondaryAction className={classes.action}>
 					<IconButton edge='end' aria-label='block' size='small'>
-						<BlockIcon color='error'/>
+						<BlockIcon color='error' />
 					</IconButton>
 					<IconButton edge='end' aria-label='close' size='small'>
-						<CloseIcon color='action'/>
+						<CloseIcon color='action' />
 					</IconButton>
 				</ListItemSecondaryAction>
 			</ListItem>
@@ -55,14 +64,18 @@ const ChatList = ({ privateChats, myself }) => {
 
 	return (
 		<List dense={true} className={classes.root}>
-			<ListItem key={myself.id} button className={classes.item}>
+			<ListItem 
+				key={myself.id} 
+				button className={classes.item}
+				onClick={() => handleChatSelection('')}
+			>
 				<Typography
 					color='textPrimary'
 					className={classes.active}
 					variant='body2'
 				>
 					{myself.room.toUpperCase()}
-				</Typography>	
+				</Typography>
 			</ListItem>
 			{list}
 		</List>

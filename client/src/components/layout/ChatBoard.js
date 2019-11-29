@@ -33,7 +33,7 @@ const ChatBoard = ({ messages, activeChat }) => {
 	
 	/* Scroll to last message when new message arrive and user has not scrolled up. */
 	useEffect(() => {
-		if (boardRef.current.lastElementChild) {
+		if (boardRef.current.lastChild) {
 			const elHeight = boardRef.current.clientHeight;
 			const elScrollTop = boardRef.current.scrollTop;
 			const lastChildOffset = boardRef.current.lastChild.offsetTop;
@@ -45,8 +45,10 @@ const ChatBoard = ({ messages, activeChat }) => {
 	}, [messages]);
 
 	/* Scroll to last message when activeChat is changed. */
-	useEffect(() => {	
-		boardRef.current.lastChild.scrollIntoView();
+	useEffect(() => {
+		if (boardRef.current.lastChild){
+			boardRef.current.lastChild.scrollIntoView();
+		}
 	},[activeChat]);
 
 	/* Map messages to create message board. */

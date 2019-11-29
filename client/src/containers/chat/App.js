@@ -20,7 +20,7 @@ const App = () => {
 	const [privateChats, setPrivateChats] = useState({});
 	const [activeChat, setActiveChat] = useState('');
 	const [ignoredIPs, setIgnoredIPs] = useState([]);
-	const [unreadMessages, setUnreadMessages] = useState(0);
+	const [mainUnread, setMainUnread] = useState(false);
 	
 	const [rooms, setRooms] = useState([]);
 	const [users, setUsers] = useState([]);
@@ -31,6 +31,7 @@ const App = () => {
 
 
 	useEffect(() => {
+		console.log('from App');
 		socket.on('joinRoom', (user) => {
 			setMessages([]);
 			setLogged(true);
@@ -58,12 +59,12 @@ const App = () => {
 		});
 
 		socket.on('message', message => {
+		
 			if (message.mutual) {
 				const isUserIgnored = ignoredIPs.find(ip => ip === message.userID);
-
 				if (!isUserIgnored) {
-					const privateChat = {...privateChats[message.userID]};
-					privateChat.messages = [... privateChat.messages, message];
+					const privateChat = {...privateChats[message.userID], unread: true};
+					privateChat.messages = [...privateChat.messages, message];
 					
 					setPrivateChats(chats => ({ ...chats, [message.userID]: privateChat }));
 				}
@@ -86,19 +87,30 @@ const App = () => {
 		});
 
 		socket.on('privateChat', ({ userName, id }) => {
-
+		
 			if (!ignoredIPs.includes(id) && !(id in privateChats)) {
 				setPrivateChats(chats => ({ ...chats, [id]: { userName, messages: [] } }));
 			}
 		});
 
 
-		return () => socket.disconnect();
-	}, []);
+		return () => {
+			socket.removeAllListeners();
+		};
+	}, [privateChats,ignoredIPs]);
+
+	/* Clean unread flag if change chat selection */
+	useEffect(() => {
+		if (activeChat){
+			return setPrivateChats(chats => ({...chats, [activeChat]: {...chats[activeChat], unread: false}}));
+		}
+
+	}, [activeChat]);
 
 	const activeMessages = () => {
-		
+		console.log(activeChat);
 		if(activeChat){
+			console.log('here');
 			return privateChats[activeChat].messages;
 		}	
 		return messages;
@@ -130,6 +142,7 @@ const App = () => {
 							pending={pending}
 							setPending={setPending}
 							setError={setError}
+							activeChat={activeChat}
 						/>
 						<InfoToast toast={toast} setToast={setToast} />
 					</Fragment>

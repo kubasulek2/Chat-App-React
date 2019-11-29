@@ -53,7 +53,7 @@ const UsersList = ({ users, myself, setError }) => {
 	const handlePrivateChat = (evt) => {
 		const id = evt.currentTarget.dataset.id;
 
-		socket.emit('privateChat', id, (error) => {
+		socket.emit('openPrivateChat', id, (error) => {
 			setError(error.message);
 		});
 	};
