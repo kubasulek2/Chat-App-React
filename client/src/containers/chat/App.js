@@ -74,13 +74,14 @@ const App = () => {
 		});
 
 		socket.on('locationMessage', link => {
-
+			console.log(link.text);
 			setMessages(messageArray => [
 				...messageArray,
 				{
 					timestamp: link.timestamp,
 					text: <a key={link.text} rel='noopener noreferrer' target='_blank' href={link.text}>My location</a>,
-					user: link.user
+					user: link.user,
+					location: true
 				}
 			]);
 		});

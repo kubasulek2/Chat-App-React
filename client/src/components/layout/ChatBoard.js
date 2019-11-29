@@ -43,7 +43,14 @@ const ChatBoard = ({ messages }) => {
 		}
 	}, [messages]);
 	const messageComponents = messages.map((message, i) => {
-
+		
+		if(message.location){
+			return (
+				<Typography key={i}>
+					<span>{formatTime(message.timestamp)}</span> - <b>{message.user}</b>:&nbsp; 
+					{message.text} 
+				</Typography>);
+		}
 		const formatedText = formatText(message.text, message.emojiInfo);
 
 		if (message.special) {
