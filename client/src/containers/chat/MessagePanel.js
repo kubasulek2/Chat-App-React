@@ -15,7 +15,7 @@ const MessagePanel = ({ pending, setError, activeChat, room }) => {
 	const [uppercaseMode, setUppercaseMode] = useState(false);
 	const [color, setColor] = useState('#b0bec5');
 
-
+	const privy = activeChat !== room;
 
 	const handleSubmit = useCallback((evt) => {
 		evt.preventDefault();
@@ -23,7 +23,6 @@ const MessagePanel = ({ pending, setError, activeChat, room }) => {
 		if (!message.length) {
 			return;
 		}
-		const privy = !(activeChat === room);
 
 		socket.emit('sendMessage', { message, emojiInfo, color, activeChat, privy }, error => {
 			if (error) {
@@ -37,10 +36,11 @@ const MessagePanel = ({ pending, setError, activeChat, room }) => {
 	}, [message, setError, emojiInfo, color, activeChat, room]);
 
 	const handleLocation = async () => {
+		console.log('here');
 		try {
 			const location = await getLocation();
 			const { coords: { latitude, longitude } } = location;
-			socket.emit('sendLocation', { latitude, longitude }, error => {
+			socket.emit('sendLocation', { latitude, longitude, activeChat, privy }, error => {
 				if (error) setError(error.message);
 			});
 		} catch (error) {

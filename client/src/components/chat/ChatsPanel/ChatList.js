@@ -31,12 +31,12 @@ const useStyles = makeStyles(({ palette }) => ({
 
 const ChatList = ({ chat, dispatchChat }) => {
 	const classes = useStyles();
-
+	console.log(chat);
 	const handleChatSelection = (chat) => {
 		dispatchChat({ type: 'SET_ACTIVE', active: chat });
 	};
 
-	const list = Object.keys(chat.chats).filter(chat => chat !== 'main').map((key) => {
+	const list = Object.keys(chat.chats).filter(channel => channel !== chat.room).map((key) => {
 		return (
 			<ListItem
 				key={key}

@@ -44,7 +44,7 @@ const useStyles = makeStyles(({ palette, breakpoints }) => ({
 }));
 
 
-const ChatsPanel = ({ chats, dispatchChat }) => {
+const ChatsPanel = ({ chat, dispatchChat }) => {
 	const classes = useStyles();
 	const [expanded, setExpanded] = useState(false);
 
@@ -58,14 +58,14 @@ const ChatsPanel = ({ chats, dispatchChat }) => {
 	};
 
 	return (
-		Object.keys(chats).length > 1
+		Object.keys(chat.chats).length > 1
 			? <ClickAwayListener onClickAway={handleClickAway}>
 				<Card className={classes.card}>
 					<Collapse in={expanded} timeout='auto'>
 						<CardContent className={classes.content}>
 							
 							<ChatList 
-								chats={chats} 
+								chat={chat} 
 								dispatchChat={dispatchChat}
 							/>
 						</CardContent>

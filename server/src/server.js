@@ -74,20 +74,22 @@ io.on('connection', (client) => {
 	});
 
 
-	client.on('sendLocation', ({ latitude, longitude, activeChat }, cb) => {
+	client.on('sendLocation', ({ latitude, longitude, activeChat, privy }, cb) => {
 		const user = getUser(client.id);
-		const mutual = Boolean(activeChat);
 
 		if (!user) {
 			return cb({ message: 'Client not found', type: 401 });
 		}
 
-		activeChat = activeChat || user.room;
 
-		const options = { message: `https://google.com/maps?q=${ latitude },${ longitude }`, userID: user.id, user: user.userName, mutual };
+		const options = { message: `https://google.com/maps?q=${ latitude },${ longitude }`, userID: user.id, user: user.userName, privy };
+		const msg = generateMessage(options);
 
-		io.to(`${ activeChat }`).emit('locationMessage', generateMessage(options));
+		io.to(`${ activeChat }`).emit('locationMessage', msg);
 
+		if(privy){
+			client.emit('locationMessage', { ...msg, userID: activeChat });
+		}
 		cb();
 	});
 

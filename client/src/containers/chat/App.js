@@ -13,7 +13,6 @@ import { socket } from '../../server/socket';
 import { chatActions } from '../../utils/actions';
 
 const chatReducer = (chatObj, action) => {
-	console.log(chatObj);
 	switch (action.type) {
 		case 'JOIN':
 			return chatActions.joinChat(chatObj, action.room);
@@ -21,8 +20,10 @@ const chatReducer = (chatObj, action) => {
 			return chatActions.setActive(chatObj, action.active);
 		case 'MESSAGE':
 			return chatActions.addMessage(chatObj, action.message);
+		case 'PRIVATE':
+			return chatActions.setPrivate(chatObj, action.id, action.userName);
 		default:
-			return;
+			return chatObj;
 	}
 };
 
@@ -30,7 +31,7 @@ const chatReducer = (chatObj, action) => {
 
 const App = () => {
 	const [logged, setLogged] = useState(false);
-	const [chat, dispatchChat] = useReducer(chatReducer, { activeChat: '', chats: {}, ignoredIPs: [], room: '' });
+	const [chat, dispatchChat] = useReducer(chatReducer, { activeChat: '', chats: {}, ignoredUsers: [], room: '' });
 	const [myself, setMyself] = useState(null);
 
 	const [rooms, setRooms] = useState([]);
@@ -72,7 +73,7 @@ const App = () => {
 		socket.on('message', message => {
 
 			if (message.privy) {
-				const isUserIgnored = chat.ignoredIPs.some(ip => ip === message.userID);
+				const isUserIgnored = chat.ignoredUsers.some(id => id === message.userID);
 
 				if (isUserIgnored) { return; }
 			}
@@ -80,31 +81,30 @@ const App = () => {
 
 		});
 
-		// socket.on('locationMessage', link => {
+		socket.on('locationMessage', link => {
 
-		// 	setMessages(messageArray => [
-		// 		...messageArray,
-		// 		{
-		// 			timestamp: link.timestamp,
-		// 			text: <a key={link.text} rel='noopener noreferrer' target='_blank' href={link.text}>My location</a>,
-		// 			user: link.user,
-		// 			location: true
-		// 		}
-		// 	]);
-		// });
+			if (link.privy) {
+				const isUserIgnored = chat.ignoredUsers.some(id => id === link.userID);
 
-		// socket.on('privateChat', ({ userName, id }) => {
+				if (isUserIgnored) { return; }
+			}
 
-		// 	if (!chat.ignoredIPs.includes(id) && !(id in chat.chats)) {
-		// 		setPrivateChats(chats => ({ ...chats, [id]: { userName, messages: [] } }));
-		// 	}
-		// });
+			dispatchChat({ type: 'MESSAGE', message: { ...link, location: true, text: <a key={link.text} rel='noopener noreferrer' target='_blank' href={link.text}>My location</a> } });
+
+		});
+
+		socket.on('privateChat', ({ userName, id }) => {
+
+			if (!chat.ignoredUsers.includes(id) && !(id in chat.chats)) {
+				dispatchChat({ type: 'PRIVATE', id, userName });
+			}
+		});
 
 
 		return () => {
 			socket.removeAllListeners();
 		};
-	}, [chat]);
+	}, [chat.ignoredUsers, chat.chats]);
 
 	/* Clean unread flag if change chat selection */
 	// s
@@ -131,7 +131,7 @@ const App = () => {
 						<Divider />
 						<ChatsPanel
 							dispatchChat={dispatchChat}
-							chats={chat.chats}
+							chat={chat}
 						/>
 						<Footer
 							pending={pending}
