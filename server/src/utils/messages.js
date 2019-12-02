@@ -1,4 +1,4 @@
-const generateMessage = ({ user, userID, special = false, color = '#b0bec5', emojiInfo = [], message, mutual }) => {
+const generateMessage = ({ user, userID, special = false, color = '#b0bec5', emojiInfo = [], message, privy }) => {
 
 	return {
 		text: message,
@@ -7,7 +7,7 @@ const generateMessage = ({ user, userID, special = false, color = '#b0bec5', emo
 		color,
 		emojiInfo,
 		special,
-		mutual,
+		privy,
 		timestamp: new Date().getTime()
 	};
 };

@@ -29,14 +29,14 @@ const useStyles = makeStyles(({ palette }) => ({
 	}
 }));
 
-const ChatList = ({ chats, dispatchChat }) => {
+const ChatList = ({ chat, dispatchChat }) => {
 	const classes = useStyles();
 
 	const handleChatSelection = (chat) => {
 		dispatchChat({ type: 'SET_ACTIVE', active: chat });
 	};
 
-	const list = Object.keys(chats).filter(chat => chat !== 'main').map((key) => {
+	const list = Object.keys(chat.chats).filter(chat => chat !== 'main').map((key) => {
 		return (
 			<ListItem
 				key={key}
@@ -47,7 +47,7 @@ const ChatList = ({ chats, dispatchChat }) => {
 					color='textPrimary'
 					variant='body2'
 				>
-					{chats[key].userName}
+					{chat.chats[key].userName}
 				</Typography>
 				<ListItemSecondaryAction className={classes.action}>
 					<IconButton edge='end' aria-label='block' size='small'>
@@ -65,16 +65,16 @@ const ChatList = ({ chats, dispatchChat }) => {
 	return (
 		<List dense={true} className={classes.root}>
 			<ListItem
-				key={chats.main.id}
+				key={chat.room}
 				button className={classes.item}
-				onClick={() => handleChatSelection('main')}
+				onClick={() => handleChatSelection(chat.room)}
 			>
 				<Typography
 					color='textPrimary'
 					className={classes.active}
 					variant='body2'
 				>
-					{myself.room.toUpperCase()}
+					{chat.room.toUpperCase()}
 				</Typography>
 			</ListItem>
 			{list}

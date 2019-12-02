@@ -48,10 +48,9 @@ io.on('connection', (client) => {
 	});
 
 
-	client.on('sendMessage', ({ message, emojiInfo, color, activeChat }, cb) => {
+	client.on('sendMessage', ({ message, emojiInfo, color, activeChat, privy }, cb) => {
 		const user = getUser(client.id);
 		const filter = new Filter();
-		const mutual = Boolean(activeChat);
 
 		if (!user) {
 			return cb({ message: 'Client not found', type: 401 });
@@ -60,16 +59,14 @@ io.on('connection', (client) => {
 		if (filter.isProfane(message)) {
 			return cb({ message: 'Naughty, naughty!', type: 403 });
 		}
-		
-		activeChat = activeChat || user.room;
 
-		const options = { message, emojiInfo, color, userID: user.id, user: user.userName, mutual };
+		const options = { message, emojiInfo, color, userID: user.id, user: user.userName, privy };
 		const msg = generateMessage(options);
-		
-		io.to(`${activeChat}`).emit('message', msg);
 
-		if(mutual){
-			client.emit('message',{...msg, userID: activeChat});
+		io.to(`${ activeChat }`).emit('message', msg);
+
+		if (privy) {
+			client.emit('message', { ...msg, userID: activeChat });
 		}
 
 
@@ -89,7 +86,7 @@ io.on('connection', (client) => {
 
 		const options = { message: `https://google.com/maps?q=${ latitude },${ longitude }`, userID: user.id, user: user.userName, mutual };
 
-		io.to(`${activeChat}`).emit('locationMessage', generateMessage(options));
+		io.to(`${ activeChat }`).emit('locationMessage', generateMessage(options));
 
 		cb();
 	});

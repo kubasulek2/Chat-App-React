@@ -13,12 +13,15 @@ import { socket } from '../../server/socket';
 import { chatActions } from '../../utils/actions';
 
 const chatReducer = (chatObj, action) => {
+	console.log(chatObj);
 	switch (action.type) {
 		case 'JOIN':
 			return chatActions.joinChat(chatObj, action.room);
 		case 'SET_ACTIVE':
-			return chatActions.setActive(chatObj, action.active); 
-		default: 
+			return chatActions.setActive(chatObj, action.active);
+		case 'MESSAGE':
+			return chatActions.addMessage(chatObj, action.message);
+		default:
 			return;
 	}
 };
@@ -27,13 +30,8 @@ const chatReducer = (chatObj, action) => {
 
 const App = () => {
 	const [logged, setLogged] = useState(false);
-	const [chat, dispatchChat] = useReducer(chatReducer, { activeChat: '', chats: { main: {} }, ignoredIPs: [] });
+	const [chat, dispatchChat] = useReducer(chatReducer, { activeChat: '', chats: {}, ignoredIPs: [], room: '' });
 	const [myself, setMyself] = useState(null);
-	const [messages, setMessages] = useState([]);
-	const [privateChats, setPrivateChats] = useState({});
-	const [activeChat, setActiveChat] = useState('');
-	const [ignoredIPs, setIgnoredIPs] = useState([]);
-	const [mainUnread, setMainUnread] = useState(false);
 
 	const [rooms, setRooms] = useState([]);
 	const [users, setUsers] = useState([]);
@@ -46,7 +44,7 @@ const App = () => {
 	useEffect(() => {
 
 		socket.on('joinRoom', (user) => {
-			dispatchChat({ action: 'JOIN', room: user.room });
+			dispatchChat({ type: 'JOIN', room: user.room });
 			setLogged(true);
 			setPending(false);
 			setMyself(user);
@@ -68,60 +66,51 @@ const App = () => {
 		});
 
 		socket.on('welcome', message => {
-			setMessages(messageArray => [...messageArray, message]);
+			dispatchChat({ type: 'MESSAGE', message: message });
 		});
 
 		socket.on('message', message => {
 
-			if (message.mutual) {
-				const isUserIgnored = ignoredIPs.find(ip => ip === message.userID);
-				if (!isUserIgnored) {
-					const privateChat = { ...privateChats[message.userID], unread: true };
-					privateChat.messages = [...privateChat.messages, message];
+			if (message.privy) {
+				const isUserIgnored = chat.ignoredIPs.some(ip => ip === message.userID);
 
-					setPrivateChats(chats => ({ ...chats, [message.userID]: privateChat }));
-				}
-			} else {
-				setMessages(messageArray => [...messageArray, message]);
+				if (isUserIgnored) { return; }
 			}
+			dispatchChat({ type: 'MESSAGE', message: message });
+
 		});
 
-		socket.on('locationMessage', link => {
+		// socket.on('locationMessage', link => {
 
-			setMessages(messageArray => [
-				...messageArray,
-				{
-					timestamp: link.timestamp,
-					text: <a key={link.text} rel='noopener noreferrer' target='_blank' href={link.text}>My location</a>,
-					user: link.user,
-					location: true
-				}
-			]);
-		});
+		// 	setMessages(messageArray => [
+		// 		...messageArray,
+		// 		{
+		// 			timestamp: link.timestamp,
+		// 			text: <a key={link.text} rel='noopener noreferrer' target='_blank' href={link.text}>My location</a>,
+		// 			user: link.user,
+		// 			location: true
+		// 		}
+		// 	]);
+		// });
 
-		socket.on('privateChat', ({ userName, id }) => {
+		// socket.on('privateChat', ({ userName, id }) => {
 
-			if (!ignoredIPs.includes(id) && !(id in privateChats)) {
-				setPrivateChats(chats => ({ ...chats, [id]: { userName, messages: [] } }));
-			}
-		});
+		// 	if (!chat.ignoredIPs.includes(id) && !(id in chat.chats)) {
+		// 		setPrivateChats(chats => ({ ...chats, [id]: { userName, messages: [] } }));
+		// 	}
+		// });
 
 
 		return () => {
 			socket.removeAllListeners();
 		};
-	}, [privateChats, ignoredIPs]);
-
-	/* Clean unread flag if change chat selection */
-	useEffect(() => {
-		if (activeChat) {
-			return setPrivateChats(chats => ({ ...chats, [activeChat]: { ...chats[activeChat], unread: false } }));
-		}
-
 	}, [chat]);
 
+	/* Clean unread flag if change chat selection */
+	// s
+
 	/* Filter messages */
-	const activeMessages = () => chat.chats[chat.activeChat];
+	const activeMessages = () => chat.chats[chat.activeChat].messages || [];
 
 	return (
 		<Fragment>
@@ -143,13 +132,13 @@ const App = () => {
 						<ChatsPanel
 							dispatchChat={dispatchChat}
 							chats={chat.chats}
-							myself={myself}
 						/>
 						<Footer
 							pending={pending}
 							setPending={setPending}
 							setError={setError}
-							activeChat={activeChat}
+							activeChat={chat.activeChat}
+							room={chat.room}
 						/>
 						<InfoToast toast={toast} setToast={setToast} />
 					</Fragment>

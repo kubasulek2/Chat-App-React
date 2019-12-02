@@ -8,7 +8,7 @@ import MessageForm from '../../components/chat/MessageForm';
 import BottomPanel from '../../components/chat/BottomPanel';
 
 
-const MessagePanel = ({ pending, setError, activeChat }) => {
+const MessagePanel = ({ pending, setError, activeChat, room }) => {
 
 	const [message, setMessage] = useState('');
 	const [emojiInfo, setEmojiInfo] = useState([]);
@@ -23,8 +23,9 @@ const MessagePanel = ({ pending, setError, activeChat }) => {
 		if (!message.length) {
 			return;
 		}
-		
-		socket.emit('sendMessage', { message, emojiInfo, color, activeChat }, error => {
+		const privy = !(activeChat === room);
+
+		socket.emit('sendMessage', { message, emojiInfo, color, activeChat, privy }, error => {
 			if (error) {
 				return setError(error.message);
 			}	
@@ -33,7 +34,7 @@ const MessagePanel = ({ pending, setError, activeChat }) => {
 		setMessage('');
 		setEmojiInfo([]);
 
-	}, [message, setError, emojiInfo, color, activeChat]);
+	}, [message, setError, emojiInfo, color, activeChat, room]);
 
 	const handleLocation = async () => {
 		try {
