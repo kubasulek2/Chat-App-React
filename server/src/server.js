@@ -48,25 +48,32 @@ io.on('connection', (client) => {
 	});
 
 
-	client.on('sendMessage', ({ message, emojiInfo, color, activeChat, privy }, cb) => {
+	client.on('sendMessage', ({ message, emojiInfo, color, sendTo, privy }, cb) => {
 		const user = getUser(client.id);
 		const filter = new Filter();
+		
 
 		if (!user) {
 			return cb({ message: 'Client not found', type: 401 });
 		}
 
-		if (filter.isProfane(message)) {
+		if (!privy && filter.isProfane(message)) {
 			return cb({ message: 'Naughty, naughty!', type: 403 });
 		}
 
-		const options = { message, emojiInfo, color, userID: user.id, user: user.userName, privy };
+		const options = { message, emojiInfo, color, senderID: user.id, sender: user.userName, privy };
 		const msg = generateMessage(options);
 
-		io.to(`${ activeChat }`).emit('message', msg);
+		io.to(`${ sendTo }`).emit('message', msg);
 
 		if (privy) {
-			client.emit('message', { ...msg, userID: activeChat });
+			const receiver = getUser(sendTo);
+
+			if(!receiver){
+				return cb({ message: 'Requested user not found', type: 404 });
+			}
+
+			client.emit('message', { ...msg, senderID: sendTo, sender: receiver.userName });
 		}
 
 
@@ -74,7 +81,7 @@ io.on('connection', (client) => {
 	});
 
 
-	client.on('sendLocation', ({ latitude, longitude, activeChat, privy }, cb) => {
+	client.on('sendLocation', ({ latitude, longitude, sendTo, privy }, cb) => {
 		const user = getUser(client.id);
 
 		if (!user) {
@@ -82,13 +89,19 @@ io.on('connection', (client) => {
 		}
 
 
-		const options = { message: `https://google.com/maps?q=${ latitude },${ longitude }`, userID: user.id, user: user.userName, privy };
+		const options = { message: `https://google.com/maps?q=${ latitude },${ longitude }`, senderID: user.id, sender: user.userName, privy };
 		const msg = generateMessage(options);
 
-		io.to(`${ activeChat }`).emit('locationMessage', msg);
+		io.to(`${ sendTo }`).emit('locationMessage', msg);
 
 		if(privy){
-			client.emit('locationMessage', { ...msg, userID: activeChat });
+			const receiver = getUser(sendTo);
+
+			if (!receiver) {
+				return cb({ message: 'Requested user not found', type: 404 });
+			}
+
+			client.emit('locationMessage', { ...msg, senderID: sendTo, sender: receiver.userName });
 		}
 		cb();
 	});
@@ -136,7 +149,7 @@ io.on('connection', (client) => {
 		cb();
 	});
 
-	client.on('openPrivateChat', (requestedId) => {
+	client.on('openPrivateChat', (requestedId, cb) => {
 		const user = getUser(client.id);
 		const requestedUser = getUser(requestedId);
 
@@ -149,6 +162,8 @@ io.on('connection', (client) => {
 		}
 		client.emit('privateChat', { userName: requestedUser.userName, id: requestedUser.id });
 		io.to(`${ requestedId }`).emit('privateChat', { userName: user.userName, id: user.id });
+
+		cb();
 
 	});
 

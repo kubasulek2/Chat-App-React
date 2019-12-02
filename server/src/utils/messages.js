@@ -1,9 +1,9 @@
-const generateMessage = ({ user, userID, special = false, color = '#b0bec5', emojiInfo = [], message, privy }) => {
+const generateMessage = ({ sender, senderID, special = false, color = '#b0bec5', emojiInfo = [], message, privy }) => {
 
 	return {
 		text: message,
-		user,
-		userID,
+		sender,
+		senderID,
 		color,
 		emojiInfo,
 		special,
@@ -16,7 +16,7 @@ handleWelcomeMessages = (socket, userName, room) => {
 
 	const options = {
 		message: ', welcome!',
-		user: userName,
+		sender: userName,
 		special: true
 	};
 
@@ -32,7 +32,7 @@ handleLeaveMessage = (socket, userName, room) => {
 	const options = {
 		message: 'has left.',
 		special: true,
-		user: userName
+		sender: userName
 	};
 	socket.broadcast.to(room).emit('message', generateMessage(options));
 };

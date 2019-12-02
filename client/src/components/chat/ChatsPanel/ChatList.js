@@ -31,7 +31,7 @@ const useStyles = makeStyles(({ palette }) => ({
 
 const ChatList = ({ chat, dispatchChat }) => {
 	const classes = useStyles();
-	console.log(chat);
+	
 	const handleChatSelection = (chat) => {
 		dispatchChat({ type: 'SET_ACTIVE', active: chat });
 	};
@@ -47,7 +47,7 @@ const ChatList = ({ chat, dispatchChat }) => {
 					color='textPrimary'
 					variant='body2'
 				>
-					{chat.chats[key].userName}
+					{key}
 				</Typography>
 				<ListItemSecondaryAction className={classes.action}>
 					<IconButton edge='end' aria-label='block' size='small'>

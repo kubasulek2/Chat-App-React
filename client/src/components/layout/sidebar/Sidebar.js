@@ -3,7 +3,7 @@ import React, { Fragment } from 'react';
 import Header from '../Header';
 import Drawer from './Drawer';
 
-const Sidebar = ({ rooms, users, myself, setError }) => {
+const Sidebar = ({ rooms, users, myself, setError, dispatchChat }) => {
 	const [mobileOpen, setMobileOpen] = React.useState(false);
 	const handleDrawerToggle = () => {
 		setMobileOpen(!mobileOpen);
@@ -12,7 +12,8 @@ const Sidebar = ({ rooms, users, myself, setError }) => {
 	return (
 		<Fragment>
 			<Header handleMobile={handleDrawerToggle} />
-			<Drawer 
+			<Drawer
+				dispatchChat={dispatchChat} 
 				mobile={mobileOpen} 
 				handleMobile={handleDrawerToggle} 
 				rooms={rooms}

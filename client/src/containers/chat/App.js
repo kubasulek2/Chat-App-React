@@ -71,9 +71,9 @@ const App = () => {
 		});
 
 		socket.on('message', message => {
-
+			console.log(message, message.privy);
 			if (message.privy) {
-				const isUserIgnored = chat.ignoredUsers.some(id => id === message.userID);
+				const isUserIgnored = chat.ignoredUsers.some(id => id === message.senderID);
 
 				if (isUserIgnored) { return; }
 			}
@@ -84,7 +84,7 @@ const App = () => {
 		socket.on('locationMessage', link => {
 
 			if (link.privy) {
-				const isUserIgnored = chat.ignoredUsers.some(id => id === link.userID);
+				const isUserIgnored = chat.ignoredUsers.some(id => id === link.senderID);
 
 				if (isUserIgnored) { return; }
 			}
@@ -94,8 +94,9 @@ const App = () => {
 		});
 
 		socket.on('privateChat', ({ userName, id }) => {
-
-			if (!chat.ignoredUsers.includes(id) && !(id in chat.chats)) {
+			const chatExists = Object.keys(chat.chats).some(key => chat.chats[key].id === id);
+		
+			if (!chat.ignoredUsers.includes(id) && !chatExists) {
 				dispatchChat({ type: 'PRIVATE', id, userName });
 			}
 		});
@@ -106,8 +107,6 @@ const App = () => {
 		};
 	}, [chat.ignoredUsers, chat.chats]);
 
-	/* Clean unread flag if change chat selection */
-	// s
 
 	/* Filter messages */
 	const activeMessages = () => chat.chats[chat.activeChat].messages || [];
@@ -122,6 +121,7 @@ const App = () => {
 							myself={myself}
 							rooms={rooms}
 							users={users}
+							dispatchChat={dispatchChat}
 							setError={setError}
 						/>
 						<ChatBoard
@@ -137,8 +137,7 @@ const App = () => {
 							pending={pending}
 							setPending={setPending}
 							setError={setError}
-							activeChat={chat.activeChat}
-							room={chat.room}
+							chat={chat}
 						/>
 						<InfoToast toast={toast} setToast={setToast} />
 					</Fragment>

@@ -46,20 +46,25 @@ const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
 	}
 }));
 
-const UsersList = ({ users, myself, setError }) => {
+const UsersList = ({ users, myself, setError, dispatchChat }) => {
 	const classes = useStyles();
 	let usersList = null;
 
 	const handlePrivateChat = (evt) => {
 		const id = evt.currentTarget.dataset.id;
+		const name = evt.currentTarget.dataset.name;
 
 		socket.emit('openPrivateChat', id, (error) => {
-			setError(error.message);
+			if (error) {
+				return setError(error.message);
+			}
+			
+			dispatchChat({ type: 'SET_ACTIVE', active: name });
 		});
 	};
 
-	const button = (id) => (
-		<IconButton edge="end" aria-label="private-conversation" onClick={handlePrivateChat} data-id={id}>
+	const button = (id, name) => (
+		<IconButton edge="end" aria-label="private-conversation" onClick={handlePrivateChat} data-id={id} data-name={name}>
 			<CommentIcon color='primary' />
 		</IconButton>
 	);
@@ -78,7 +83,7 @@ const UsersList = ({ users, myself, setError }) => {
 			>
 				<ListItemText secondary={<span className={i === 0 ? classes.me : null} >{user.userName}</span>} />
 				<ListItemSecondaryAction>
-					{i === 0 ? null : button(user.id)}
+					{i === 0 ? null : button(user.id, user.userName)}
 				</ListItemSecondaryAction>
 			</ListItem>
 		));

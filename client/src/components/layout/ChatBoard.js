@@ -53,12 +53,12 @@ const ChatBoard = ({ messages, activeChat }) => {
 
 	/* Map messages to create message board. */
 	const messageComponents = messages.map((message, i) => {
-		
+		console.log(message);
 		/* if message is location type handle it separately. */
 		if(message.location){
 			return (
 				<Typography key={i}>
-					<span>{formatTime(message.timestamp)}</span> - <b>{message.user}</b>:&nbsp; 
+					<span>{formatTime(message.timestamp)}</span> - <b>{message.sender}</b>:&nbsp; 
 					{message.text} 
 				</Typography>);
 		}
@@ -72,12 +72,12 @@ const ChatBoard = ({ messages, activeChat }) => {
 			return (
 				<Typography key={i}>
 					<span>{formatTime(message.timestamp)}
-					</span> - <b>{message.user} </b><span style={{ color: message.color }}>{formatedText}</span>
+					</span> - <b>{message.sender} </b><span style={{ color: message.color }}>{formatedText}</span>
 				</Typography>);
 		} else {
 			return (
 				<Typography key={i}>
-					<span>{formatTime(message.timestamp)}</span> - <b>{message.user}</b>: <span style={{ color: message.color }}>{formatedText}</span>
+					<span>{formatTime(message.timestamp)}</span> - <b>{message.sender}</b>: <span style={{ color: message.color }}>{formatedText}</span>
 				</Typography>);
 		}
 	});
