@@ -23,6 +23,10 @@ const chatReducer = (chatObj, action) => {
 			return chatActions.addMessage(chatObj, action.message);
 		case 'PRIVATE':
 			return chatActions.setPrivate(chatObj, action.id, action.userName);
+		case 'CLOSE':
+			return chatActions.close(chatObj, action.chatName);
+		case 'BLOCK':
+			return chatActions.setPrivate(chatObj, action.id, action.userName);		
 		default:
 			return chatObj;
 	}
@@ -50,7 +54,6 @@ const App = () => {
 			setLogged(true);
 			setPending(false);
 			setMyself(user);
-			showToast(setToast, <span>You have joined <span className='styled'>{user.room}</span> room.</span>);
 
 		});
 
@@ -67,7 +70,7 @@ const App = () => {
 		});
 
 		socket.on('message', message => {
-			console.log(message, message.privy);
+	
 			if (message.privy) {
 				const isUserIgnored = chat.ignoredUsers.some(id => id === message.senderID);
 
@@ -98,7 +101,7 @@ const App = () => {
 
 			if (!chatExists) {
 				socket.emit('acceptChat', { requestedID, requestedName, requestingID });
-				dispatchChat({ type: 'PRIVATE', requestingID, requestingName });
+				dispatchChat({ type: 'PRIVATE', id: requestingID, userName: requestingName });
 				showToast(setToast, <span>Private chat with <span className='styled'>{requestingName}</span></span>);
 			}
 		});
@@ -115,7 +118,6 @@ const App = () => {
 			
 			dispatchChat({ type: 'PRIVATE', id: requestedID, userName: requestedName });
 			dispatchChat({ type: 'SET_ACTIVE', active: requestedName});
-			showToast(setToast, <span><span className='styled'>{requestedName}</span> accepted your request</span>);
 		});
 
 		return () => {
@@ -123,16 +125,22 @@ const App = () => {
 		};
 	}, [chat.ignoredUsers, chat.chats]);
 
+	useEffect(() => {
+		if(chat.activeChat){
+			showToast(setToast, <span><span className='styled'>{chat.activeChat}</span> is your active chat now.</span>);
+		}
+	},[chat.activeChat]);
+
 
 	/* Filter messages */
 	const activeMessages = () => chat.chats[chat.activeChat].messages || [];
 
 	return (
 		<Fragment>
-			{error ? <ErrorModal error={error} handleOpen={setError} /> : null}
 			{logged ?
 				(
 					<Fragment>
+						<ErrorModal error={error} handleOpen={setError} />
 						<Sidebar
 							myself={myself}
 							rooms={rooms}

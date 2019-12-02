@@ -1,53 +1,63 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Modal from '@material-ui/core/Modal';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Slide from '@material-ui/core/Slide';
 
-const useStyles = makeStyles(theme => ({
-	modal: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'center',
-		border: '1px solid rgba(66,66,66, 0.4)',
-		outline: 'none',
-	},
+const useStyles = makeStyles(({ palette, shadows }) => ({
 	paper: {
-		backgroundColor: theme.palette.background.paper,
+		minWidth: 300,
+		backgroundColor: palette.background.paper,
 		border: '1px solid rgba(66,66,66, 0.4)',
-		outline: 'none',
-		boxShadow: theme.shadows[ 2 ],
-		padding: theme.spacing(2, 4, 3),
+		boxShadow: shadows[2],
 	},
 }));
+
+/* eslint-disable react/display-name */
+const Transition = forwardRef(function Transition (props, ref) {
+	return <Slide direction='up' ref={ref} unmountOnExit {...props} />;
+});
+/* eslint-enable react/display-name */
 
 const ErrorModal = ({ error, handleOpen }) => {
 	const classes = useStyles();
 
-	const handleClose = () => {
-		handleOpen(false);
-	};
+	const handleClose = () => handleOpen(false);
+
 	const open = !!error;
-	
+
 	return (
-		<Modal
-			className={classes.modal}
+		<Dialog
+			className={classes.root}
+			TransitionComponent={Transition}
 			open={open}
 			onClose={handleClose}
 			closeAfterTransition
-			BackdropComponent={Backdrop}
-			BackdropProps={{
-				timeout: 500,
+			PaperProps={{
+				classes:{
+					root: classes.paper
+				}
 			}}
 		>
-			<Fade in={open}>
-				<div className={classes.paper}>
-					<h2>{error.type}: {error.message}</h2>
-				</div>
-			</Fade>
-		</Modal>
+			<DialogTitle>Ups! Error {error.type}:</DialogTitle>
+			<DialogContent>
+				<DialogContentText >
+					{error.message}
+				</DialogContentText>
+			</DialogContent>
+			<DialogActions>
+				<Button onClick={handleClose} color="primary">
+					Ok
+				</Button>
+			</DialogActions>
+		</Dialog>
 
 	);
 };
 
 export default ErrorModal;
+
