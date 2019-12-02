@@ -11,6 +11,7 @@ import InfoToast from '../../components/UI/feedback/InfoToast';
 import ChatsPanel from '../../components/chat/ChatsPanel/ChatsPanel';
 import { socket } from '../../server/socket';
 import { chatActions } from '../../utils/actions';
+import { showToast } from '../../utils/';
 
 const chatReducer = (chatObj, action) => {
 	switch (action.type) {
@@ -49,13 +50,8 @@ const App = () => {
 			setLogged(true);
 			setPending(false);
 			setMyself(user);
+			showToast(setToast, <span>You have joined <span className='styled'>{user.room}</span> room.</span>);
 
-			setTimeout(() => {
-				setToast({
-					open: true,
-					message: <span>You have joined <span style={{ color: '#417cab', textTransform: 'uppercase', fontWeight: 'bold' }}>{user.room}</span> room.</span>
-				});
-			}, 400);
 		});
 
 		socket.on('roomsList', roomsList => {
@@ -103,6 +99,7 @@ const App = () => {
 			if (!chatExists) {
 				socket.emit('acceptChat', { requestedID, requestedName, requestingID });
 				dispatchChat({ type: 'PRIVATE', requestingID, requestingName });
+				showToast(setToast, <span>Private chat with <span className='styled'>{requestingName}</span></span>);
 			}
 		});
 
@@ -118,6 +115,7 @@ const App = () => {
 			
 			dispatchChat({ type: 'PRIVATE', id: requestedID, userName: requestedName });
 			dispatchChat({ type: 'SET_ACTIVE', active: requestedName});
+			showToast(setToast, <span><span className='styled'>{requestedName}</span> accepted your request</span>);
 		});
 
 		return () => {
@@ -139,9 +137,7 @@ const App = () => {
 							myself={myself}
 							rooms={rooms}
 							users={users}
-							dispatchChat={dispatchChat}
 							setError={setError}
-							setToast={setToast}
 						/>
 						<ChatBoard
 							activeChat={chat.activeChat}

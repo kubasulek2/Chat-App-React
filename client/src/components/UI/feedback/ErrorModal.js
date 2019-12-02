@@ -28,7 +28,7 @@ const ErrorModal = ({ error, handleOpen }) => {
 		handleOpen(false);
 	};
 	const open = !!error;
-	console.log(error.message);
+	
 	return (
 		<Modal
 			className={classes.modal}

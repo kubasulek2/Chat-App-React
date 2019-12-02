@@ -17,8 +17,12 @@ const useStyles = makeStyles(({ palette }) => ({
 		a: {
 			'&,&:hover,&:active,&:visited': {
 				color: palette.primary.light,
-				//textDecoration: 'none'
 			}
+		},
+		'span.styled': { 
+			color: '#417cab', 
+			textTransform: 'uppercase', 
+			fontWeight: 'bold' 
 		},
 		'*::-webkit-scrollbar': {
 			width: '0.4em'

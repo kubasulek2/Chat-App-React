@@ -36,10 +36,16 @@ export const formatText = (text, emojiInfo) => {
 		counter++;
 	});
 
-
-	// 
-
 	return formatedText;
+};
+
+export const showToast = (cb, message) => {
+	setTimeout(() => {
+		cb({
+			open: true,
+			message,
+		});
+	}, 400);
 };
 
 

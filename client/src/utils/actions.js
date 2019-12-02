@@ -30,7 +30,7 @@ const setPrivate = (chat, id, userName) => {
 	const chats = { ...chat.chats };
 
 	chats[userName] = { id, messages: [] };
-	console.log({ ...chat, chats });
+	
 	return { ...chat, chats };
 };
 
