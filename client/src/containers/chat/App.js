@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, useReducer } from 'react';
 import Divider from '@material-ui/core/Divider';
 
 import WithStyles from '../../hoc/withStyles';
@@ -10,30 +10,43 @@ import ErrorModal from '../../components/UI/feedback/ErrorModal';
 import InfoToast from '../../components/UI/feedback/InfoToast';
 import ChatsPanel from '../../components/chat/ChatsPanel/ChatsPanel';
 import { socket } from '../../server/socket';
+import { chatActions } from '../../utils/actions';
+
+const chatReducer = (chatObj, action) => {
+	switch (action.type) {
+		case 'JOIN':
+			return chatActions.joinChat(chatObj, action.room);
+		case 'SET_ACTIVE':
+			return chatActions.setActive(chatObj, action.active); 
+		default: 
+			return;
+	}
+};
+
 
 
 const App = () => {
 	const [logged, setLogged] = useState(false);
-	
+	const [chat, dispatchChat] = useReducer(chatReducer, { activeChat: '', chats: { main: {} }, ignoredIPs: [] });
 	const [myself, setMyself] = useState(null);
 	const [messages, setMessages] = useState([]);
 	const [privateChats, setPrivateChats] = useState({});
 	const [activeChat, setActiveChat] = useState('');
 	const [ignoredIPs, setIgnoredIPs] = useState([]);
 	const [mainUnread, setMainUnread] = useState(false);
-	
+
 	const [rooms, setRooms] = useState([]);
 	const [users, setUsers] = useState([]);
-	
+
 	const [pending, setPending] = useState(false);
 	const [error, setError] = useState(false);
 	const [toast, setToast] = useState({ open: false, message: null });
 
 
 	useEffect(() => {
-		console.log('from App');
+
 		socket.on('joinRoom', (user) => {
-			setMessages([]);
+			dispatchChat({ action: 'JOIN', room: user.room });
 			setLogged(true);
 			setPending(false);
 			setMyself(user);
@@ -59,13 +72,13 @@ const App = () => {
 		});
 
 		socket.on('message', message => {
-		
+
 			if (message.mutual) {
 				const isUserIgnored = ignoredIPs.find(ip => ip === message.userID);
 				if (!isUserIgnored) {
-					const privateChat = {...privateChats[message.userID], unread: true};
+					const privateChat = { ...privateChats[message.userID], unread: true };
 					privateChat.messages = [...privateChat.messages, message];
-					
+
 					setPrivateChats(chats => ({ ...chats, [message.userID]: privateChat }));
 				}
 			} else {
@@ -74,7 +87,7 @@ const App = () => {
 		});
 
 		socket.on('locationMessage', link => {
-	
+
 			setMessages(messageArray => [
 				...messageArray,
 				{
@@ -87,7 +100,7 @@ const App = () => {
 		});
 
 		socket.on('privateChat', ({ userName, id }) => {
-		
+
 			if (!ignoredIPs.includes(id) && !(id in privateChats)) {
 				setPrivateChats(chats => ({ ...chats, [id]: { userName, messages: [] } }));
 			}
@@ -97,24 +110,18 @@ const App = () => {
 		return () => {
 			socket.removeAllListeners();
 		};
-	}, [privateChats,ignoredIPs]);
+	}, [privateChats, ignoredIPs]);
 
 	/* Clean unread flag if change chat selection */
 	useEffect(() => {
-		if (activeChat){
-			return setPrivateChats(chats => ({...chats, [activeChat]: {...chats[activeChat], unread: false}}));
+		if (activeChat) {
+			return setPrivateChats(chats => ({ ...chats, [activeChat]: { ...chats[activeChat], unread: false } }));
 		}
 
-	}, [activeChat]);
+	}, [chat]);
 
-	const activeMessages = () => {
-		console.log(activeChat);
-		if(activeChat){
-			console.log('here');
-			return privateChats[activeChat].messages;
-		}	
-		return messages;
-	};
+	/* Filter messages */
+	const activeMessages = () => chat.chats[chat.activeChat];
 
 	return (
 		<Fragment>
@@ -129,13 +136,13 @@ const App = () => {
 							setError={setError}
 						/>
 						<ChatBoard
-							activeChat={activeChat}
+							activeChat={chat.activeChat}
 							messages={activeMessages()}
 						/>
 						<Divider />
 						<ChatsPanel
-							setActiveChat={setActiveChat}
-							privateChats={privateChats}
+							dispatchChat={dispatchChat}
+							chats={chat.chats}
 							myself={myself}
 						/>
 						<Footer

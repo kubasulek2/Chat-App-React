@@ -44,7 +44,7 @@ const useStyles = makeStyles(({ palette, breakpoints }) => ({
 }));
 
 
-const ChatsPanel = ({ privateChats, myself, setActiveChat }) => {
+const ChatsPanel = ({ chats, dispatchChat }) => {
 	const classes = useStyles();
 	const [expanded, setExpanded] = useState(false);
 
@@ -58,16 +58,15 @@ const ChatsPanel = ({ privateChats, myself, setActiveChat }) => {
 	};
 
 	return (
-		Object.keys(privateChats).length && myself
+		Object.keys(chats).length > 1
 			? <ClickAwayListener onClickAway={handleClickAway}>
 				<Card className={classes.card}>
 					<Collapse in={expanded} timeout='auto'>
 						<CardContent className={classes.content}>
 							
 							<ChatList 
-								privateChats={privateChats} 
-								myself={myself} 
-								setActiveChat={setActiveChat}
+								chats={chats} 
+								dispatchChat={dispatchChat}
 							/>
 						</CardContent>
 					</Collapse>

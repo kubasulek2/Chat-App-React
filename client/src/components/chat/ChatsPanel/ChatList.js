@@ -29,17 +29,17 @@ const useStyles = makeStyles(({ palette }) => ({
 	}
 }));
 
-const ChatList = ({ privateChats, myself, setActiveChat }) => {
+const ChatList = ({ chats, dispatchChat }) => {
 	const classes = useStyles();
 
 	const handleChatSelection = (chat) => {
-		setActiveChat(chat);
+		dispatchChat({ type: 'SET_ACTIVE', active: chat });
 	};
 
-	const list = Object.keys(privateChats).map((key) => {
+	const list = Object.keys(chats).filter(chat => chat !== 'main').map((key) => {
 		return (
-			<ListItem 
-				key={key} 
+			<ListItem
+				key={key}
 				button className={classes.item}
 				onClick={() => handleChatSelection(key)}
 			>
@@ -47,7 +47,7 @@ const ChatList = ({ privateChats, myself, setActiveChat }) => {
 					color='textPrimary'
 					variant='body2'
 				>
-					{privateChats[key].userName}
+					{chats[key].userName}
 				</Typography>
 				<ListItemSecondaryAction className={classes.action}>
 					<IconButton edge='end' aria-label='block' size='small'>
@@ -64,10 +64,10 @@ const ChatList = ({ privateChats, myself, setActiveChat }) => {
 
 	return (
 		<List dense={true} className={classes.root}>
-			<ListItem 
-				key={myself.id} 
+			<ListItem
+				key={chats.main.id}
 				button className={classes.item}
-				onClick={() => handleChatSelection('')}
+				onClick={() => handleChatSelection('main')}
 			>
 				<Typography
 					color='textPrimary'
