@@ -53,6 +53,7 @@ const MessagePanel = ({ pending, setError, chat }) => {
 	return (
 		<Grid container>
 			<MessageForm
+				activeChat={activeChat}
 				message={message}
 				setMessage={setMessage}
 				pending={pending}

@@ -15,7 +15,7 @@ import { chatActions } from '../../utils/actions';
 const chatReducer = (chatObj, action) => {
 	switch (action.type) {
 		case 'JOIN':
-			return chatActions.joinChat(chatObj, action.room);
+			return chatActions.joinRoom(chatObj, action.room);
 		case 'SET_ACTIVE':
 			return chatActions.setActive(chatObj, action.active);
 		case 'MESSAGE':

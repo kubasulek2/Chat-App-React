@@ -25,7 +25,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 const BottomPanel = (props) => {
 	const classes = useStyles(props);
 	const { setUppercaseMode, color, setColor, setMessage, setEmojiInfo } = props;
-	
+
 	const handleCase = () => {
 		setUppercaseMode(prevMode => !prevMode);
 	};

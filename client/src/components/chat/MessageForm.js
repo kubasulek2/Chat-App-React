@@ -33,11 +33,14 @@ const MessageForm = (props) => {
 	const textInput = useRef();
 	const form = useRef();
 
-	const { message, setMessage, pending, handleSubmit, uppercaseMode } = props;
+	const { message, setMessage, pending, handleSubmit, uppercaseMode, color, activeChat } = props;
+
 
 	useEffect(() => {
-		setTimeout(() => textInput.current.focus(), 100);
-	});
+		if (textInput.current.id !== document.activeElement.id){
+			setTimeout(() => textInput.current.focus(), 200);
+		}
+	}, [uppercaseMode, color, message, activeChat]);
 
 	const handleKeyDown = (evt) => {
 

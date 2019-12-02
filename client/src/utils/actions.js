@@ -1,6 +1,8 @@
-const joinChat = (chat, room) => {
+const joinRoom = (chat, room) => {
 	const chats = { ...chat.chats };
-
+	
+	delete chats[chat.room];
+	
 	chats[room] = { id: room, messages: [], unread: false };
 
 	return {
@@ -35,7 +37,7 @@ const setPrivate = (chat, id, userName) => {
 
 
 export const chatActions = {
-	joinChat,
+	joinRoom,
 	setActive,
 	addMessage,
 	setPrivate
