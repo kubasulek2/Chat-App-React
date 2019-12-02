@@ -28,7 +28,7 @@ const ErrorModal = ({ error, handleOpen }) => {
 		handleOpen(false);
 	};
 	const open = !!error;
-
+	console.log(error.message);
 	return (
 		<Modal
 			className={classes.modal}
@@ -42,7 +42,7 @@ const ErrorModal = ({ error, handleOpen }) => {
 		>
 			<Fade in={open}>
 				<div className={classes.paper}>
-					<h2>{error}</h2>
+					<h2>{error.type}: {error.message}</h2>
 				</div>
 			</Fade>
 		</Modal>

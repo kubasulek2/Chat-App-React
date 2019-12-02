@@ -46,20 +46,17 @@ const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
 	}
 }));
 
-const UsersList = ({ users, myself, setError, dispatchChat }) => {
+const UsersList = ({ users, myself, setError, dispatchChat, setToast }) => {
 	const classes = useStyles();
 	let usersList = null;
 
 	const handlePrivateChat = (evt) => {
 		const id = evt.currentTarget.dataset.id;
-		const name = evt.currentTarget.dataset.name;
-
-		socket.emit('openPrivateChat', id, (error) => {
+		
+		socket.emit('privateChatRequest', id, (error) => {
 			if (error) {
 				return setError(error.message);
 			}
-			
-			dispatchChat({ type: 'SET_ACTIVE', active: name });
 		});
 	};
 

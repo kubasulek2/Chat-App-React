@@ -53,7 +53,7 @@ const ChatBoard = ({ messages, activeChat }) => {
 
 	/* Map messages to create message board. */
 	const messageComponents = messages.map((message, i) => {
-		console.log(message);
+		
 		/* if message is location type handle it separately. */
 		if(message.location){
 			return (

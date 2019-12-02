@@ -93,14 +93,32 @@ const App = () => {
 
 		});
 
-		socket.on('privateChat', ({ userName, id }) => {
-			const chatExists = Object.keys(chat.chats).some(key => chat.chats[key].id === id);
-		
-			if (!chat.ignoredUsers.includes(id) && !chatExists) {
-				dispatchChat({ type: 'PRIVATE', id, userName });
+		socket.on('openPrivateChat', ({ requestedID, requestedName, requestingID, requestingName }) => {
+			const chatExists = Object.keys(chat.chats).some(key => chat.chats[key].id === requestingID);
+
+			if (chat.ignoredUsers.includes(requestingID)) {
+				return socket.emit('rejectChat', { requestedName, requestingID });
+			}
+
+			if (!chatExists) {
+				socket.emit('acceptChat', { requestedID, requestedName, requestingID });
+				dispatchChat({ type: 'PRIVATE', requestingID, requestingName });
 			}
 		});
 
+		socket.on('chatRejected', ({ requestedName }) => {
+			
+			setError({
+				type: 403,
+				message: <span><span style={{ color: '#417cab', textTransform: 'capitalize', fontWeight: 'bold' }}>{requestedName}</span> has blocked you.</span>
+			});
+		});
+
+		socket.on('chatAccepted', ({ requestedName, requestedID }) => {
+			
+			dispatchChat({ type: 'PRIVATE', id: requestedID, userName: requestedName });
+			dispatchChat({ type: 'SET_ACTIVE', active: requestedName});
+		});
 
 		return () => {
 			socket.removeAllListeners();
@@ -113,7 +131,7 @@ const App = () => {
 
 	return (
 		<Fragment>
-			<ErrorModal error={error} handleOpen={setError} />
+			{error ? <ErrorModal error={error} handleOpen={setError} /> : null}
 			{logged ?
 				(
 					<Fragment>
@@ -123,6 +141,7 @@ const App = () => {
 							users={users}
 							dispatchChat={dispatchChat}
 							setError={setError}
+							setToast={setToast}
 						/>
 						<ChatBoard
 							activeChat={chat.activeChat}

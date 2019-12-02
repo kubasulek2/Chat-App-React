@@ -43,7 +43,7 @@ const useStyles = makeStyles(({ mixins, palette, breakpoints }) => ({
 	}
 }));
 
-const DrawerComponent = ({ mobile, handleMobile, users, rooms, myself, setError, dispatchChat }) => {
+const DrawerComponent = ({ mobile, handleMobile, users, rooms, myself, setError, dispatchChat, setToast }) => {
 
 	const classes = useStyles();
 
@@ -62,6 +62,7 @@ const DrawerComponent = ({ mobile, handleMobile, users, rooms, myself, setError,
 				myself={myself} 
 				setError={setError}
 				dispatchChat={dispatchChat}
+				setToast={setToast}
 			/>
 			<div className={classes.footer}>
 				<NewRoom setError={setError}/>

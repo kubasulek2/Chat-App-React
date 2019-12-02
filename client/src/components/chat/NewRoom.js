@@ -60,13 +60,8 @@ const NewRoom = ({ setError }) => {
 
 	const handleSubmit = (evt) => {
 		evt.preventDefault();
-
-		const privatePattern = /^__private__/;
-
-		if (privatePattern.test(roomName)) {
-			return setLocalError('This name is reserved.');
-
-		} else if (roomName.length < 3) {
+		
+		if (roomName.length < 3) {
 			return setLocalError('At least 3 characters.');
 		}
 

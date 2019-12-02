@@ -14,8 +14,6 @@ const joinChat = (chat, room) => {
 const setActive = (chat, active) => ({ ...chat, activeChat: active });
 
 const addMessage = (chat, message) => {
-	console.log('chat:', chat);
-	console.log('message:', message);
 	const chats = { ...chat.chats };
 	const channel = message.privy ? message.sender : chat.room;
 	const messages = chats[channel].messages;

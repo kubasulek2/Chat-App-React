@@ -51,7 +51,7 @@ io.on('connection', (client) => {
 	client.on('sendMessage', ({ message, emojiInfo, color, sendTo, privy }, cb) => {
 		const user = getUser(client.id);
 		const filter = new Filter();
-		
+
 
 		if (!user) {
 			return cb({ message: 'Client not found', type: 401 });
@@ -69,7 +69,7 @@ io.on('connection', (client) => {
 		if (privy) {
 			const receiver = getUser(sendTo);
 
-			if(!receiver){
+			if (!receiver) {
 				return cb({ message: 'Requested user not found', type: 404 });
 			}
 
@@ -94,7 +94,7 @@ io.on('connection', (client) => {
 
 		io.to(`${ sendTo }`).emit('locationMessage', msg);
 
-		if(privy){
+		if (privy) {
 			const receiver = getUser(sendTo);
 
 			if (!receiver) {
@@ -149,22 +149,30 @@ io.on('connection', (client) => {
 		cb();
 	});
 
-	client.on('openPrivateChat', (requestedId, cb) => {
-		const user = getUser(client.id);
-		const requestedUser = getUser(requestedId);
+	client.on('privateChatRequest', (requestedId, cb) => {
+		const { id: requestingID, userName: requestingName } = getUser(client.id);
+		const { id: requestedID, userName: requestedName } = getUser(requestedId);
 
-		if (!user) {
+		if (!requestingName) {
 			return cb({ message: 'Client not found', type: 401 });
 		}
 
-		if (!requestedUser) {
+		if (!requestedName) {
 			return cb({ message: 'Requested user not found', type: 404 });
 		}
-		client.emit('privateChat', { userName: requestedUser.userName, id: requestedUser.id });
-		io.to(`${ requestedId }`).emit('privateChat', { userName: user.userName, id: user.id });
+		
+		io.to(`${ requestedId }`).emit('openPrivateChat', { requestedID, requestedName, requestingID, requestingName });
 
 		cb();
 
+	});
+
+	client.on('rejectChat', ({ requestedName, requestingID }) => {
+		io.to(`${ requestingID }`).emit('chatRejected', { requestedName });
+	});
+
+	client.on('acceptChat', ({ requestedID, requestedName, requestingID }) => {
+		io.to(`${ requestingID }`).emit('chatAccepted', { requestedName, requestedID });
 	});
 
 	client.on('disconnect', () => {
