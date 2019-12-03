@@ -12,32 +12,40 @@ const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
 		width: 'calc(100% - 300px)',
 		flex: '1 1 auto',
 		overflowY: 'scroll',
+		padding: spacing(2),
+		display: 'block',
+		
+		'& b': {
+			color: palette.secondary.light
+		},
+		
+		'& span': {
+			color: palette.primary.light
+		},
+		
 		[breakpoints.down('md')]: {
 			marginLeft: 0,
 			width: '100%',
 		},
-		padding: spacing(2),
-		display: 'block',
-		'& b': {
-			color: palette.secondary.light
-		},
-		'& span': {
-			color: palette.primary.light
+
+		'& p:last-child': {
+			paddingBottom: 35
 		}
+
 	}
 }));
 
 const ChatBoard = ({ messages, activeChat }) => {
 	const classes = useStyles();
 	const boardRef = useRef();
-	
+
 	/* Scroll to last message when new message arrive and user has not scrolled up. */
 	useEffect(() => {
 		if (boardRef.current.lastChild) {
 			const elHeight = boardRef.current.clientHeight;
 			const elScrollTop = boardRef.current.scrollTop;
 			const lastChildOffset = boardRef.current.lastChild.offsetTop;
-			
+
 			if ((lastChildOffset >= elHeight - 10) && (elHeight + elScrollTop > lastChildOffset - 30)) {
 				boardRef.current.lastChild.scrollIntoView();
 			}
@@ -46,20 +54,20 @@ const ChatBoard = ({ messages, activeChat }) => {
 
 	/* Scroll to last message when activeChat is changed. */
 	useEffect(() => {
-		if (boardRef.current.lastChild){
+		if (boardRef.current.lastChild) {
 			boardRef.current.lastChild.scrollIntoView();
 		}
-	},[activeChat]);
+	}, [activeChat]);
 
 	/* Map messages to create message board. */
 	const messageComponents = messages.map((message, i) => {
-		
+
 		/* if message is location type handle it separately. */
-		if(message.location){
+		if (message.location) {
 			return (
 				<Typography key={i}>
-					<span>{formatTime(message.timestamp)}</span> - <b>{message.sender}</b>:&nbsp; 
-					{message.text} 
+					<span>{formatTime(message.timestamp)}</span> - <b>{message.sender}</b>:&nbsp;
+					{message.text}
 				</Typography>);
 		}
 
