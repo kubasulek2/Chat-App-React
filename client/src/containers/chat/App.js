@@ -26,7 +26,7 @@ const chatReducer = (chatObj, action) => {
 		case 'CLOSE':
 			return chatActions.close(chatObj, action.chatName);
 		case 'BLOCK':
-			return chatActions.setPrivate(chatObj, action.id, action.userName);		
+			return chatActions.block(chatObj, action.id, action.chatName);
 		default:
 			return chatObj;
 	}
@@ -70,11 +70,13 @@ const App = () => {
 		});
 
 		socket.on('message', message => {
-	
+
 			if (message.privy) {
 				const isUserIgnored = chat.ignoredUsers.some(id => id === message.senderID);
 
-				if (isUserIgnored) { return; }
+				if (isUserIgnored) {
+					return socket.emit('rejectChat', { requestedName: myself.userName, requestingID: message.senderID });
+				}
 			}
 			dispatchChat({ type: 'MESSAGE', message: message });
 
@@ -100,14 +102,14 @@ const App = () => {
 			}
 
 			if (!chatExists) {
-				socket.emit('acceptChat', { requestedID, requestedName, requestingID });
 				dispatchChat({ type: 'PRIVATE', id: requestingID, userName: requestingName });
 				showToast(setToast, <span>Private chat with <span className='styled'>{requestingName}</span></span>);
 			}
+			socket.emit('acceptChat', { requestedID, requestedName, requestingID });
 		});
 
 		socket.on('chatRejected', ({ requestedName }) => {
-			
+
 			setError({
 				type: 403,
 				message: <span><span style={{ color: '#417cab', textTransform: 'capitalize', fontWeight: 'bold' }}>{requestedName}</span> has blocked you.</span>
@@ -115,9 +117,9 @@ const App = () => {
 		});
 
 		socket.on('chatAccepted', ({ requestedName, requestedID }) => {
-			
+
 			dispatchChat({ type: 'PRIVATE', id: requestedID, userName: requestedName });
-			dispatchChat({ type: 'SET_ACTIVE', active: requestedName});
+			dispatchChat({ type: 'SET_ACTIVE', active: requestedName });
 		});
 
 		return () => {
@@ -126,10 +128,10 @@ const App = () => {
 	}, [chat.ignoredUsers, chat.chats]);
 
 	useEffect(() => {
-		if(chat.activeChat){
+		if (chat.activeChat) {
 			showToast(setToast, <span><span className='styled'>{chat.activeChat}</span> is your active chat now.</span>);
 		}
-	},[chat.activeChat]);
+	}, [chat.activeChat, myself]);
 
 
 	/* Filter messages */
@@ -146,6 +148,7 @@ const App = () => {
 							rooms={rooms}
 							users={users}
 							setError={setError}
+							ignoredUsers={chat.ignoredUsers}
 						/>
 						<ChatBoard
 							activeChat={chat.activeChat}

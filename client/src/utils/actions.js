@@ -18,7 +18,7 @@ const addMessage = (chat, message) => {
 	const channel = message.privy ? message.sender : chat.room;
 
 	return produce(chat, draft => {
-		draft.chats[channel].messages = chat.chats[channel].messages || [];
+		draft.chats[channel].messages = draft.chats[channel].messages || [];
 		draft.chats[channel].messages.push(message);
 		draft.chats[channel].unread = channel !== chat.activeChat;
 	});
@@ -29,11 +29,12 @@ const setPrivate = (chat, id, userName) => produce(chat, draft => {
 });
 
 
-const block = (chat, id, userName) => {
-	const chats = { ...chat.chats };
-	//chats[userName] = { id, messages: [] };
-
-	return { ...chat, chats };
+const block = (chat, id, name) => {
+	return produce(chat, draft => {
+		draft.activeChat = chat.activeChat === name ? chat.room : chat.activeChat;
+		draft.ignoredUsers.push(id);
+		delete draft.chats[name];
+	});
 };
 
 const close = (chat, chatName) => produce(chat, draft => {

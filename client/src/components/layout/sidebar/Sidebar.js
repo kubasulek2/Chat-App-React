@@ -3,7 +3,7 @@ import React, { Fragment } from 'react';
 import Header from '../Header';
 import Drawer from './Drawer';
 
-const Sidebar = ({ rooms, users, myself, setError}) => {
+const Sidebar = ({ rooms, users, myself, setError, ignoredUsers}) => {
 	const [mobileOpen, setMobileOpen] = React.useState(false);
 	const handleDrawerToggle = () => {
 		setMobileOpen(!mobileOpen);
@@ -19,6 +19,7 @@ const Sidebar = ({ rooms, users, myself, setError}) => {
 				users={users}
 				myself={myself}
 				setError = {setError}	
+				ignoredUsers={ignoredUsers}
 			/>
 		</Fragment>
 	);

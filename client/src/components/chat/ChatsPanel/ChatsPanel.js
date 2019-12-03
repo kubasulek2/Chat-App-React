@@ -7,6 +7,7 @@ import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
 import MessageIcon from '@material-ui/icons/Message';
 import Badge from '@material-ui/core/Badge';
+import Zoom from '@material-ui/core/Zoom';
 
 import ChatList from './ChatList.js';
 
@@ -45,8 +46,8 @@ const useStyles = makeStyles(({ palette, breakpoints }) => ({
 
 const ChatsPanel = ({ chat, dispatchChat }) => {
 	const classes = useStyles();
-	const [expanded, setExpanded] = useState(false);
-	console.log(expanded);
+	const [expanded, setExpanded] = useState(true);
+	
 	const handleExpandClick = () => {
 		setExpanded(!expanded);
 	};
@@ -69,11 +70,12 @@ const ChatsPanel = ({ chat, dispatchChat }) => {
 		if (next.messages){
 			return ++prev;
 		}
+		return prev;
 	},0);
 
 	return (
-		chatCount > 1
-			? <Card className={classes.card}>
+		<Zoom in={chatCount > 1} >
+			<Card className={classes.card}>
 				<Collapse in={expanded} timeout='auto'>
 					<CardContent className={classes.content}>
 
@@ -96,7 +98,7 @@ const ChatsPanel = ({ chat, dispatchChat }) => {
 					</Badge>
 				</CardActions>
 			</Card>
-			: null
+		</Zoom>
 	);
 };
 

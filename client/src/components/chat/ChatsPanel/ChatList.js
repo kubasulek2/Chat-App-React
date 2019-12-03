@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import BlockIcon from '@material-ui/icons/Block';
 import CloseIcon from '@material-ui/icons/Close';
+import Badge from '@material-ui/core/Badge';
 
 import IgnoreDialog from '../../UI/feedback/IgnoreDialog';
 
@@ -32,13 +33,40 @@ const useStyles = makeStyles(({ palette }) => ({
 	iconSmall: {
 		width: '1.2rem',
 		height: '1.2rem'
+	},
+	chatBadge: {
+		backgroundColor: palette.secondary.main,
+		top: 2,
+		'&::after': {
+			backgroundColor: palette.secondary.main,
+			position: 'absolute',
+			top: 0,
+			left: 0,
+			width: '100%',
+			height: '100%',
+			borderRadius: '50%',
+			animation: '$ripple 1.2s infinite ease-in-out',
+			content: '""',
+		},
+	},
+	'@keyframes ripple': {
+		'0%': {
+			transform: 'scale(.8)',
+			opacity: 1,
+		},
+		'100%': {
+			transform: 'scale(1.6)',
+			opacity: 0,
+		},
 	}
 }));
 
 const ChatList = ({ chat, dispatchChat }) => {
 	const classes = useStyles();
+
 	const [dialog, setDialog] = useState(false);
 	const [ignore, setIgnore] = useState(null);
+
 	const { activeChat, room, chats } = chat;
 
 
@@ -63,13 +91,22 @@ const ChatList = ({ chat, dispatchChat }) => {
 				button className={classes.item}
 				onClick={() => handleChatSelection(key)}
 			>
-				<Typography
-					className={activeChat === key ? classes.active : null}
-					color='textPrimary'
-					variant='body2'
+				<Badge
+					invisible={!chats[key].unread}
+					color='secondary'
+					variant='dot'
+					classes={{
+						badge: classes.chatBadge
+					}}
 				>
-					{key}
-				</Typography>
+					<Typography
+						className={activeChat === key ? classes.active : null}
+						color='textPrimary'
+						variant='body2'
+					>
+						{key}
+					</Typography>
+				</Badge>
 				<ListItemSecondaryAction className={classes.action}>
 					<IconButton
 						edge='end'
@@ -109,14 +146,23 @@ const ChatList = ({ chat, dispatchChat }) => {
 					key={room}
 					button className={classes.item}
 					onClick={() => handleChatSelection(room)}
-				>
-					<Typography
-						color='textPrimary'
-						className={activeChat === room ? classes.active : null}
-						variant='body2'
+				>	<Badge
+						invisible={!chats[room].unread}
+						color='secondary'
+						variant='dot'
+						classes={{
+							badge: classes.chatBadge
+						}}
 					>
-						{room.toUpperCase()}
-					</Typography>
+						<Typography
+							color='textPrimary'
+							className={activeChat === room ? classes.active : null}
+							variant='body2'
+						>
+							{room.toUpperCase()}
+
+						</Typography>
+					</Badge>
 				</ListItem>
 				{list}
 			</List>

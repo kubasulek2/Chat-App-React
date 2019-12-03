@@ -21,7 +21,7 @@ const IgnoreDialog = ({ open, handleOpen, dispatchChat, setIgnore, ignore }) => 
 
 	const handleIgnore = () => {
 		handleOpen(false);
-		dispatchChat({ type: 'BLOCK', id: ignore.id });
+		dispatchChat({ type: 'BLOCK', id: ignore.id, chatName: ignore.name });
 		setIgnore(null);
 	};
 

@@ -46,7 +46,7 @@ const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
 	}
 }));
 
-const UsersList = ({ users, myself, setError }) => {
+const UsersList = ({ users, myself, setError, ignoredUsers }) => {
 	const classes = useStyles();
 	let usersList = null;
 
@@ -80,7 +80,7 @@ const UsersList = ({ users, myself, setError }) => {
 			>
 				<ListItemText secondary={<span className={i === 0 ? classes.me : null} >{user.userName}</span>} />
 				<ListItemSecondaryAction>
-					{i === 0 ? null : button(user.id, user.userName)}
+					{i !== 0 && !ignoredUsers.includes(user.id) ? button(user.id, user.userName) : null}
 				</ListItemSecondaryAction>
 			</ListItem>
 		));
