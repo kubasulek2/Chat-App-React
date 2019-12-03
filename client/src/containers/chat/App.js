@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, useReducer } from 'react';
+import React, { Fragment, useEffect, useReducer } from 'react';
 import Divider from '@material-ui/core/Divider';
 
 import WithStyles from '../../hoc/withStyles';
@@ -10,7 +10,7 @@ import ErrorModal from '../../components/UI/feedback/ErrorModal';
 import InfoToast from '../../components/UI/feedback/InfoToast';
 import ChatsPanel from '../../components/chat/ChatsPanel/ChatsPanel';
 import chatReducer from '../../utils/reducers/chatReducer';
-import usersReducer from '../../utils/reducers/usersReducer';
+import chatInfoReducer from '../../utils/reducers/chatInfoReducer';
 import stateReducer from '../../utils/reducers/stateReducer';
 import { socket } from '../../server/socket';
 import { showToast } from '../../utils';
@@ -19,40 +19,31 @@ import { showToast } from '../../utils';
 
 
 const App = () => {
-	const [chat, dispatchChat] = useReducer(chatReducer, { activeChat: '', chats: {}, ignoredUsers: [], room: '' });
-	//const [users, dispatchUsers] = useReducer(usersReducer, { myself: {}, rooms: [], users: [] })
+	const [chat, dispatchChat] = useReducer(chatReducer, { activeChat: '', chats: {}, ignoredUsers: [], room: ';' });
+	const [chatInfo, dispatchChatInfo] = useReducer(chatInfoReducer, { myself: {}, rooms: [], users: [] });
 	const [appState, dispatchAppState] = useReducer(stateReducer, { logged: false, pending: false, error: false, toast: { open: false, message: null } });
 
-	const [myself, setMyself] = useState({});
-	const [rooms, setRooms] = useState([]);
-	const [users, setUsers] = useState([]);
-
-	//const [logged, setLogged] = useState(false);
-	// const [pending, setPending] = useState(false);
-	// const [error, setError] = useState(false);
-	// const [toast, setToast] = useState({ open: false, message: null });
-
 	const { ignoredUsers, chats, activeChat, room } = chat;
-	const { error, pending, logged, toast } = appState; 
-
+	const { error, pending, logged, toast } = appState;
+	const { users, rooms, myself } = chatInfo;
 
 	useEffect(() => {
 
 		socket.on('joinRoom', (user) => {
 			dispatchChat({ type: 'JOIN', room: user.room });
 			dispatchAppState({ type: 'JOIN', myself: user });
-			setMyself(user);
+			dispatchChatInfo({ type: 'SET_MYSELF', myself: user });
 
 		});
 
 
 		socket.on('roomsList', roomsList => {
-			setRooms(roomsList);
+			dispatchChatInfo({ type: 'SET_ROOMS', rooms: roomsList });
 		});
 
 
 		socket.on('usersList', usersList => {
-			setUsers(usersList);
+			dispatchChatInfo({ type: 'SET_USERS', users: usersList });
 		});
 
 
