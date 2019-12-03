@@ -46,7 +46,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 }));
 
 
-const NewRoom = ({ setError }) => {
+const NewRoom = ({ dispatchAppState }) => {
 	const classes = useStyles();
 	const [roomName, setRoomName] = useState('');
 	const [localError, setLocalError] = useState(null);
@@ -69,7 +69,7 @@ const NewRoom = ({ setError }) => {
 
 			if (error) {
 				if (error.message){
-					return setError(error);
+					return dispatchAppState({ type: 'SET_ERROR', errType: error.type, message: error.message});
 				}
 				return setLocalError(error);
 			}

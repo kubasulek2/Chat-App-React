@@ -21,7 +21,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 	card: {
 		width: 345,
 		padding: `${ spacing(3) }px ${ spacing(1) }px`,
-		[ xxs ]: {
+		[xxs]: {
 			width: '95%',
 			minWidth: 300
 		}
@@ -38,7 +38,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 		margin: '16px 0 0',
 		fontSize: 26,
 		fontWeight: 'bold',
-		[ xxs ]: {
+		[xxs]: {
 			fontSize: 24,
 		}
 	}
@@ -46,7 +46,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 
 }));
 
-const Login = ({ pending, setPending }) => {
+const Login = ({ pending, dispatchAppState }) => {
 	const classes = useStyles();
 	return (
 		<div className={classes.root}>
@@ -64,7 +64,7 @@ const Login = ({ pending, setPending }) => {
 				<CardContent>
 					<LoginForm
 						pending={pending}
-						setPending={setPending}
+						dispatchAppState={dispatchAppState}
 					/>
 				</CardContent>
 			</Card>

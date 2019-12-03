@@ -33,13 +33,18 @@ const hideToast = (state) => ({
 		message: null
 	}
 });
+const setPending = (state, pending) => ({
+	...state,
+	pending: pending
+});
 
 const usersActions = {
 	setError,
 	cancelError,
 	join,
 	showToast,
-	hideToast
+	hideToast,
+	setPending
 };
 
 export default usersActions;

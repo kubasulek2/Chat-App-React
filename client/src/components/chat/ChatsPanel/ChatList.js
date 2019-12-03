@@ -42,13 +42,11 @@ const useStyles = makeStyles(({ palette }) => ({
 	}
 }));
 
-const ChatList = ({ chat, dispatchChat }) => {
+const ChatList = ({ chats, activeChat, room, dispatchChat }) => {
 	const classes = useStyles();
 
 	const [dialog, setDialog] = useState(false);
 	const [ignore, setIgnore] = useState(null);
-
-	const { activeChat, room, chats } = chat;
 
 
 	const handleChatSelection = (chat) => {

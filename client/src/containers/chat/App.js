@@ -19,25 +19,28 @@ import { showToast } from '../../utils';
 
 
 const App = () => {
-	const [logged, setLogged] = useState(false);
 	const [chat, dispatchChat] = useReducer(chatReducer, { activeChat: '', chats: {}, ignoredUsers: [], room: '' });
 	//const [users, dispatchUsers] = useReducer(usersReducer, { myself: {}, rooms: [], users: [] })
 	const [appState, dispatchAppState] = useReducer(stateReducer, { logged: false, pending: false, error: false, toast: { open: false, message: null } });
-	
+
 	const [myself, setMyself] = useState({});
 	const [rooms, setRooms] = useState([]);
 	const [users, setUsers] = useState([]);
 
+	//const [logged, setLogged] = useState(false);
 	// const [pending, setPending] = useState(false);
 	// const [error, setError] = useState(false);
 	// const [toast, setToast] = useState({ open: false, message: null });
+
+	const { ignoredUsers, chats, activeChat, room } = chat;
+	const { error, pending, logged, toast } = appState; 
 
 
 	useEffect(() => {
 
 		socket.on('joinRoom', (user) => {
 			dispatchChat({ type: 'JOIN', room: user.room });
-			dispatchAppState({type: 'JOIN', myself: user});
+			dispatchAppState({ type: 'JOIN', myself: user });
 			setMyself(user);
 
 		});
@@ -61,7 +64,7 @@ const App = () => {
 		socket.on('message', message => {
 
 			if (message.privy) {
-				const isUserIgnored = chat.ignoredUsers.some(id => id === message.senderID);
+				const isUserIgnored = ignoredUsers.some(id => id === message.senderID);
 
 				if (isUserIgnored) {
 					return socket.emit('rejectChat', { requestedName: myself.userName, requestingID: message.senderID });
@@ -75,7 +78,7 @@ const App = () => {
 		socket.on('locationMessage', link => {
 
 			if (link.privy) {
-				const isUserIgnored = chat.ignoredUsers.some(id => id === link.senderID);
+				const isUserIgnored = ignoredUsers.some(id => id === link.senderID);
 
 				if (isUserIgnored) {
 					return socket.emit('rejectChat', { requestedName: myself.userName, requestingID: link.senderID });
@@ -88,9 +91,9 @@ const App = () => {
 
 
 		socket.on('openPrivateChat', ({ requestedID, requestedName, requestingID, requestingName }) => {
-			const chatExists = Object.keys(chat.chats).some(key => chat.chats[key].id === requestingID);
+			const chatExists = Object.keys(chats).some(key => chats[key].id === requestingID);
 
-			if (chat.ignoredUsers.includes(requestingID)) {
+			if (ignoredUsers.includes(requestingID)) {
 				return socket.emit('rejectChat', { requestedName, requestingID });
 			}
 
@@ -139,21 +142,21 @@ const App = () => {
 
 		return () => socket.removeAllListeners();
 
-	}, [chat.ignoredUsers, chat.chats, myself.userName]);
+	}, [ignoredUsers, chats, myself.userName]);
 
 	useEffect(() => {
-		if (chat.activeChat) {
-			showToast(dispatchAppState, <span><span className='styled'>{chat.activeChat}</span> is your active chat now.</span>);
+		if (activeChat) {
+			showToast(dispatchAppState, <span><span className='styled'>{activeChat}</span> is your active chat now.</span>);
 		}
-	}, [chat.activeChat]);
+	}, [activeChat]);
 
 
 	/* Filter messages */
-	const activeMessages = () => chat.chats[chat.activeChat].messages || [];
+	const activeMessages = () => chats[activeChat].messages || [];
 
 	return (
 		<Fragment>
-			<ErrorModal error={appState.error} dispatchAppState={dispatchAppState} />
+			<ErrorModal error={error} dispatchAppState={dispatchAppState} />
 			{logged ?
 				(
 					<Fragment>
@@ -161,31 +164,33 @@ const App = () => {
 							myself={myself}
 							rooms={rooms}
 							users={users}
-							setError={setError}
-							ignoredUsers={chat.ignoredUsers}
+							dispatchAppState={dispatchAppState}
+							ignoredUsers={ignoredUsers}
 						/>
 						<ChatBoard
-							activeChat={chat.activeChat}
+							activeChat={activeChat}
 							messages={activeMessages()}
 						/>
 						<Divider />
 						<ChatsPanel
 							dispatchChat={dispatchChat}
-							chat={chat}
+							chats={chats}
+							room={room}
+							activeChat={activeChat}
 						/>
 						<Footer
 							pending={pending}
-							setPending={setPending}
-							setError={setError}
-							chat={chat}
+							dispatchAppState={dispatchAppState}
+							chats={chats}
+							room={room}
+							activeChat={activeChat}
 						/>
-						<InfoToast toast={toast} setToast={setToast} />
+						<InfoToast toast={toast} dispatchAppState={dispatchAppState} />
 					</Fragment>
 				) :
 				<Login
 					pending={pending}
-					setPending={setPending}
-					setLogged={setLogged}
+					dispatchAppState={dispatchAppState}
 				/>}
 		</Fragment>
 	);

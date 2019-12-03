@@ -8,14 +8,13 @@ import MessageForm from '../../components/chat/MessageForm';
 import BottomPanel from '../../components/chat/BottomPanel';
 
 
-const MessagePanel = ({ pending, setError, chat }) => {
+const MessagePanel = ({ pending, dispatchAppState, activeChat, room, chats }) => {
 
 	const [message, setMessage] = useState('');
 	const [emojiInfo, setEmojiInfo] = useState([]);
 	const [uppercaseMode, setUppercaseMode] = useState(false);
 	const [color, setColor] = useState('#b0bec5');
 
-	const { activeChat, room, chats } = chat;
 	const privy = activeChat !== room;
 	const sendTo = chats[activeChat].id;
 
@@ -28,27 +27,27 @@ const MessagePanel = ({ pending, setError, chat }) => {
 
 		socket.emit('sendMessage', { message, emojiInfo, color, sendTo, privy }, error => {
 			if (error) {
-				return setError(error.message);
+				return dispatchAppState({ type: 'SET_ERROR', message: error.message, errType: error.type });
 			}
 		});
 
 		setMessage('');
 		setEmojiInfo([]);
 
-	}, [message, setError, emojiInfo, color, privy, sendTo]);
+	}, [message, dispatchAppState, emojiInfo, color, privy, sendTo]);
 
 	const handleLocation = useCallback(async () => {
 		try {
 			const location = await getLocation();
 			const { coords: { latitude, longitude } } = location;
 			socket.emit('sendLocation', { latitude, longitude, sendTo, privy }, error => {
-				if (error) setError(error);
+				if (error) dispatchAppState({ type: 'SET_ERROR', message: error.message, errType: error.type });
 			});
 		} catch (error) {
-			setError({message: error.message, type: 'Geolocation Error'});
+			dispatchAppState({ type: 'SET_ERROR', message: error.message, errType: 'Geolocation Error' });
 		}
 
-	}, [privy, sendTo, setError]);
+	}, [privy, sendTo, dispatchAppState]);
 
 	return (
 		<Grid container>

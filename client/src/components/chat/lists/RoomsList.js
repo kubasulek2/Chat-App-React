@@ -44,7 +44,7 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 	}
 }));
 
-const RoomsList = ({ rooms, myself, setError }) => {
+const RoomsList = ({ rooms, myself, dispatchAppState }) => {
 	const classes = useStyles();
 
 
@@ -53,7 +53,7 @@ const RoomsList = ({ rooms, myself, setError }) => {
 		socket.emit('switchRoom', { roomName: room, createNew: false }, (error) => {
 
 			if (error) {
-				return setError(error.message);
+				return dispatchAppState({ type: 'SET_ERROR', errType: error.type, message: error.message });
 			}
 		});
 	};

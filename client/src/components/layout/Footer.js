@@ -17,15 +17,16 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => ({
 	}
 }));
 
-const Footer = ({ pending, setPending, setError, chat }) => {
+const Footer = ({ pending, dispatchAppState, activeChat, room, chats }) => {
 	const classes = useStyles();
 	return (
 		<footer className={classes.root}>
 			<MessagePanel
-				chat={chat}
+				chats={chats}
+				room={room}
+				activeChat={activeChat}
 				pending={pending}
-				setPending={setPending}
-				setError={setError}
+				dispatchAppState={dispatchAppState}
 			/>
 		</footer>
 	);

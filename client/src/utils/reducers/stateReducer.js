@@ -9,6 +9,9 @@ const stateReducer = (state, action) => {
 		case 'SET_ERROR':
 			return stateActions.setError(state, action.message, action.errType);
 
+		case 'SET_PENDING':
+			return stateActions.setPending(state, action.pending);
+
 		case 'CANCEL_ERROR':
 			return stateActions.cancelError(state);
 

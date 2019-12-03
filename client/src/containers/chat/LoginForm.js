@@ -42,7 +42,7 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 	border: { borderRadius: 4 },
 }));
 
-const LoginForm = ({ pending, setPending }) => {
+const LoginForm = ({ pending, dispatchAppState }) => {
 	const classes = useStyles();
 	const [ userName, setUserName ] = useState('');
 	const [ disabled, setDisabled ] = useState(true);
@@ -60,17 +60,17 @@ const LoginForm = ({ pending, setPending }) => {
 			return;
 		}
 
-		setPending(true);
+		dispatchAppState({ type: 'SET_PENDING', pending: true});
 		setDisabled(true);
 		setLoginError('');
 		setUserName('');
 
 		socket.emit('login', { userName: userName, roomName: 'public' }, (error) => {
+			
 			if (error) {
 				setLoginError(error);
-				return setPending(false);
+				return dispatchAppState({ type: 'SET_PENDING', pending: false });
 			}
-			console.log('loggedIn');
 		});
 
 	};

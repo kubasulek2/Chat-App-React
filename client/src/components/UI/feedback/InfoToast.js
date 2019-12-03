@@ -22,13 +22,14 @@ const useStyles = makeStyles(({spacing, palette}) => ({
 	},
 }));
 
-const InfoToast = ({ toast, setToast}) => {
+const InfoToast = ({ toast, dispatchAppState}) => {
 	const classes = useStyles();
 	const matches = useMediaQuery('(min-width:960px)');
 
 	const handleClose = () => {
-		setToast({open: false, message: null});
+		dispatchAppState({ type: 'HIDE_TOAST'});
 	};
+	
 	return (
 		<Snackbar
 			anchorOrigin={{

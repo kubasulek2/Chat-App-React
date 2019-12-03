@@ -44,7 +44,7 @@ const useStyles = makeStyles(({ palette, breakpoints }) => ({
 }));
 
 
-const ChatsPanel = ({ chat, dispatchChat }) => {
+const ChatsPanel = ({ chats, room, activeChat, dispatchChat }) => {
 	const classes = useStyles();
 	const [expanded, setExpanded] = useState(true);
 	
@@ -54,7 +54,7 @@ const ChatsPanel = ({ chat, dispatchChat }) => {
 
 	const calculateUnread = () => {
 		let count = 0;
-		Object.values(chat.chats).forEach(value => {
+		Object.values(chats).forEach(value => {
 			if (value.unread) {
 				count++;
 			}
@@ -66,7 +66,7 @@ const ChatsPanel = ({ chat, dispatchChat }) => {
 	const unreadCount = calculateUnread();
 	/* Chat count indicates how many message arrays exists in chat state object. Message array is destroyed if chat is closed, and recreated on new chat or new message from closed chat */
 	/* This counting method lets you to not display chat in panel when you click on close chat button, while still being able to receive messages from closed chat, unless you block it.*/
-	const chatCount = Object.values(chat.chats).reduce((prev, next) => {
+	const chatCount = Object.values(chats).reduce((prev, next) => {
 		if (next.messages){
 			return ++prev;
 		}
@@ -80,7 +80,9 @@ const ChatsPanel = ({ chat, dispatchChat }) => {
 					<CardContent className={classes.content}>
 
 						<ChatList
-							chat={chat}
+							chats={chats}
+							room={room}
+							activeChat={activeChat}
 							dispatchChat={dispatchChat}
 						/>
 					</CardContent>

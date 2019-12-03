@@ -46,7 +46,7 @@ const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
 	}
 }));
 
-const UsersList = ({ users, myself, setError, ignoredUsers }) => {
+const UsersList = ({ users, myself, dispatchAppState, ignoredUsers }) => {
 	const classes = useStyles();
 	let usersList = null;
 
@@ -55,7 +55,7 @@ const UsersList = ({ users, myself, setError, ignoredUsers }) => {
 
 		socket.emit('privateChatRequest', id, (error) => {
 			if (error) {
-				return setError(error.message);
+				return dispatchAppState({ type: 'SET_ERROR', message: error.message, errType: error.type });
 			}
 		});
 	};
