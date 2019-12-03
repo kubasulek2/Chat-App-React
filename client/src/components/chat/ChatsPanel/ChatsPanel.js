@@ -63,9 +63,16 @@ const ChatsPanel = ({ chat, dispatchChat }) => {
 	};
 
 	const unreadCount = calculateUnread();
+	/* Chat count indicates how many message arrays exists in chat state object. Message array is destroyed if chat is closed, and recreated on new chat or new message from closed chat */
+	/* This counting method lets you to not display chat in panel when you click on close chat button, while still being able to receive messages from closed chat, unless you block it.*/
+	const chatCount = Object.values(chat.chats).reduce((prev, next) => {
+		if (next.messages){
+			return ++prev;
+		}
+	},0);
 
 	return (
-		Object.keys(chat.chats).length > 1
+		chatCount > 1
 			? <Card className={classes.card}>
 				<Collapse in={expanded} timeout='auto'>
 					<CardContent className={classes.content}>

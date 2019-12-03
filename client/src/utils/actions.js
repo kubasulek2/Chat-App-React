@@ -18,6 +18,7 @@ const addMessage = (chat, message) => {
 	const channel = message.privy ? message.sender : chat.room;
 
 	return produce(chat, draft => {
+		draft.chats[channel].messages = chat.chats[channel].messages || [];
 		draft.chats[channel].messages.push(message);
 		draft.chats[channel].unread = channel !== chat.activeChat;
 	});
@@ -37,7 +38,7 @@ const block = (chat, id, userName) => {
 
 const close = (chat, chatName) => produce(chat, draft => {
 	draft.activeChat = chat.activeChat === chatName ? chat.room : chat.activeChat;
-	draft.chats[chatName].messages = [];
+	delete draft.chats[chatName].messages;
 });
 
 
