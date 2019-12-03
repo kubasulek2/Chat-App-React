@@ -66,7 +66,7 @@ const UsersList = ({ users, myself, setError, ignoredUsers }) => {
 		</IconButton>
 	);
 
-	if (myself && users.length) {
+	if (users.length) {
 		usersList = [...users];
 		const index = usersList.findIndex(el => el.id === myself.id);
 		const me = usersList.splice(index, 1);

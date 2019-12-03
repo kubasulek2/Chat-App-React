@@ -44,7 +44,7 @@ const close = (chat, chatName) => produce(chat, draft => {
 
 
 
-export const chatActions = {
+const chatActions = {
 	joinRoom,
 	setActive,
 	addMessage,
@@ -52,3 +52,5 @@ export const chatActions = {
 	block,
 	close
 };
+
+export default chatActions;

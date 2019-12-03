@@ -42,7 +42,7 @@ export const formatText = (text, emojiInfo) => {
 export const showToast = (cb, message) => {
 	setTimeout(() => {
 		cb({
-			open: true,
+			type: 'TOAST',
 			message,
 		});
 	}, 400);

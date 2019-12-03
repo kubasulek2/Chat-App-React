@@ -31,12 +31,11 @@ const Transition = forwardRef(function Transition (props, ref) {
 });
 /* eslint-enable react/display-name */
 
-const ErrorModal = ({ error,  setError, setPending }) => {
+const ErrorModal = ({ error, dispatchAppState }) => {
 	const classes = useStyles();
 
 	const handleClose = () => {
-		setError(false);
-		setPending(false);
+		dispatchAppState({ type: 'CANCEL_ERROR'});
 	};
 
 	const open = !!error;
