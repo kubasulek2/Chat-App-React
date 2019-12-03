@@ -69,7 +69,7 @@ const NewRoom = ({ setError }) => {
 
 			if (error) {
 				if (error.message){
-					return setError(error.message);
+					return setError(error);
 				}
 				return setLocalError(error);
 			}

@@ -23,7 +23,6 @@ io.on('connection', (client) => {
 		 * @param {string} roomName - Room name picked by user, can contain uppercase letters.
 		 * @var {string} room - result of @function addUserToRoom - transformed @param roomName - no uppercase letters, used for establishing rooms.
 		 */
-
 		const { userError, user } = addUser(client.id, userName, roomName);
 
 		if (userError) {
@@ -113,7 +112,7 @@ io.on('connection', (client) => {
 			const existingRooms = fetchPublicRooms();
 
 			if (existingRooms.includes(roomName.toLowerCase())) {
-				return cb('Room already exists.');
+				return cb('Room already exists');
 			}
 		}
 
@@ -127,7 +126,7 @@ io.on('connection', (client) => {
 		const { room: oldRoom } = user;
 
 		if (roomError) {
-			return cb(roomError);
+			return cb({message: roomError, type: 500});
 		}
 
 
@@ -160,7 +159,7 @@ io.on('connection', (client) => {
 		if (!requestedName) {
 			return cb({ message: 'Requested user not found', type: 404 });
 		}
-		
+
 		io.to(`${ requestedId }`).emit('openPrivateChat', { requestedID, requestedName, requestingID, requestingName });
 
 		cb();

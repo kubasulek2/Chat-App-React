@@ -1,4 +1,5 @@
 import React, { forwardRef } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -13,7 +14,17 @@ const Transition = forwardRef(function Transition (props, ref) {
 	return <Slide direction='up' ref={ref} {...props} />;
 });
 
+const useStyles = makeStyles(({ palette }) => ({
+	confirm: {
+		color: palette.error.light
+	},
+	bold: {
+		fontWeight: 'bold',
+	}
+}));
+
 const IgnoreDialog = ({ open, handleOpen, dispatchChat, setIgnore, ignore }) => {
+	const classes = useStyles();
 
 	const handleClose = () => {
 		handleOpen(false);
@@ -33,7 +44,7 @@ const IgnoreDialog = ({ open, handleOpen, dispatchChat, setIgnore, ignore }) => 
 			keepMounted
 			onClose={handleClose}
 		>
-			<DialogTitle>Are you sure you want to block user <span className='styled'>{ignore.name}</span>?</DialogTitle>
+			<DialogTitle><span className={classes.bold}>Are you sure you want to block user <span className='styled'>{ignore.name}</span>?</span></DialogTitle>
 			<DialogContent>
 				<DialogContentText id="alert-dialog-slide-description">
 					This user, won't be able to interact with you. This action is irreversible.
@@ -43,7 +54,7 @@ const IgnoreDialog = ({ open, handleOpen, dispatchChat, setIgnore, ignore }) => 
 				<Button onClick={handleClose} color="primary">
 					cancel
 				</Button>
-				<Button onClick={handleIgnore} color="primary">
+				<Button onClick={handleIgnore} className={classes.confirm}>
 					proceed
 				</Button>
 			</DialogActions>

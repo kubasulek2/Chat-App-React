@@ -122,6 +122,20 @@ const App = () => {
 			dispatchChat({ type: 'SET_ACTIVE', active: requestedName });
 		});
 
+		socket.on('connect_error', () => {
+			setError({
+				type: 'Connection failed',
+				message: 'Either you have no connection or server not responding'
+			});
+		});
+
+		socket.on('connect_timeout', () => {
+			setError({
+				type: 408,
+				message: 'Request Timeout.'
+			});
+		});
+
 		return () => {
 			socket.removeAllListeners();
 		};
@@ -139,10 +153,10 @@ const App = () => {
 
 	return (
 		<Fragment>
+			<ErrorModal error={error} setError={setError} setPending={setPending} />
 			{logged ?
 				(
 					<Fragment>
-						<ErrorModal error={error} handleOpen={setError} />
 						<Sidebar
 							myself={myself}
 							rooms={rooms}

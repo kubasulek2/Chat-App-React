@@ -42,10 +42,10 @@ const MessagePanel = ({ pending, setError, chat }) => {
 			const location = await getLocation();
 			const { coords: { latitude, longitude } } = location;
 			socket.emit('sendLocation', { latitude, longitude, sendTo, privy }, error => {
-				if (error) setError(error.message);
+				if (error) setError(error);
 			});
 		} catch (error) {
-			setError(error.message);
+			setError({message: error.message, type: 'Geolocation Error'});
 		}
 
 	}, [privy, sendTo, setError]);

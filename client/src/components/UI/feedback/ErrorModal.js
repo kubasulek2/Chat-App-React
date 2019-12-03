@@ -11,10 +11,18 @@ import Slide from '@material-ui/core/Slide';
 const useStyles = makeStyles(({ palette, shadows }) => ({
 	paper: {
 		minWidth: 300,
+		maxWidth: '98%',
 		backgroundColor: palette.background.paper,
 		border: '1px solid rgba(66,66,66, 0.4)',
 		boxShadow: shadows[2],
 	},
+	bold: {
+		fontWeight: 'bold',
+		color: palette.primary.main
+	},
+	error: {
+		color: palette.error.dark
+	}
 }));
 
 /* eslint-disable react/display-name */
@@ -23,10 +31,13 @@ const Transition = forwardRef(function Transition (props, ref) {
 });
 /* eslint-enable react/display-name */
 
-const ErrorModal = ({ error, handleOpen }) => {
+const ErrorModal = ({ error,  setError, setPending }) => {
 	const classes = useStyles();
 
-	const handleClose = () => handleOpen(false);
+	const handleClose = () => {
+		setError(false);
+		setPending(false);
+	};
 
 	const open = !!error;
 
@@ -43,7 +54,7 @@ const ErrorModal = ({ error, handleOpen }) => {
 				}
 			}}
 		>
-			<DialogTitle>Ups! Error {error.type}:</DialogTitle>
+			<DialogTitle><span className={classes.bold}>Ups!</span> Error: <span className={classes.error}>{error.type}</span></DialogTitle>
 			<DialogContent>
 				<DialogContentText >
 					{error.message}
