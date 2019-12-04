@@ -37,7 +37,6 @@ const useStyles = makeStyles(({ palette, breakpoints }) => ({
 	},
 	content: {
 		padding: 8,
-		background: palette.background.light,
 		'&:last-child': {
 			paddingBottom: 8
 		}

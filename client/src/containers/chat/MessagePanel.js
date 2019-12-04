@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useContext } from 'react';
 import Grid from '@material-ui/core/Grid';
 
-import { DispatchContext } from '../../containers/App';
+import { DispatchContext, ChatContext } from '../../containers/App';
 import { socket } from '../../server/socket';
 import { getLocation } from '../../utils';
 import PanelButtons from '../../components/UI/buttons/PanelButtons';
@@ -19,6 +19,7 @@ const MessagePanel = () => {
 
 	/* Use context */
 	const { dispatchAppState } = useContext(DispatchContext);
+	const { activeChat, chats, room } = useContext(ChatContext);
 
 	/* determine if message is private */
 	const privy = activeChat !== room;
