@@ -15,6 +15,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 
 }));
 
+/* Button  for either canceling or accepting create new room*/
 const NewRoomButton = ({clicked, text, dismiss}) => {
 	const classes = useStyles();
 	const icon =(

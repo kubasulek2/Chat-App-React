@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -10,6 +10,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import CommentIcon from '@material-ui/icons/Comment';
 
+import { DispatchContext, ChatInfoContext, ChatContext } from '../../../containers/App';
 import { socket } from '../../../server/socket';
 
 const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
@@ -46,26 +47,37 @@ const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
 	}
 }));
 
-const UsersList = ({ users, myself, dispatchAppState, ignoredUsers }) => {
+/* Components displays users in active room. Handles private chat requests. */
+const UsersList = () => {
 	const classes = useStyles();
 	let usersList = null;
 
+	/* Use Context */
+	const { users, myself} = useContext(ChatInfoContext);
+	const { dispatchAppState } = useContext(DispatchContext);
+	const { ignoredUsers } = useContext(ChatContext);
+
+	/* Private Chat request. */
 	const handlePrivateChat = (evt) => {
 		const id = evt.currentTarget.dataset.id;
 
+		/* Emit Socket event with private chat request */
 		socket.emit('privateChatRequest', id, (error) => {
 			if (error) {
+				/* Handle server error message. */
 				return dispatchAppState({ type: 'SET_ERROR', message: error.message, errType: error.type });
 			}
 		});
 	};
 
+	/* Customizable button function. */
 	const button = (id, name) => (
 		<IconButton edge="end" aria-label="private-conversation" onClick={handlePrivateChat} data-id={id} data-name={name}>
 			<CommentIcon color='primary' />
 		</IconButton>
 	);
-
+	
+	/* handle userList */
 	if (users.length) {
 		usersList = [...users];
 		const index = usersList.findIndex(el => el.id === myself.id);

@@ -6,7 +6,7 @@ import Divider from '@material-ui/core/Divider';
 
 import RoomsList from '../../chat/lists/RoomsList';
 import UsersList from '../../chat/lists/UsersList';
-import NewRoom from '../../chat/NewRoom';
+import NewRoom from '../../../containers/chat/NewRoom';
 
 const useStyles = makeStyles(({ mixins, palette, breakpoints }) => ({
 	toolbar: {
@@ -42,29 +42,21 @@ const useStyles = makeStyles(({ mixins, palette, breakpoints }) => ({
 		}
 	}
 }));
-
-const DrawerComponent = ({ mobile, handleMobile, users, rooms, myself, dispatchAppState, ignoredUsers }) => {
+/* Component containing side navigation, behaves differently depends on screen size. */
+const DrawerComponent = ({ mobile, handleMobile }) => {
 
 	const classes = useStyles();
 
+	/* Drawer contents. */
 	const drawer = (
 		<div>
 			<div className={classes.toolbar} />
-			<RoomsList
-				rooms={rooms}
-				myself={myself}
-				dispatchAppState={dispatchAppState}
-			/>
+			<RoomsList />
 
 			<Divider />
-			<UsersList
-				users={users}
-				myself={myself}
-				dispatchAppState={dispatchAppState}
-				ignoredUsers={ignoredUsers}
-			/>
+			<UsersList />
 			<div className={classes.footer}>
-				<NewRoom dispatchAppState={dispatchAppState} />
+				<NewRoom />
 			</div>
 		</div>
 	);

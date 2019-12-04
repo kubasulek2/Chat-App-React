@@ -1,13 +1,18 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useCallback } from 'react';
 
 import Header from '../Header';
 import Drawer from './Drawer';
 
-const Sidebar = ({ rooms, users, myself, dispatchAppState, ignoredUsers }) => {
+/* Component grouping together Header and Drawer components, which together compose a application navigation. */
+const Sidebar = () => {
+
+	/* Local state for switch display of Drawer component on small screens*/
 	const [mobileOpen, setMobileOpen] = React.useState(false);
-	const handleDrawerToggle = () => {
+
+	/* handling opening and closing mobile nav. Created with useCallback to prevent unnecessary renders. */
+	const handleDrawerToggle = useCallback(() => {
 		setMobileOpen(!mobileOpen);
-	};
+	}, [mobileOpen]);
 
 	return (
 		<Fragment>
@@ -15,11 +20,6 @@ const Sidebar = ({ rooms, users, myself, dispatchAppState, ignoredUsers }) => {
 			<Drawer
 				mobile={mobileOpen}
 				handleMobile={handleDrawerToggle}
-				rooms={rooms}
-				users={users}
-				myself={myself}
-				dispatchAppState={dispatchAppState}
-				ignoredUsers={ignoredUsers}
 			/>
 		</Fragment>
 	);

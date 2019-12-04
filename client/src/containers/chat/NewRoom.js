@@ -1,9 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Zoom from '@material-ui/core/Zoom';
 
-import NewRoomButton from '../UI/buttons/NewRoomButton';
+import { DispatchContext } from '../App';
+import NewRoomButton from '../../components/UI/buttons/NewRoomButton';
 import { socket } from '../../server/socket';
 
 
@@ -45,19 +46,28 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 	}
 }));
 
-
-const NewRoom = ({ dispatchAppState }) => {
+/* Stateful Component displays add-new-room-panel, and handles new room form. */
+const NewRoom = () => {
 	const classes = useStyles();
+
+	/* Use Context. */
+	const { dispatchAppState } = useContext(DispatchContext);
+
+	/* Local state, handles creating new room. */
 	const [roomName, setRoomName] = useState('');
 	const [localError, setLocalError] = useState(null);
 	const [displayInput, setDisplayInput] = useState(false);
+
+	/* Input reference */
 	const inputRef = useRef();
 
+	/* Input change */
 	const handleInputChange = (evt) => {
 		setRoomName(evt.target.value);
 		setLocalError(false);
 	};
 
+	/* Form submit and validation */
 	const handleSubmit = (evt) => {
 		evt.preventDefault();
 		
@@ -65,9 +75,11 @@ const NewRoom = ({ dispatchAppState }) => {
 			return setLocalError('At least 3 characters.');
 		}
 
+		/* Emit socket event for switching to new room */
 		socket.emit('switchRoom', { roomName, createNew: true }, (error) => {
 
 			if (error) {
+				/* Handle server error message */
 				if (error.message){
 					return dispatchAppState({ type: 'SET_ERROR', errType: error.type, message: error.message});
 				}
@@ -81,6 +93,7 @@ const NewRoom = ({ dispatchAppState }) => {
 
 	};
 
+	/* Display input if hidden, submit form if input visible */
 	const handleClick = (evt) => {
 
 		if (!displayInput) {
@@ -94,6 +107,7 @@ const NewRoom = ({ dispatchAppState }) => {
 		}
 	};
 
+	/* Hide input, cancel typing new room. */
 	const handleDismiss = () => {
 
 		setLocalError(false);
@@ -101,6 +115,7 @@ const NewRoom = ({ dispatchAppState }) => {
 		setRoomName('');
 	};
 
+	/* When input is visible and is empty, dismiss is available. */
 	const dismiss = displayInput === true && roomName.length === 0;
 
 	return (

@@ -53,10 +53,11 @@ const useStyles = makeStyles(({ palette, shadows, breakpoints, zIndex, spacing }
 		}
 	},
 }));
-
+/* App Header and part of App navigation*/
 const Header = ({ handleMobile }) => {
 	const classes = useStyles();
 
+	/* Reload app when click on logOut button */
 	const handleLogOut = () => {
 		window.location.reload();
 	};
