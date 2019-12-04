@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -9,6 +9,7 @@ import MessageIcon from '@material-ui/icons/Message';
 import Badge from '@material-ui/core/Badge';
 import Zoom from '@material-ui/core/Zoom';
 
+import { ChatContext } from '../../../containers/App';
 import ChatList from './ChatList.js';
 
 const useStyles = makeStyles(({ palette, breakpoints }) => ({
@@ -43,15 +44,22 @@ const useStyles = makeStyles(({ palette, breakpoints }) => ({
 	}
 }));
 
-
-const ChatsPanel = ({ chats, room, activeChat, dispatchChat }) => {
+/* Component displays side panel with private chats list */
+const ChatsPanel = () => {
 	const classes = useStyles();
+
+	/* Use Context. */
+	const { chats } = useContext(ChatContext);
+
+	/* Local state to expand and contract panel */
 	const [expanded, setExpanded] = useState(true);
-	
+
+	/* Handle expand contract panel. */
 	const handleExpandClick = () => {
 		setExpanded(!expanded);
 	};
 
+	/* Calculate how many chats have unread messages */
 	const calculateUnread = () => {
 		let count = 0;
 		Object.values(chats).forEach(value => {
@@ -64,14 +72,16 @@ const ChatsPanel = ({ chats, room, activeChat, dispatchChat }) => {
 	};
 
 	const unreadCount = calculateUnread();
+
+
 	/* Chat count indicates how many message arrays exists in chat state object. Message array is destroyed if chat is closed, and recreated on new chat or new message from closed chat */
 	/* This counting method lets you to not display chat in panel when you click on close chat button, while still being able to receive messages from closed chat, unless you block it.*/
 	const chatCount = Object.values(chats).reduce((prev, next) => {
-		if (next.messages){
+		if (next.messages) {
 			return ++prev;
 		}
 		return prev;
-	},0);
+	}, 0);
 
 	return (
 		<Zoom in={chatCount > 1} >
@@ -79,12 +89,7 @@ const ChatsPanel = ({ chats, room, activeChat, dispatchChat }) => {
 				<Collapse in={expanded} timeout='auto'>
 					<CardContent className={classes.content}>
 
-						<ChatList
-							chats={chats}
-							room={room}
-							activeChat={activeChat}
-							dispatchChat={dispatchChat}
-						/>
+						<ChatList />
 					</CardContent>
 				</Collapse>
 				<CardActions onClick={handleExpandClick} className={classes.expand}>

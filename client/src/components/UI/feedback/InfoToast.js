@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -6,7 +6,9 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Snackbar from '@material-ui/core/Snackbar';
 
-const useStyles = makeStyles(({spacing, palette}) => ({
+import { DispatchContext, AppStateContext } from '../../../containers/App';
+
+const useStyles = makeStyles(({ spacing, palette }) => ({
 	root: {
 		bottom: 65,
 		left: 10
@@ -22,14 +24,22 @@ const useStyles = makeStyles(({spacing, palette}) => ({
 	},
 }));
 
-const InfoToast = ({ toast, dispatchAppState}) => {
+/* Component displays toast with chat notifications. */
+const InfoToast = () => {
 	const classes = useStyles();
+
+	/* Use context. */
+	const { toast } = useContext(AppStateContext);
+	const { dispatchAppState } = useContext(DispatchContext);
+
+	/* use media query */
 	const matches = useMediaQuery('(min-width:960px)');
 
+	/* Close toast */
 	const handleClose = () => {
-		dispatchAppState({ type: 'HIDE_TOAST'});
+		dispatchAppState({ type: 'HIDE_TOAST' });
 	};
-	
+
 	return (
 		<Snackbar
 			anchorOrigin={{
@@ -37,7 +47,7 @@ const InfoToast = ({ toast, dispatchAppState}) => {
 				horizontal: 'left',
 			}}
 			className={classes.root}
-			open={ matches ? toast.open : false}
+			open={matches ? toast.open : false}
 			autoHideDuration={2500}
 			onClose={handleClose}
 			message={toast.message}

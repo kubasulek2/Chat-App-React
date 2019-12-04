@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -8,8 +8,11 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 
+import { DispatchContext } from '../../../containers/App';
+
 
 /* eslint-disable react/display-name */
+/* Create Transition Component with ref forwarded */
 const Transition = forwardRef(function Transition (props, ref) {
 	return <Slide direction='up' ref={ref} {...props} />;
 });
@@ -23,13 +26,19 @@ const useStyles = makeStyles(({ palette }) => ({
 	}
 }));
 
-const IgnoreDialog = ({ open, handleOpen, dispatchChat, setIgnore, ignore }) => {
+/* Confirmation dialog that pops up when attempt to ignore user. */
+const IgnoreDialog = ({ open, handleOpen, setIgnore, ignore }) => {
 	const classes = useStyles();
 
+	/* Use Context */
+	const { dispatchChat } = useContext(DispatchContext);
+
+	/* Close dialog */
 	const handleClose = () => {
 		handleOpen(false);
 	};
 
+	/* Confirm ignore */
 	const handleIgnore = () => {
 		handleOpen(false);
 		dispatchChat({ type: 'BLOCK', id: ignore.id, chatName: ignore.name });

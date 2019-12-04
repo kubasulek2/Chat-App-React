@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, memo } from 'react';
+import React, { useEffect, useRef, memo, useContext } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import { ChatContext } from '../../containers/App';
 import { formatTime, formatText } from '../../utils';
 
 const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
@@ -35,8 +36,14 @@ const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
 	}
 }));
 
-const ChatBoard = ({ messages, activeChat }) => {
+/* Layout center component, responsible for displaying chat messages */
+const ChatBoard = () => {
 	const classes = useStyles();
+
+	/* Use Context. */
+	const { messages, activeChat, chats } = useContext(ChatContext);
+
+	/* Reference component. */
 	const boardRef = useRef();
 
 	/* Scroll to last message when new message arrive and user has not scrolled up. */

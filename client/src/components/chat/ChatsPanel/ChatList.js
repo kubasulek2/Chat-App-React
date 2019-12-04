@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -9,6 +9,7 @@ import BlockIcon from '@material-ui/icons/Block';
 import CloseIcon from '@material-ui/icons/Close';
 import Badge from '@material-ui/core/Badge';
 
+import { ChatContext, DispatchContext } from '../../../containers/App';
 import IgnoreDialog from '../../UI/feedback/IgnoreDialog';
 
 const useStyles = makeStyles(({ palette }) => ({
@@ -42,26 +43,35 @@ const useStyles = makeStyles(({ palette }) => ({
 	}
 }));
 
-const ChatList = ({ chats, activeChat, room, dispatchChat }) => {
+/* Displays List of chats when ChatsPanel is expanded. */
+const ChatList = () => {
 	const classes = useStyles();
 
+	/* Use Context. */
+	const { chats, activeChat, room } = useContext(ChatContext);
+	const { dispatchChat } = useContext(DispatchContext);
+
+	/* Local State for displaying confirmation dialog, and passing ignore user info to it. */
 	const [dialog, setDialog] = useState(false);
 	const [ignore, setIgnore] = useState(null);
 
-
+	/* Switch to clicked chat. */
 	const handleChatSelection = (chat) => {
 		dispatchChat({ type: 'SET_ACTIVE', active: chat });
 	};
 
+	/* Close clicked chat. */
 	const handleCloseChat = (chatName) => {
 		dispatchChat({ type: 'CLOSE', chatName });
 	};
 
+	/* Open ignore dialog and create user info object to pass to it.  */
 	const handleBlockUser = (id, name) => {
 		setDialog(true);
 		setIgnore({ id, name });
 	};
 
+	/* map all non room chats to listItems. */
 	const list = Object.keys(chats).filter(key => key !== room).map((key) => {
 
 		return (
@@ -117,7 +127,7 @@ const ChatList = ({ chats, activeChat, room, dispatchChat }) => {
 					handleOpen={setDialog}
 					ignore={ignore}
 					setIgnore={setIgnore}
-					dispatchChat={dispatchChat} />
+				/>
 				: null
 			}
 			<List dense={true} className={classes.root}>
