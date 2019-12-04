@@ -1,8 +1,16 @@
+/**
+ * @var rooms @type {object} - object containing rooms arrays with users id
+ */
 const rooms = {
 	public: []
 };
 
-
+/**
+ * @function addUserToRoom - Creates room if not exists yet and add user id to room array
+ * @param {string} userId - Client id.
+ * @param {string} room - Name of room send by the client.
+ * @returns {object || string} - RoomError or lowercase room name.
+ */
 const addUserToRoom = (userId, room) => {
 	room = room.toLowerCase();
 
@@ -19,6 +27,12 @@ const addUserToRoom = (userId, room) => {
 	return { room };
 };
 
+/**
+ * @function removeUserFromRoom - Removes user id from room array, removes all empty rooms apart public room.
+ * @param {string} userId - Client id.
+ * @param {string} room - Name of room send by the client.
+ * @returns {object || string} - RoomError or room name.
+ */
 const removeUserFromRoom = (userId, room) => {
 	
 	if (!rooms[room]) {
@@ -38,6 +52,10 @@ const removeUserFromRoom = (userId, room) => {
 	return { room };
 };
 
+/**
+ * @function fetchPublicRooms - Displays all rooms.
+ * @returns {array} - rooms list.
+ */
 const fetchPublicRooms = () => Object.keys(rooms);
 
 module.exports = {
