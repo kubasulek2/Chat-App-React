@@ -7,7 +7,7 @@ import { AppStateContext } from '../containers/App';
 // import ChatBoard from './chat/ChatBoard';
 // import Footer from '../components/layout/Footer';
 // import Login from '../components/UI/login/Login';
-// import ErrorModal from '../components/UI/feedback/ErrorModal';
+import ErrorModal from '../components/UI/feedback/ErrorModal';
 // import InfoToast from '../components/UI/feedback/InfoToast';
 // import ChatsPanel from '../components/chat/ChatsPanel/ChatsPanel';
 
@@ -17,12 +17,11 @@ import { AppStateContext } from '../containers/App';
 const Chat = () => {
 
 	const {logged} = useContext(AppStateContext);
-	console.log(logged);
 
 	return (
 		<Fragment>
-			{/* <ErrorModal />
-			{logged ?
+			<ErrorModal />
+			{/* {logged ?
 				(
 					<Fragment>
 						<Sidebar />
