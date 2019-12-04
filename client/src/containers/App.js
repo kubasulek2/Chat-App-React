@@ -1,31 +1,37 @@
-import React, { Fragment, useEffect, useReducer } from 'react';
-import Divider from '@material-ui/core/Divider';
+import React, { useEffect, useReducer, createContext, useMemo } from 'react';
 
-import WithStyles from '../../hoc/withStyles';
-import Sidebar from '../../components/layout/sidebar/Sidebar';
-import ChatBoard from '../../components/layout/ChatBoard';
-import Footer from '../../components/layout/Footer';
-import Login from '../../components/UI/login/Login';
-import ErrorModal from '../../components/UI/feedback/ErrorModal';
-import InfoToast from '../../components/UI/feedback/InfoToast';
-import ChatsPanel from '../../components/chat/ChatsPanel/ChatsPanel';
-import chatReducer from '../../utils/reducers/chatReducer';
-import chatInfoReducer from '../../utils/reducers/chatInfoReducer';
-import stateReducer from '../../utils/reducers/stateReducer';
-import { socket } from '../../server/socket';
-import { showToast } from '../../utils';
+import WithStyles from '../hoc/withStyles';
+
+import chatReducer from '../utils/reducers/chatReducer';
+import chatInfoReducer from '../utils/reducers/chatInfoReducer';
+import stateReducer from '../utils/reducers/stateReducer';
+
+import { socket } from '../server/socket';
+import { showToast } from '../utils';
 
 
+/* React Context Api */
+const DispatchContext = createContext();
+const ChatContext = createContext();
+const ChatInfoContext = createContext();
+const AppStateContext = createContext();
 
-
-const App = () => {
+/* Root Component handling state and providing context. */
+const App = ({ children }) => {
+	/* State reducers. */
 	const [chat, dispatchChat] = useReducer(chatReducer, { activeChat: '', chats: {}, ignoredUsers: [], room: ';' });
 	const [chatInfo, dispatchChatInfo] = useReducer(chatInfoReducer, { myself: {}, rooms: [], users: [] });
 	const [appState, dispatchAppState] = useReducer(stateReducer, { logged: false, pending: false, error: false, toast: { open: false, message: null } });
 
-	const { ignoredUsers, chats, activeChat, room } = chat;
-	const { error, pending, logged, toast } = appState;
-	const { users, rooms, myself } = chatInfo;
+	/* Context.Providers values memoised */
+	const dispatchValue = useMemo({ dispatchChat, dispatchChatInfo, dispatchAppState });
+	const chatValue = useMemo({ chat }, [chat]);
+	const chatInfoValue = useMemo({ chatInfo }, [chatInfo]);
+	const appStateValue = useMemo({ appState }, [appState]);
+
+	/* Reducers destructuring for useEffects dependency arrays */
+	const { ignoredUsers, chats, activeChat } = chat;
+	const { myself } = chatInfo;
 
 	useEffect(() => {
 
@@ -142,48 +148,19 @@ const App = () => {
 	}, [activeChat]);
 
 
-	/* Filter messages */
-	const activeMessages = () => chats[activeChat].messages || [];
+
 
 	return (
-		<Fragment>
-			<ErrorModal error={error} dispatchAppState={dispatchAppState} />
-			{logged ?
-				(
-					<Fragment>
-						<Sidebar
-							myself={myself}
-							rooms={rooms}
-							users={users}
-							dispatchAppState={dispatchAppState}
-							ignoredUsers={ignoredUsers}
-						/>
-						<ChatBoard
-							activeChat={activeChat}
-							messages={activeMessages()}
-						/>
-						<Divider />
-						<ChatsPanel
-							dispatchChat={dispatchChat}
-							chats={chats}
-							room={room}
-							activeChat={activeChat}
-						/>
-						<Footer
-							pending={pending}
-							dispatchAppState={dispatchAppState}
-							chats={chats}
-							room={room}
-							activeChat={activeChat}
-						/>
-						<InfoToast toast={toast} dispatchAppState={dispatchAppState} />
-					</Fragment>
-				) :
-				<Login
-					pending={pending}
-					dispatchAppState={dispatchAppState}
-				/>}
-		</Fragment>
+		<DispatchContext.Provider value={dispatchValue}>
+			<ChatContext.Provider value={chatValue}>
+				<ChatInfoContext.Provider value={chatInfoValue}>
+					<AppStateContext.Provider value={appStateValue}>
+						{children}
+					</AppStateContext.Provider>
+				</ChatInfoContext.Provider>
+			</ChatContext.Provider>
+		</DispatchContext.Provider>
+
 	);
 };
 

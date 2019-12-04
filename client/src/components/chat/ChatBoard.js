@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, memo } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -59,8 +59,11 @@ const ChatBoard = ({ messages, activeChat }) => {
 		}
 	}, [activeChat]);
 
+	/* Filter messages */
+	const activeMessages = () => chats[activeChat].messages || [];
+
 	/* Map messages to create message board. */
-	const messageComponents = messages.map((message, i) => {
+	const messageComponents = activeMessages().map((message, i) => {
 
 		/* if message is location type handle it separately. */
 		if (message.location) {
@@ -97,4 +100,4 @@ const ChatBoard = ({ messages, activeChat }) => {
 	);
 };
 
-export default ChatBoard;
+export default memo(ChatBoard);
