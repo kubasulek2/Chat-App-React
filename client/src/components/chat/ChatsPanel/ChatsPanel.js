@@ -44,7 +44,7 @@ const useStyles = makeStyles(({ palette, breakpoints }) => ({
 	}
 }));
 
-/* Component displays side panel with private chats list */
+/* Stateful Component - displays side panel with private chats list */
 const ChatsPanel = () => {
 	const classes = useStyles();
 

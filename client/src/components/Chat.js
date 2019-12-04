@@ -5,7 +5,7 @@ import { AppStateContext } from '../containers/App';
 
 import Sidebar from '../components/layout/sidebar/Sidebar';
 import ChatBoard from './chat/ChatBoard';
-// import Footer from '../components/layout/Footer';
+import Footer from '../components/layout/Footer';
 import Login from '../components/UI/login/Login';
 import ErrorModal from '../components/UI/feedback/ErrorModal';
 import InfoToast from '../components/UI/feedback/InfoToast';
@@ -28,7 +28,7 @@ const Chat = () => {
 						<ChatBoard />
 						<Divider />
 						<ChatsPanel />
-						{/* <Footer /> */}
+						<Footer />
 						<InfoToast />
 					</Fragment>
 				) :

@@ -3,7 +3,7 @@ import React, { Fragment, useCallback } from 'react';
 import Header from '../Header';
 import Drawer from './Drawer';
 
-/* Component grouping together Header and Drawer components, which together compose a application navigation. */
+/* Stateful Component -  grouping together Header and Drawer components, which together compose a application navigation. */
 const Sidebar = () => {
 
 	/* Local state for switch display of Drawer component on small screens*/

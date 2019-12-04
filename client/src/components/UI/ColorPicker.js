@@ -28,7 +28,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 }));
 
 
-
+/* Stateful Component -  */
 const ColorPicker = (props) => {
 	const classes = useStyles(props);
 	const { setColor } = props;

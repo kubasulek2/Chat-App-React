@@ -59,20 +59,26 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 	}
 }));
 
-
+/* Stateful Component - display panel to choose message color */
 const EmojiPickerComp = ({ setMessage, setEmojiInfo }) => {
 	const classes = useStyles();
+
+	/* Local state for displaying color picker */
 	const [anchorEl, setAnchorEl] = useState(null);
 
+	/* open picker */
 	const handleClick = evt => {
 		setAnchorEl(evt.currentTarget);
 	};
 
+	/* Close picker. */
 	const handleClose = () => {
+		/* Find message input */
 		const textarea = document.getElementById('messagePanelInput');
 		
 		setAnchorEl(null);
 		
+		/* focus message input on close picker */
 		setTimeout(() => {
 			textarea.focus();
 			textarea.setSelectionRange(textarea.value.length, textarea.value.length);
@@ -82,12 +88,15 @@ const EmojiPickerComp = ({ setMessage, setEmojiInfo }) => {
 	const open = Boolean(anchorEl);
 	const id = open ? 'emoji-popover' : undefined;
 
+	/* Emoji handling */
 	const addEmoji = (emoji) => {
 		let inputVal = document.getElementById('messagePanelInput').value;
 		const emojiObj = { id: emoji.id, native: emoji.native };
+		/* Append native emoji in message text */
 		inputVal += emoji.native;
-
+		
 		setMessage(inputVal);
+		/* push emoji info obj to emojiInfo arr.*/
 		setEmojiInfo(arr => [...arr, emojiObj]);
 	};
 

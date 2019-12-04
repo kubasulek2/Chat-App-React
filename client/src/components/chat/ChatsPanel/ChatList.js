@@ -43,7 +43,7 @@ const useStyles = makeStyles(({ palette }) => ({
 	}
 }));
 
-/* Displays List of chats when ChatsPanel is expanded. */
+/* Stateful Component displays List of chats when ChatsPanel is expanded. */
 const ChatList = () => {
 	const classes = useStyles();
 

@@ -43,7 +43,7 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 	border: { borderRadius: 4 },
 }));
 
-/* Login Form component - handles frontEnd login logic. */
+/* Stateful Component -  handles frontEnd login logic. */
 const LoginForm = () => {
 	const classes = useStyles();
 

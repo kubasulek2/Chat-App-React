@@ -19,6 +19,7 @@ const useStyles = makeStyles(({ spacing, palette, shadows, breakpoints }) => ({
 
 }));
 
+/* Custom Icon button */
 const IconButton = (props) => {
 	const classes = useStyles(props);
 

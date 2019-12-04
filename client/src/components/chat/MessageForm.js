@@ -2,6 +2,8 @@ import React, { useRef, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 
+import { AppStateContext, ChatContext } from '../../containers/App';
+
 const useStyles = makeStyles(({ spacing, palette }) => ({
 	form: {
 		width: '100%',
@@ -28,30 +30,41 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 	}
 }));
 
+/* Message form, typing chat messages here. */
 const MessageForm = (props) => {
 	const classes = useStyles(props);
+
+	/* references */
 	const textInput = useRef();
 	const form = useRef();
 
-	const { message, setMessage, pending, handleSubmit, uppercaseMode, color, activeChat } = props;
+	/* Use Context. */
+	const { pending } = useContext(AppStateContext);
+	const { activeChat } = useContext(ChatContext);
 
+	const { message, setMessage, handleSubmit, uppercaseMode, color } = props;
 
+	/* Focus input to improve user experience */
 	useEffect(() => {
-		if (textInput.current.id !== document.activeElement.id){
+		if (textInput.current.id !== document.activeElement.id) {
 			setTimeout(() => textInput.current.focus(), 200);
 		}
 	}, [uppercaseMode, color, message, activeChat]);
 
+	/* Handle enter keyDown */
 	const handleKeyDown = (evt) => {
 
+		/* Don't submit form when shift + enter. New line instead */
 		if (evt.key === 'Enter' && evt.shiftKey && document.activeElement.id === textInput.current.id) {
 			return;
 		}
+		/* Submit when enter without shift. */
 		else if (evt.key === 'Enter' && document.activeElement.id === textInput.current.id) {
 			handleSubmit(evt);
 		}
 	};
 
+	/* Handle input change. Change letter case when user picked uppercase mode */
 	const handleInputChange = (evt) => {
 		let value = evt.target.value;
 		if (uppercaseMode) {

@@ -21,7 +21,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 	}
 }));
 
-
+/* Panel with modify message components */
 const BottomPanel = (props) => {
 	const classes = useStyles(props);
 	const { setUppercaseMode, color, setColor, setMessage, setEmojiInfo } = props;

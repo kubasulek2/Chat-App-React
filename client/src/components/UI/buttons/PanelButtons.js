@@ -4,6 +4,8 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 
+import { AppStateContext } from '../../../containers/App';
+
 const useStyles = makeStyles(({ palette, breakpoints }) => ({
 	sendButton: {
 		fontWeight: 'bold',
@@ -20,10 +22,13 @@ const useStyles = makeStyles(({ palette, breakpoints }) => ({
 	},
 }));
 
-const PanelButtons = ({ handleLocation, handleSubmit, pending }) => {
+/* Component displays  submit message and send location buttons. */
+const PanelButtons = ({ handleLocation, handleSubmit }) => {
 	const classes = useStyles();
 
-
+	/* Use Context. */
+	const { pending } = useContext(AppStateContext);
+	
 	return (
 		<ButtonGroup
 			size='large'
