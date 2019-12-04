@@ -9,30 +9,36 @@ import stateReducer from '../utils/reducers/stateReducer';
 import { socket } from '../server/socket';
 import { showToast } from '../utils';
 
+/* Root Component that provides state reducers and Context.Providers for its children. */
 
 /* React Context Api */
-const DispatchContext = createContext();
-const ChatContext = createContext();
-const ChatInfoContext = createContext();
-const AppStateContext = createContext();
+export const DispatchContext = createContext();
+export const ChatContext = createContext();
+export const ChatInfoContext = createContext();
+export const AppStateContext = createContext();
 
 /* Root Component handling state and providing context. */
 const App = ({ children }) => {
+
 	/* State reducers. */
 	const [chat, dispatchChat] = useReducer(chatReducer, { activeChat: '', chats: {}, ignoredUsers: [], room: ';' });
 	const [chatInfo, dispatchChatInfo] = useReducer(chatInfoReducer, { myself: {}, rooms: [], users: [] });
 	const [appState, dispatchAppState] = useReducer(stateReducer, { logged: false, pending: false, error: false, toast: { open: false, message: null } });
 
-	/* Context.Providers values memoised */
-	const dispatchValue = useMemo({ dispatchChat, dispatchChatInfo, dispatchAppState });
-	const chatValue = useMemo({ chat }, [chat]);
-	const chatInfoValue = useMemo({ chatInfo }, [chatInfo]);
-	const appStateValue = useMemo({ appState }, [appState]);
+	/* Reducers destructuring for Context.Providers value object and useEffects dependency arrays */
+	const { ignoredUsers, chats, activeChat, room } = chat;
+	const { myself, rooms, users } = chatInfo;
+	const { logged, pending, error, toast } = appState;
 
-	/* Reducers destructuring for useEffects dependency arrays */
-	const { ignoredUsers, chats, activeChat } = chat;
-	const { myself } = chatInfo;
+	/* Context.Providers values destructured and memoised */
+	const dispatchValue = useMemo(() => ({ dispatchChat, dispatchChatInfo, dispatchAppState }));
+	const chatValue = useMemo(() => ({ ignoredUsers, chats, activeChat, room }), [ignoredUsers, chats, activeChat, room]);
+	const chatInfoValue = useMemo(() => ({ myself, rooms, users }), [myself, rooms, users]);
+	const appStateValue = useMemo(() => ({ logged, pending, error, toast }), [logged, pending, error, toast]);
 
+
+
+	/* All the socket events logic. */
 	useEffect(() => {
 
 		socket.on('joinRoom', (user) => {
@@ -136,11 +142,12 @@ const App = ({ children }) => {
 			});
 		});
 
-
+		/* Clearing all listeners before next function call, for them not to fire multiple times */
 		return () => socket.removeAllListeners();
 
 	}, [ignoredUsers, chats, myself.userName]);
 
+	/* Show info Toast when activeChat is changed. */
 	useEffect(() => {
 		if (activeChat) {
 			showToast(dispatchAppState, <span><span className='styled'>{activeChat}</span> is your active chat now.</span>);

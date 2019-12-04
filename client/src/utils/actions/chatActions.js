@@ -1,6 +1,6 @@
 import produce from 'immer';
 /**
- * @module produce - Module from `immer` npm package for immutable state updates.
+ * @requires produce - Module from `immer` npm package for immutable state updates.
  */
 
 /** @requires {module} produce - All functions below. */

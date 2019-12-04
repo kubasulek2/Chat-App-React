@@ -1,57 +1,39 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useContext } from 'react';
 import Divider from '@material-ui/core/Divider';
 
-import Sidebar from '../components/layout/sidebar/Sidebar';
-import ChatBoard from './chat/ChatBoard';
-import Footer from '../components/layout/Footer';
-import Login from '../components/UI/login/Login';
-import ErrorModal from '../components/UI/feedback/ErrorModal';
-import InfoToast from '../components/UI/feedback/InfoToast';
-import ChatsPanel from '../components/chat/ChatsPanel/ChatsPanel';
+import { AppStateContext } from '../containers/App';
+
+// import Sidebar from '../components/layout/sidebar/Sidebar';
+// import ChatBoard from './chat/ChatBoard';
+// import Footer from '../components/layout/Footer';
+// import Login from '../components/UI/login/Login';
+// import ErrorModal from '../components/UI/feedback/ErrorModal';
+// import InfoToast from '../components/UI/feedback/InfoToast';
+// import ChatsPanel from '../components/chat/ChatsPanel/ChatsPanel';
 
 
-
+/* Container Component for all other components. */
 
 const Chat = () => {
 
+	const {logged} = useContext(AppStateContext);
+	console.log(logged);
+
 	return (
 		<Fragment>
-			<ErrorModal error={error} dispatchAppState={dispatchAppState} />
+			{/* <ErrorModal />
 			{logged ?
 				(
 					<Fragment>
-						<Sidebar
-							myself={myself}
-							rooms={rooms}
-							users={users}
-							dispatchAppState={dispatchAppState}
-							ignoredUsers={ignoredUsers}
-						/>
-						<ChatBoard
-							activeChat={activeChat}
-							messages={activeMessages()}
-						/>
+						<Sidebar />
+						<ChatBoard />
 						<Divider />
-						<ChatsPanel
-							dispatchChat={dispatchChat}
-							chats={chats}
-							room={room}
-							activeChat={activeChat}
-						/>
-						<Footer
-							pending={pending}
-							dispatchAppState={dispatchAppState}
-							chats={chats}
-							room={room}
-							activeChat={activeChat}
-						/>
-						<InfoToast toast={toast} dispatchAppState={dispatchAppState} />
+						<ChatsPanel />
+						<Footer />
+						<InfoToast />
 					</Fragment>
 				) :
-				<Login
-					pending={pending}
-					dispatchAppState={dispatchAppState}
-				/>}
+				<Login />} */}
 		</Fragment>
 	);
 };

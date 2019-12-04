@@ -1,6 +1,9 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 import { blueGrey, deepOrange, deepPurple } from '@material-ui/core/colors';
 
+
+/* Creates custom MaterialUI theme for the project. */
+
 const theme = createMuiTheme({
 	palette: {
 		type: 'dark',
@@ -72,5 +75,5 @@ const theme = createMuiTheme({
 		'0px 11px 15px -7px rgba(0,0,0,0.09),0px 24px 38px 3px rgba(0,0,0,0.05),0px 9px 46px 8px rgba(0,0,0,0.3)',
 	]
 });
-console.log(theme);
+
 export default theme;

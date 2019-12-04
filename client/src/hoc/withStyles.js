@@ -4,6 +4,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import theme from '../styles/theme';
 
+
 const useStyles = makeStyles(({ palette }) => ({
 	'@global': {
 		'html, body': {
@@ -38,7 +39,12 @@ const useStyles = makeStyles(({ palette }) => ({
 	}
 }));
 
-
+/**
+ * @function withStyles - Wrap a component with Higher Order Component which will apply global styles, and custom theme.
+ * @requires <ThemeProvider> - MaterialUI Component that passes down my custom `theme`.
+ * @param {component} WC - Component being wrapped
+ * @returns {component} - Wrapper and wrapped components with styles applied.
+ */
 const withStyles = WC => {
 
 	const WithStyles = props => {

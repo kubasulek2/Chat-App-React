@@ -1,7 +1,7 @@
 import chatInfoActions from '../actions/chatInfoActions';
 
 /**
- * @module chatInfoActions - Helper functions for handling state.
+ * @requires chatInfoActions - Helper functions for handling state.
  */
 
 /* ChatInfo reducer */

@@ -1,7 +1,7 @@
 import stateActions from '../actions/stateActions';
 
 /**
- * @module stateActions - Helper functions for handling state.
+ * @requires stateActions - Helper functions for handling state.
  */
 
 /* AppState reducer */
