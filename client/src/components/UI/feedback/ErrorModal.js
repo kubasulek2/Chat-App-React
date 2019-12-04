@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -7,6 +7,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
+
+import { AppStateContext, DispatchContext } from '../../../containers/App';
 
 const useStyles = makeStyles(({ palette, shadows }) => ({
 	paper: {
@@ -25,17 +27,26 @@ const useStyles = makeStyles(({ palette, shadows }) => ({
 	}
 }));
 
+
 /* eslint-disable react/display-name */
+
+/* Create Transition component with ref forwarded. */
 const Transition = forwardRef(function Transition (props, ref) {
 	return <Slide direction='up' ref={ref} unmountOnExit {...props} />;
 });
 /* eslint-enable react/display-name */
 
-const ErrorModal = ({ error, dispatchAppState }) => {
+
+/* Modal showing up when error state is set to true.  */
+const ErrorModal = () => {
 	const classes = useStyles();
 
+	const { error } = useContext(AppStateContext);
+	const { dispatchAppState } = useContext(DispatchContext);
+
+	/* Handle cancel error and close modal. */
 	const handleClose = () => {
-		dispatchAppState({ type: 'CANCEL_ERROR'});
+		dispatchAppState({ type: 'CANCEL_ERROR' });
 	};
 
 	const open = !!error;
@@ -48,7 +59,7 @@ const ErrorModal = ({ error, dispatchAppState }) => {
 			onClose={handleClose}
 			closeAfterTransition
 			PaperProps={{
-				classes:{
+				classes: {
 					root: classes.paper
 				}
 			}}

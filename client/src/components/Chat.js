@@ -3,10 +3,10 @@ import Divider from '@material-ui/core/Divider';
 
 import { AppStateContext } from '../containers/App';
 
-// import Sidebar from '../components/layout/sidebar/Sidebar';
+import Sidebar from '../components/layout/sidebar/Sidebar';
 // import ChatBoard from './chat/ChatBoard';
 // import Footer from '../components/layout/Footer';
-// import Login from '../components/UI/login/Login';
+import Login from '../components/UI/login/Login';
 import ErrorModal from '../components/UI/feedback/ErrorModal';
 // import InfoToast from '../components/UI/feedback/InfoToast';
 // import ChatsPanel from '../components/chat/ChatsPanel/ChatsPanel';
@@ -16,23 +16,23 @@ import ErrorModal from '../components/UI/feedback/ErrorModal';
 
 const Chat = () => {
 
-	const {logged} = useContext(AppStateContext);
+	const { logged } = useContext(AppStateContext);
 
 	return (
 		<Fragment>
 			<ErrorModal />
-			{/* {logged ?
+			{logged ?
 				(
 					<Fragment>
 						<Sidebar />
-						<ChatBoard />
+						{/* <ChatBoard />
 						<Divider />
 						<ChatsPanel />
 						<Footer />
-						<InfoToast />
+						<InfoToast /> */}
 					</Fragment>
 				) :
-				<Login />} */}
+				<Login />}
 		</Fragment>
 	);
 };

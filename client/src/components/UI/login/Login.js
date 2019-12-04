@@ -46,7 +46,8 @@ const useStyles = makeStyles(({ spacing }) => ({
 
 }));
 
-const Login = ({ pending, dispatchAppState }) => {
+/* Login Page Component - displays <LoginForm> stateful component. */
+const Login = () => {
 	const classes = useStyles();
 	return (
 		<div className={classes.root}>
@@ -62,10 +63,7 @@ const Login = ({ pending, dispatchAppState }) => {
 					color='textSecondary'
 				>Welcome to React Chat</Typography>
 				<CardContent>
-					<LoginForm
-						pending={pending}
-						dispatchAppState={dispatchAppState}
-					/>
+					<LoginForm />
 				</CardContent>
 			</Card>
 		</div>

@@ -1,10 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
+import { DispatchContext, AppStateContext } from '../../containers/App';
 import { socket } from '../../server/socket';
 import Tooltip from '../../components/UI/feedback/Tooltip';
 import { Typography } from '@material-ui/core';
@@ -36,23 +37,34 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 		width: '100%',
 		borderRadius: 4,
 		fontSize: 20,
-		color: palette.grey[ 300 ],
+		color: palette.grey[300],
 		textTransform: 'capitalize'
 	},
 	border: { borderRadius: 4 },
 }));
 
-const LoginForm = ({ pending, dispatchAppState }) => {
+/* Login Form component - handles frontEnd login logic. */
+const LoginForm = () => {
 	const classes = useStyles();
-	const [ userName, setUserName ] = useState('');
-	const [ disabled, setDisabled ] = useState(true);
+
+	/* Use context */
+	const { pending } = useContext(AppStateContext);
+	const { dispatchAppState } = useContext(DispatchContext);
+
+	/* Local states. */
+	const [userName, setUserName] = useState('');
+	const [disabled, setDisabled] = useState(true);
 	const [disableMessage, setDisableMessage] = useState('User name must have at least 5 characters, at least one letter, and contain no spaces');
-	const [ loginError, setLoginError ] = useState('');
+	const [loginError, setLoginError] = useState('');
 	const [validate] = useState(/^(?=.*[a-zA-Z])[^\t\s]{5,12}$/);
+
+	/* Input reference. */
 	const loginInput = useRef();
 
-	useEffect(() => loginInput.current.focus(),[]);
+	/* Input is always focused. */
+	useEffect(() => loginInput.current.focus(), []);
 
+	/* Validate and submit login */
 	const handleLogin = evt => {
 		evt.preventDefault();
 
@@ -60,20 +72,24 @@ const LoginForm = ({ pending, dispatchAppState }) => {
 			return;
 		}
 
-		dispatchAppState({ type: 'SET_PENDING', pending: true});
+		dispatchAppState({ type: 'SET_PENDING', pending: true });
 		setDisabled(true);
 		setLoginError('');
 		setUserName('');
 
+		/* Send event to the server with login data */
 		socket.emit('login', { userName: userName, roomName: 'public' }, (error) => {
-			
+
 			if (error) {
+				/* Set local error on error message from server */
 				setLoginError(error);
 				return dispatchAppState({ type: 'SET_PENDING', pending: false });
 			}
 		});
 
 	};
+
+	/* Handle input change, disable and enable login button, display or hide info Tooltip*/
 	const handleChange = evt => {
 		if (disabled && validate.test(evt.target.value)) {
 			setDisabled(false);

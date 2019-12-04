@@ -31,7 +31,7 @@ const App = ({ children }) => {
 	const { logged, pending, error, toast } = appState;
 
 	/* Context.Providers values destructured and memoised */
-	const dispatchValue = useMemo(() => ({ dispatchChat, dispatchChatInfo, dispatchAppState }));
+	const dispatchValue = { dispatchChat, dispatchChatInfo, dispatchAppState };
 	const chatValue = useMemo(() => ({ ignoredUsers, chats, activeChat, room }), [ignoredUsers, chats, activeChat, room]);
 	const chatInfoValue = useMemo(() => ({ myself, rooms, users }), [myself, rooms, users]);
 	const appStateValue = useMemo(() => ({ logged, pending, error, toast }), [logged, pending, error, toast]);
@@ -41,6 +41,7 @@ const App = ({ children }) => {
 	/* All the socket events logic. */
 	useEffect(() => {
 
+		/* On login or switching room */
 		socket.on('joinRoom', (user) => {
 			dispatchChat({ type: 'JOIN', room: user.room });
 			dispatchAppState({ type: 'JOIN', myself: user });
@@ -48,28 +49,30 @@ const App = ({ children }) => {
 
 		});
 
-
+		/* Server sending existing rooms list. */
 		socket.on('roomsList', roomsList => {
 			dispatchChatInfo({ type: 'SET_ROOMS', rooms: roomsList });
 		});
 
-
+		/* Server sending users in room. */
 		socket.on('usersList', usersList => {
 			dispatchChatInfo({ type: 'SET_USERS', users: usersList });
 		});
 
-
+		/* Server sending welcome message after joining a room */
 		socket.on('welcome', message => {
 			dispatchChat({ type: 'MESSAGE', message: message });
 		});
 
-
+		/* Handle displaying messages */
 		socket.on('message', message => {
 
+			/* When message is private detect if sender isn't blocked.*/
 			if (message.privy) {
 				const isUserIgnored = ignoredUsers.some(id => id === message.senderID);
 
 				if (isUserIgnored) {
+					/* If sender is blocked emit reject event to notify him, he's been blocked by you*/
 					return socket.emit('rejectChat', { requestedName: myself.userName, requestingID: message.senderID });
 				}
 			}
@@ -77,9 +80,10 @@ const App = ({ children }) => {
 
 		});
 
-
+		/* Another type of message with location link. */
 		socket.on('locationMessage', link => {
 
+			/* Validation when message is private. */
 			if (link.privy) {
 				const isUserIgnored = ignoredUsers.some(id => id === link.senderID);
 
@@ -92,22 +96,24 @@ const App = ({ children }) => {
 
 		});
 
-
+		/* Event fires when someone tries to enter private chat with you. */
 		socket.on('openPrivateChat', ({ requestedID, requestedName, requestingID, requestingName }) => {
 			const chatExists = Object.keys(chats).some(key => chats[key].id === requestingID);
 
+			/* Notify sender if is blocked by you. */
 			if (ignoredUsers.includes(requestingID)) {
 				return socket.emit('rejectChat', { requestedName, requestingID });
 			}
-
+			/* Create new private chat state if there isn't one already. */
 			if (!chatExists) {
 				dispatchChat({ type: 'PRIVATE', id: requestingID, userName: requestingName });
 				showToast(dispatchAppState, <span>Private chat with <span className='styled'>{requestingName}</span></span>);
 			}
+			/* Accept chat */
 			socket.emit('acceptChat', { requestedID, requestedName, requestingID });
 		});
 
-
+		/* Display ErrorModal with information about being blocked by user. */
 		socket.on('chatRejected', ({ requestedName }) => {
 
 			dispatchAppState({
@@ -117,14 +123,14 @@ const App = ({ children }) => {
 			});
 		});
 
-
+		/* When private chat is accepted by requested user create new chat and switch to it. */
 		socket.on('chatAccepted', ({ requestedName, requestedID }) => {
 
 			dispatchChat({ type: 'PRIVATE', id: requestedID, userName: requestedName });
 			dispatchChat({ type: 'SET_ACTIVE', active: requestedName });
 		});
 
-
+		/* Handle Server and Connection errors. */
 		socket.on('connect_error', () => {
 			dispatchAppState({
 				type: 'SET_ERROR',
@@ -133,7 +139,7 @@ const App = ({ children }) => {
 			});
 		});
 
-
+		/* Handle connection's timeout. */
 		socket.on('connect_timeout', () => {
 			dispatchAppState({
 				type: 'SET_ERROR',
