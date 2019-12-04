@@ -1,5 +1,10 @@
 import chatInfoActions from '../actions/chatInfoActions';
 
+/**
+ * @module chatInfoActions - Helper functions for handling state.
+ */
+
+/* ChatInfo reducer */
 const chatInfoReducer = (state, action) => {
 	
 	switch (action.type) {

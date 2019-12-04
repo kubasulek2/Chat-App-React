@@ -1,4 +1,12 @@
 import produce from 'immer';
+/**
+ * @module produce - Module from `immer` npm package for immutable state updates.
+ */
+
+/** @requires {module} produce - All functions below. */
+
+
+/* functions handling state updates in chat reducer.*/
 
 const joinRoom = (chat, room) => produce(chat, draft => {
 	delete draft.chats[chat.room];

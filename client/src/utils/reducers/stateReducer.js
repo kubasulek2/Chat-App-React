@@ -1,5 +1,10 @@
 import stateActions from '../actions/stateActions';
 
+/**
+ * @module stateActions - Helper functions for handling state.
+ */
+
+/* AppState reducer */
 const stateReducer = (state, action) => {
 	
 	switch (action.type) {

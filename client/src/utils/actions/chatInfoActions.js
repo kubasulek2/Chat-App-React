@@ -1,3 +1,5 @@
+/* functions handling state updates in chatInfo reducer.*/
+
 const setMyself = (state, myself) => ({ ...state, myself: myself });
 
 const setRooms = (state, rooms) => ({ ...state, rooms: rooms });

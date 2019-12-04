@@ -1,5 +1,10 @@
 import chatActions from '../actions/chatActions';
 
+/**
+ * @module chatActions - Helper functions for handling state.
+ */
+
+/* Chat reducer */
 const chatReducer = (chatObj, action) => {
 	switch (action.type) {
 		case 'JOIN':

@@ -1,3 +1,5 @@
+/* functions handling state updates in appState reducer.*/
+
 const setError = (state, message, type) => ({
 	...state,
 	error: {
