@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
@@ -44,7 +44,6 @@ const useStyles = makeStyles(({ mixins, palette, breakpoints }) => ({
 }));
 /* Component containing side navigation, behaves differently depends on screen size. */
 const DrawerComponent = ({ mobile, handleMobile }) => {
-	useEffect(() => console.log('Drawer'));
 	const classes = useStyles();
 
 	/* Drawer contents. */

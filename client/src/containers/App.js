@@ -31,7 +31,7 @@ const App = ({ children }) => {
 	const { logged, pending, error, toast } = appState;
 
 	/* Context.Providers values destructured and memoised */
-	const dispatchValue = { dispatchChat, dispatchChatInfo, dispatchAppState };
+	const dispatchValue = useMemo(() => ({ dispatchChat, dispatchChatInfo, dispatchAppState }),[]);
 	const chatValue = useMemo(() => ({ ignoredUsers, chats, activeChat, room }), [ignoredUsers, chats, activeChat, room]);
 	const chatInfoValue = useMemo(() => ({ myself, rooms, users }), [myself, rooms, users]);
 	const appStateValue = useMemo(() => ({ logged, pending, error, toast }), [logged, pending, error, toast]);

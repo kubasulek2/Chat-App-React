@@ -127,10 +127,12 @@ io.on('connection', (client) => {
 
 	/* switch room event */
 	client.on('switchRoom', ({ roomName, createNew }, cb) => {
+		
+		/* Check existing rooms. */
+		const existingRooms = fetchPublicRooms();
+		
 		/* createNew informs if client clicked on existing room or wants to create new one. */
 		if (createNew) {
-			/* Check if requested new room doesn't already exists. */
-			const existingRooms = fetchPublicRooms();
 
 			/* Inform client, room already exists. */
 			if (existingRooms.includes(roomName.toLowerCase())) {
@@ -159,14 +161,21 @@ io.on('connection', (client) => {
 		client.leave(oldRoom);
 		client.join(newRoom);
 
+		/* Check rooms after update */
+		const updatedRooms = fetchPublicRooms();
+
 		removeUserFromRoom(user.id, oldRoom);
 		updateUserRoomField(client.id, newRoom);
 
 		/* Send appropriate events. */
 		client.emit('joinRoom', { ...user, room: newRoom });
-		io.emit('roomsList', fetchPublicRooms());
 		io.to(newRoom).emit('usersList', getUsersByRoom(newRoom));
 		io.to(oldRoom).emit('usersList', getUsersByRoom(oldRoom));
+		
+		/* Inform clients if rooms list changed */
+		if(updatedRooms.length < existingRooms.length){
+			io.emit('roomsList', fetchPublicRooms());
+		}
 
 		/* Handle server messages. */
 		handleWelcomeMessages(client, user.userName, newRoom);
@@ -210,13 +219,21 @@ io.on('connection', (client) => {
 	client.on('disconnect', () => {
 		/* Remove user from users list. */
 		const user = removeUser(client.id);
-
+		
+		/* if there is user to remove, remove it and send events to rooms. */
 		if (user) {
-			/* if there is user to remove, remove it and send events to rooms. */
+			const roomsBefore = fetchPublicRooms();
+			
 			removeUserFromRoom(user.id, user.room);
+			
+			const roomsAfter = fetchPublicRooms(); 
 
 			io.to(user.room).emit('usersList', getUsersByRoom(user.room));
-			io.emit('roomsList', fetchPublicRooms());
+
+			/* Optimization, don't send event when rooms not changed.  */
+			if (roomsAfter.length < roomsBefore.length){
+				io.emit('roomsList', fetchPublicRooms());
+			}
 
 			handleLeaveMessage(client, user.userName, user.room);
 		}
