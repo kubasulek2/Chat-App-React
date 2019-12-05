@@ -25,7 +25,9 @@
 		"no-unused-expressions": [
 			"error",
 			{
-				"allowTernary": true
+				"allowShortCircuit": true,
+				"allowTernary": true,
+				"allowTaggedTemplates": true
 			}
 		],
 		"react/prop-types": 0,

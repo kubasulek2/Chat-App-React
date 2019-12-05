@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, memo, useContext } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -15,15 +15,15 @@ const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
 		overflowY: 'scroll',
 		padding: spacing(2),
 		display: 'block',
-		
+
 		'& b': {
 			color: palette.secondary.light
 		},
-		
+
 		'& span': {
 			color: palette.primary.light
 		},
-		
+
 		[breakpoints.down('md')]: {
 			marginLeft: 0,
 			width: '100%',
@@ -31,23 +31,28 @@ const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
 
 		'& p:last-child': {
 			paddingBottom: 35
+		},
+	},
+	userMessage: {
+		'& b': {
+			color: palette.secondary.dark
 		}
-
 	}
 }));
 
 /* Layout center component, responsible for displaying chat messages */
 const ChatBoard = () => {
 	const classes = useStyles();
-	
+
 	/* Use Context. */
-	const { messages, activeChat, chats } = useContext(ChatContext);
+	const { activeChat, chats, userName } = useContext(ChatContext);
 
 	/* Reference component. */
 	const boardRef = useRef();
 
 	/* Scroll to last message when new message arrive and user has not scrolled up. */
 	useEffect(() => {
+
 		if (boardRef.current.lastChild) {
 			const elHeight = boardRef.current.clientHeight;
 			const elScrollTop = boardRef.current.scrollTop;
@@ -57,7 +62,7 @@ const ChatBoard = () => {
 				boardRef.current.lastChild.scrollIntoView();
 			}
 		}
-	}, [messages]);
+	}, [chats]);
 
 	/* Scroll to last message when activeChat is changed. */
 	useEffect(() => {
@@ -71,11 +76,11 @@ const ChatBoard = () => {
 
 	/* Map messages to create message board. */
 	const messageComponents = activeMessages().map((message, i) => {
-
+		(true || activeMessages())
 		/* if message is location type handle it separately. */
 		if (message.location) {
 			return (
-				<Typography key={i}>
+				<Typography key={i} className={userName === message.sender ? classes.userMessage : null}>
 					<span>{formatTime(message.timestamp)}</span> - <b>{message.sender}</b>:&nbsp;
 					{message.text}
 				</Typography>);
@@ -88,13 +93,13 @@ const ChatBoard = () => {
 		/* if message is special type (system messages) handle it separately. */
 		if (message.special) {
 			return (
-				<Typography key={i}>
+				<Typography key={i} className={userName === message.sender ? classes.userMessage : null}>
 					<span>{formatTime(message.timestamp)}
 					</span> - <b>{message.sender} </b><span style={{ color: message.color }}>{formatedText}</span>
 				</Typography>);
 		} else {
 			return (
-				<Typography key={i}>
+				<Typography key={i} className={userName === message.sender ? classes.userMessage : null}>
 					<span>{formatTime(message.timestamp)}</span> - <b>{message.sender}</b>: <span style={{ color: message.color }}>{formatedText}</span>
 				</Typography>);
 		}
@@ -107,4 +112,4 @@ const ChatBoard = () => {
 	);
 };
 
-export default memo(ChatBoard);
+export default ChatBoard;

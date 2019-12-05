@@ -8,8 +8,9 @@ import produce from 'immer';
 
 /* functions handling state updates in chat reducer.*/
 
-const joinRoom = (chat, room) => produce(chat, draft => {
+const joinRoom = (chat, room, userName) => produce(chat, draft => {
 	delete draft.chats[chat.room];
+	draft.userName = userName
 	draft.chats[room] = { id: room, messages: [], unread: false };
 	draft.activeChat = room;
 	draft.room = room;
@@ -23,8 +24,8 @@ const setActive = (chat, active) => produce(chat, draft => {
 
 
 const addMessage = (chat, message) => {
-	const channel = message.privy ? message.sender : chat.room;
-
+	const channel = message.privy ? message.return ? message.chatWithName : message.sender : chat.room;
+	
 	return produce(chat, draft => {
 		draft.chats[channel].messages = draft.chats[channel].messages || [];
 		draft.chats[channel].messages.push(message);
@@ -47,7 +48,7 @@ const block = (chat, id, name) => {
 
 const close = (chat, chatName) => produce(chat, draft => {
 	draft.activeChat = chat.activeChat === chatName ? chat.room : chat.activeChat;
-	delete draft.chats[chatName].messages;
+	delete draft.chats[chatName];
 });
 
 

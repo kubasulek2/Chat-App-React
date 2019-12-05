@@ -1,5 +1,5 @@
 /* Generate message ready to send to clients */
-const generateMessage = ({ sender, senderID, special = false, color = '#b0bec5', emojiInfo = [], message, privy }) => {
+const generateMessage = ({ sender, senderID, special = false, color = '#b0bec5', emojiInfo = [], message, privy, location }) => {
 
 	return {
 		text: message,
@@ -9,6 +9,7 @@ const generateMessage = ({ sender, senderID, special = false, color = '#b0bec5',
 		emojiInfo,
 		special,
 		privy,
+		location,
 		timestamp: new Date().getTime()
 	};
 };

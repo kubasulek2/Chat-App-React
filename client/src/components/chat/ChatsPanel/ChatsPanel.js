@@ -15,7 +15,7 @@ import ChatList from './ChatList.js';
 const useStyles = makeStyles(({ palette, breakpoints }) => ({
 	card: {
 		width: 200,
-		position: 'absolute',
+		position: 'fixed',
 		bottom: 212,
 		right: 5,
 		overflow: 'visible',
@@ -71,19 +71,10 @@ const ChatsPanel = () => {
 	};
 
 	const unreadCount = calculateUnread();
-	console.log('chats:', chats);	
-	console.log('unreadCount:', unreadCount);
 
-
-	/* Chat count indicates how many message arrays exists in chat state object. Message array is destroyed if chat is closed, and recreated on new chat or new message from closed chat */
-	/* This counting method lets you to not display chat in panel when you click on close chat button, while still being able to receive messages from closed chat, unless you block it.*/
-	const chatCount = Object.values(chats).reduce((prev, next) => {
-		if (next.messages) {
-			return ++prev;
-		}
-		return prev;
-	}, 0);
-
+	/* How many open chats. */
+	const chatCount = Object.keys(chats).length;
+	
 	return (
 		<Zoom in={chatCount > 1} >
 			<Card className={classes.card}>

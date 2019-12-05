@@ -87,7 +87,7 @@ io.on('connection', (client) => {
 				return cb({ message: 'Requested user not found', type: 404 });
 			}
 			/* If no errors send message back to sender */
-			client.emit('message', { ...msg, senderID: sendTo, sender: receiver.userName });
+			client.emit('message', { ...msg, chatWithId: sendTo, chatWithName: receiver.userName, return: true });
 		}
 
 
@@ -104,11 +104,11 @@ io.on('connection', (client) => {
 		}
 
 		/* Format message to send it to clients. */
-		const options = { message: `https://google.com/maps?q=${ latitude },${ longitude }`, senderID: user.id, sender: user.userName, privy };
+		const options = { message: `https://google.com/maps?q=${ latitude },${ longitude }`, senderID: user.id, sender: user.userName, privy, location: true };
 		const msg = generateMessage(options);
 
 		/* Send it to requested user or room. */
-		io.to(`${ sendTo }`).emit('locationMessage', msg);
+		io.to(`${ sendTo }`).emit('message', msg);
 
 		if (privy) {
 			/* if message is private check if requested user exists */
@@ -120,17 +120,17 @@ io.on('connection', (client) => {
 			}
 
 			/* If no errors send message back to sender */
-			client.emit('locationMessage', { ...msg, senderID: sendTo, sender: receiver.userName });
+			client.emit('message', { ...msg, senderID: sendTo, sender: receiver.userName });
 		}
 		cb();
 	});
 
 	/* switch room event */
 	client.on('switchRoom', ({ roomName, createNew }, cb) => {
-		
+
 		/* Check existing rooms. */
 		const existingRooms = fetchPublicRooms();
-		
+
 		/* createNew informs if client clicked on existing room or wants to create new one. */
 		if (createNew) {
 
@@ -171,9 +171,9 @@ io.on('connection', (client) => {
 		client.emit('joinRoom', { ...user, room: newRoom });
 		io.to(newRoom).emit('usersList', getUsersByRoom(newRoom));
 		io.to(oldRoom).emit('usersList', getUsersByRoom(oldRoom));
-		
+
 		/* Inform clients if rooms list changed */
-		if(updatedRooms.length !== existingRooms.length){
+		if (updatedRooms.length !== existingRooms.length) {
 			io.emit('roomsList', fetchPublicRooms());
 		}
 
@@ -200,7 +200,7 @@ io.on('connection', (client) => {
 		}
 
 		/* send event to requested client, for him either accepts or rejects private chat. */
-		io.to(`${ requestedId }`).emit('openPrivateChat', { requestedID, requestedName, requestingID, requestingName });
+		io.to(`${ requestedId }`).emit('openPrivateChat', { requestedID, requestedName, requestingID });
 
 		cb();
 
@@ -219,19 +219,19 @@ io.on('connection', (client) => {
 	client.on('disconnect', () => {
 		/* Remove user from users list. */
 		const user = removeUser(client.id);
-		
+
 		/* if there is user to remove, remove it and send events to rooms. */
 		if (user) {
 			const roomsBefore = fetchPublicRooms();
-			
+
 			removeUserFromRoom(user.id, user.room);
-			
-			const roomsAfter = fetchPublicRooms(); 
+
+			const roomsAfter = fetchPublicRooms();
 
 			io.to(user.room).emit('usersList', getUsersByRoom(user.room));
 
 			/* Optimization, don't send event when rooms not changed.  */
-			if (roomsAfter.length < roomsBefore.length){
+			if (roomsAfter.length < roomsBefore.length) {
 				io.emit('roomsList', fetchPublicRooms());
 			}
 

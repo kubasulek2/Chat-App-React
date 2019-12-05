@@ -1,5 +1,6 @@
 import React, {
-	Fragment, useState, useContext } from 'react';
+	Fragment, useState, useContext
+} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -40,7 +41,7 @@ const useStyles = makeStyles(({ palette }) => ({
 		backgroundColor: palette.secondary.main,
 		top: 4,
 		right: -2,
-		
+
 	}
 }));
 
@@ -73,52 +74,48 @@ const ChatList = () => {
 	};
 
 	/* map all non room chats to listItems. */
-	const list = Object.keys(chats).filter(key => key !== room).map((key) => {
-		console.log(key);
-		return (
-			<ListItem
-				key={key}
-				button className={classes.item}
-				onClick={() => handleChatSelection(key)}
+	const list = Object.keys(chats).filter(key => key !== room).map((key) => (
+		<ListItem
+			key={key}
+			button className={classes.item}
+			onClick={() => handleChatSelection(key)}
+		>
+			<Badge
+				invisible={!chats[key].unread}
+				color='secondary'
+				variant='dot'
+				classes={{
+					badge: classes.chatBadge
+				}}
 			>
-				<Badge
-					invisible={!chats[key].unread}
-					color='secondary'
-					variant='dot'
-					classes={{
-						badge: classes.chatBadge
-					}}
+				<Typography
+					className={activeChat === key ? classes.active : null}
+					color='textPrimary'
+					variant='body2'
 				>
-					<Typography
-						className={activeChat === key ? classes.active : null}
-						color='textPrimary'
-						variant='body2'
-					>
-						{key}
-					</Typography>
-				</Badge>
-				<ListItemSecondaryAction className={classes.action}>
-					<IconButton
-						edge='end'
-						aria-label='block'
-						size='small'
-						onClick={() => handleBlockUser(chats[key].id, key)}
-					>
-						<BlockIcon color='error' className={classes.iconSmall} />
-					</IconButton>
-					<IconButton
-						edge='end'
-						aria-label='close'
-						size='small'
-						onClick={() => handleCloseChat(key)}
-					>
-						<CloseIcon color='secondary' className={classes.iconSmall} />
-					</IconButton>
-				</ListItemSecondaryAction>
-			</ListItem>
-		);
-	}
-	);
+					{key}
+				</Typography>
+			</Badge>
+			<ListItemSecondaryAction className={classes.action}>
+				<IconButton
+					edge='end'
+					aria-label='block'
+					size='small'
+					onClick={() => handleBlockUser(chats[key].id, key)}
+				>
+					<BlockIcon color='error' className={classes.iconSmall} />
+				</IconButton>
+				<IconButton
+					edge='end'
+					aria-label='close'
+					size='small'
+					onClick={() => handleCloseChat(key)}
+				>
+					<CloseIcon color='secondary' className={classes.iconSmall} />
+				</IconButton>
+			</ListItemSecondaryAction>
+		</ListItem>
+	));
 
 	return (
 		<Fragment>
@@ -136,7 +133,8 @@ const ChatList = () => {
 					key={room}
 					button className={classes.item}
 					onClick={() => handleChatSelection(room)}
-				>	<Badge
+				>	
+					<Badge
 						invisible={!chats[room].unread}
 						color='secondary'
 						variant='dot'

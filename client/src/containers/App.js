@@ -26,13 +26,13 @@ const App = ({ children }) => {
 	const [appState, dispatchAppState] = useReducer(stateReducer, { logged: false, pending: false, error: false, toast: { open: false, message: null } });
 
 	/* Reducers destructuring for Context.Providers value object and useEffects dependency arrays */
-	const { ignoredUsers, chats, activeChat, room } = chat;
+	const { ignoredUsers, chats, activeChat, room, userName } = chat;
 	const { myself, rooms, users } = chatInfo;
 	const { logged, pending, error, toast } = appState;
 
 	/* Context.Providers values destructured and memoised */
-	const dispatchValue = useMemo(() => ({ dispatchChat, dispatchChatInfo, dispatchAppState }),[]);
-	const chatValue = useMemo(() => ({ ignoredUsers, chats, activeChat, room }), [ignoredUsers, chats, activeChat, room]);
+	const dispatchValue = useMemo(() => ({ dispatchChat, dispatchChatInfo, dispatchAppState }), []);
+	const chatValue = useMemo(() => ({ ignoredUsers, chats, activeChat, room, userName }), [ignoredUsers, chats, activeChat, room, userName]);
 	const chatInfoValue = useMemo(() => ({ myself, rooms, users }), [myself, rooms, users]);
 	const appStateValue = useMemo(() => ({ logged, pending, error, toast }), [logged, pending, error, toast]);
 
@@ -43,7 +43,7 @@ const App = ({ children }) => {
 
 		/* On login or switching room */
 		socket.on('joinRoom', (user) => {
-			dispatchChat({ type: 'JOIN', room: user.room });
+			dispatchChat({ type: 'JOIN', room: user.room, userName: user.userName });
 			dispatchAppState({ type: 'JOIN', myself: user });
 			dispatchChatInfo({ type: 'SET_MYSELF', myself: user });
 
@@ -67,48 +67,45 @@ const App = ({ children }) => {
 		/* Handle displaying messages */
 		socket.on('message', message => {
 
-			/* When message is private detect if sender isn't blocked.*/
+			/* When message is private handle it separately.*/
 			if (message.privy) {
 				const isUserIgnored = ignoredUsers.some(id => id === message.senderID);
 
+				/* If sender is blocked emit reject event to notify him, he's been blocked by you*/
 				if (isUserIgnored) {
-					/* If sender is blocked emit reject event to notify him, he's been blocked by you*/
 					return socket.emit('rejectChat', { requestedName: myself.userName, requestingID: message.senderID });
 				}
+
+
+				/* If it's not message you have sent yourself and this chat does not exist yet, create chat and display a toast. */
+				if (!message.return && !chats[message.sender]) {
+					dispatchChat({ type: 'PRIVATE', id: message.senderID, userName: message.sender });
+					showToast(dispatchAppState, <span>Private chat with <span className='styled'>{message.sender}</span></span>);
+				}
 			}
+
+			/* If its location link format it differently */
+			if (message.location) {
+				return dispatchChat({ type: 'MESSAGE', message: { ...message, text: <a key={message.text} rel='noopener noreferrer' target='_blank' href={message.text}>My location</a> } });
+			}
+
 			dispatchChat({ type: 'MESSAGE', message: message });
 
 		});
 
-		/* Another type of message with location link. */
-		socket.on('locationMessage', link => {
-
-			/* Validation when message is private. */
-			if (link.privy) {
-				const isUserIgnored = ignoredUsers.some(id => id === link.senderID);
-
-				if (isUserIgnored) {
-					return socket.emit('rejectChat', { requestedName: myself.userName, requestingID: link.senderID });
-				}
-			}
-
-			dispatchChat({ type: 'MESSAGE', message: { ...link, location: true, text: <a key={link.text} rel='noopener noreferrer' target='_blank' href={link.text}>My location</a> } });
-
+		socket.on('returnMessage', message => {
+			console.log(message);
 		});
 
-		/* Event fires when someone tries to enter private chat with you. */
-		socket.on('openPrivateChat', ({ requestedID, requestedName, requestingID, requestingName }) => {
-			const chatExists = Object.keys(chats).some(key => chats[key].id === requestingID);
 
+
+		/* Event fires when someone tries to enter private chat with you. */
+		socket.on('openPrivateChat', ({ requestedID, requestedName, requestingID }) => {
 			/* Notify sender if is blocked by you. */
 			if (ignoredUsers.includes(requestingID)) {
 				return socket.emit('rejectChat', { requestedName, requestingID });
 			}
-			/* Create new private chat state if there isn't one already. */
-			if (!chatExists) {
-				dispatchChat({ type: 'PRIVATE', id: requestingID, userName: requestingName });
-				showToast(dispatchAppState, <span>Private chat with <span className='styled'>{requestingName}</span></span>);
-			}
+
 			/* Accept chat */
 			socket.emit('acceptChat', { requestedID, requestedName, requestingID });
 		});
@@ -177,3 +174,5 @@ const App = ({ children }) => {
 };
 
 export default WithStyles(App);
+
+
