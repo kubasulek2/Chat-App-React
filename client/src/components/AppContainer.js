@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, Fragment, Suspense, lazy } from 'react';
+import React, { useContext, Fragment, Suspense, lazy } from 'react';
 
 import { AppStateContext } from '../containers/App';
-import Login from '../components/UI/login/Login';
+import Login from './layout/Login';
 import ErrorModal from '../components/UI/feedback/ErrorModal';
 import Loader from './UI/Loader';
 

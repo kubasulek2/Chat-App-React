@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Zoom from '@material-ui/core/Zoom';
@@ -49,7 +49,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 /* Stateful Component displays add-new-room-panel, and handles new room form. */
 const NewRoom = () => {
 	const classes = useStyles();
-
+	useEffect(() => console.log('NewRoom'));
 	/* Use Context. */
 	const { dispatchAppState } = useContext(DispatchContext);
 

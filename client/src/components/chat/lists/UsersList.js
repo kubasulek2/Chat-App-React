@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -51,7 +51,7 @@ const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
 const UsersList = () => {
 	const classes = useStyles();
 	let usersList = null;
-
+	useEffect(() => console.log('UsersList'));
 	/* Use Context */
 	const { users, myself} = useContext(ChatInfoContext);
 	const { dispatchAppState } = useContext(DispatchContext);

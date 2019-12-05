@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect } from 'react';
+import React, { Fragment } from 'react';
 import Divider from '@material-ui/core/Divider';
 
 
@@ -13,31 +13,20 @@ import ChatsPanel from '../components/chat/ChatsPanel/ChatsPanel';
 
 
 
-
+/* Component displays all chat components. */
 const Chat = () => {
 
 
-	useEffect(() => {
-		console.log('Chat');
-
-	});
 	return (
 		<Fragment>
-
-
-
-			<Fragment>
-				<Sidebar />
-				<ChatBoard />
-				<Divider />
-				<ChatsPanel />
-				<Footer />
-				<InfoToast />
-			</Fragment>
-
-
+			<Sidebar />
+			<ChatBoard />
+			<Divider />
+			<ChatsPanel />
+			<Footer />
+			<InfoToast />
 		</Fragment>
 	);
 };
 
-export default React.memo(Chat, (prev, next) => console.log(prev, next));
+export default Chat;

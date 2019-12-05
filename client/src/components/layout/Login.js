@@ -5,8 +5,8 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
-import { ReactComponent as LogoIcon } from '../../../assets/logo.svg';
-import LoginForm from '../../../containers/chat/LoginForm';
+import { ReactComponent as LogoIcon } from '../../assets/logo.svg';
+import LoginForm from '../../containers/chat/LoginForm';
 
 
 const xxs = '@media (max-width:400px)';
@@ -49,6 +49,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 /* Login Page Component - displays <LoginForm> stateful component. */
 const Login = () => {
 	const classes = useStyles();
+
 	return (
 		<div className={classes.root}>
 			<Card className={classes.card}>
