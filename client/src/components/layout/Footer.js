@@ -19,6 +19,7 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => ({
 
 /* Footer of the application. Contains message panel */
 const Footer = () => {
+
 	const classes = useStyles();
 	return (
 		<footer className={classes.root}>

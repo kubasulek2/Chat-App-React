@@ -46,7 +46,7 @@ const useStyles = makeStyles(({ palette, breakpoints }) => ({
 /* Stateful Component - displays side panel with private chats list */
 const ChatsPanel = () => {
 	const classes = useStyles();
-
+	
 	/* Use Context. */
 	const { chats } = useContext(ChatContext);
 
@@ -71,6 +71,8 @@ const ChatsPanel = () => {
 	};
 
 	const unreadCount = calculateUnread();
+	console.log('chats:', chats);	
+	console.log('unreadCount:', unreadCount);
 
 
 	/* Chat count indicates how many message arrays exists in chat state object. Message array is destroyed if chat is closed, and recreated on new chat or new message from closed chat */
@@ -108,4 +110,4 @@ const ChatsPanel = () => {
 	);
 };
 
-export default ChatsPanel;
+export default React.memo(ChatsPanel);

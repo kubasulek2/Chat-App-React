@@ -1,4 +1,5 @@
-import React, { Fragment, useState, useContext } from 'react';
+import React, {
+	Fragment, useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -73,7 +74,7 @@ const ChatList = () => {
 
 	/* map all non room chats to listItems. */
 	const list = Object.keys(chats).filter(key => key !== room).map((key) => {
-
+		console.log(key);
 		return (
 			<ListItem
 				key={key}

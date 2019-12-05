@@ -173,7 +173,7 @@ io.on('connection', (client) => {
 		io.to(oldRoom).emit('usersList', getUsersByRoom(oldRoom));
 		
 		/* Inform clients if rooms list changed */
-		if(updatedRooms.length < existingRooms.length){
+		if(updatedRooms.length !== existingRooms.length){
 			io.emit('roomsList', fetchPublicRooms());
 		}
 

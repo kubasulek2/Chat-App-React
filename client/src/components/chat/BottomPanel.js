@@ -49,5 +49,5 @@ const BottomPanel = (props) => {
 	);
 };
 
-export default BottomPanel;
+export default React.memo(BottomPanel);
 

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import Grid from '@material-ui/core/Grid';
 
 import { DispatchContext, ChatContext } from '../../containers/App';
@@ -28,7 +28,7 @@ const MessagePanel = () => {
 	const sendTo = chats[activeChat].id;
 
 	/* Submit handler, useCallback because it is passed to another component */
-	const handleSubmit = useCallback((evt) => {
+	const handleSubmit = (evt) => {
 		evt.preventDefault();
 
 		/* Prevent sending empty messages */
@@ -47,11 +47,11 @@ const MessagePanel = () => {
 		setMessage('');
 		setEmojiInfo([]);
 
-	}, [message, dispatchAppState, emojiInfo, color, privy, sendTo]);
+	};
 
 
 	/* Location message handler, useCallback because it is passed to another component */
-	const handleLocation = useCallback(async () => {
+	const handleLocation = async () => {
 		try {
 			/* Await getLocation return promise. */
 			const location = await getLocation();
@@ -67,7 +67,7 @@ const MessagePanel = () => {
 			dispatchAppState({ type: 'SET_ERROR', message: error.message, errType: 'Geolocation Error' });
 		}
 
-	}, [privy, sendTo, dispatchAppState]);
+	};
 
 	return (
 		<Grid container>

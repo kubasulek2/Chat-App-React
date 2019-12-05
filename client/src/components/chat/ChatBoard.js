@@ -39,7 +39,7 @@ const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
 /* Layout center component, responsible for displaying chat messages */
 const ChatBoard = () => {
 	const classes = useStyles();
-
+	
 	/* Use Context. */
 	const { messages, activeChat, chats } = useContext(ChatContext);
 

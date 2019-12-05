@@ -33,7 +33,7 @@ const ColorPicker = (props) => {
 	const classes = useStyles(props);
 	const { setColor } = props;
 	const [anchorEl, setAnchorEl] = useState(null);
-
+	
 	const handleClick = evt => {
 		setAnchorEl(evt.currentTarget);
 	};

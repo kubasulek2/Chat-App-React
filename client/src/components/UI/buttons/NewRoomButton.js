@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import CancelIcon from '@material-ui/icons/Cancel';
@@ -18,7 +18,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 /* Button  for either canceling or accepting create new room*/
 const NewRoomButton = ({clicked, text, dismiss}) => {
 	const classes = useStyles();
-	useEffect(() => console.log('NewRoomButton'));
+	
 	const icon =(
 		dismiss
 			? <CancelIcon color='secondary'/>
