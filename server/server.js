@@ -11,9 +11,15 @@ const { addUserToRoom, fetchPublicRooms, removeUserFromRoom } = require('./utils
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
-const port = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
-server.listen(port, () => console.log('Running on port ' + port));
+
+
+
+server.listen(PORT, () => console.log('Running on port ' + PORT));
+
+//io.origins(['https://www.kubasulek2.pl/chat_react/']);
+
 
 /* on socket connection. */
 io.on('connection', (client) => {
@@ -60,7 +66,7 @@ io.on('connection', (client) => {
 	client.on('sendMessage', ({ message, emojiInfo, color, sendTo, privy }, cb) => {
 		const user = getUser(client.id);
 		/* npm package for checking profanity in strings */
-		const filter = new Filter();
+		const filter = new Filter() || {isProfane: (_) => false};
 
 		/* handle user not found */
 		if (!user) {
@@ -161,19 +167,20 @@ io.on('connection', (client) => {
 		client.leave(oldRoom);
 		client.join(newRoom);
 
-		/* Check rooms after update */
-		const updatedRooms = fetchPublicRooms();
-
+		
 		removeUserFromRoom(user.id, oldRoom);
 		updateUserRoomField(client.id, newRoom);
-
+		
+		/* Check rooms after update */
+		const updatedRooms = fetchPublicRooms();
+		
 		/* Send appropriate events. */
 		client.emit('joinRoom', { ...user, room: newRoom });
 		io.to(newRoom).emit('usersList', getUsersByRoom(newRoom));
 		io.to(oldRoom).emit('usersList', getUsersByRoom(oldRoom));
 
 		/* Inform clients if rooms list changed */
-		if (updatedRooms.length !== existingRooms.length) {
+		if (Object.keys(updatedRooms).length !== Object.keys(existingRooms).length) {
 			io.emit('roomsList', fetchPublicRooms());
 		}
 
@@ -231,7 +238,7 @@ io.on('connection', (client) => {
 			io.to(user.room).emit('usersList', getUsersByRoom(user.room));
 
 			/* Optimization, don't send event when rooms not changed.  */
-			if (roomsAfter.length < roomsBefore.length) {
+			if (Object.keys(roomsAfter).length < Object.keys(roomsBefore).length) {
 				io.emit('roomsList', fetchPublicRooms());
 			}
 

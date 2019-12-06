@@ -76,7 +76,7 @@ const ChatBoard = () => {
 
 	/* Map messages to create message board. */
 	const messageComponents = activeMessages().map((message, i) => {
-		(true || activeMessages())
+		
 		/* if message is location type handle it separately. */
 		if (message.location) {
 			return (

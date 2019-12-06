@@ -17,7 +17,7 @@ const addUserToRoom = (userId, room) => {
 	if (!rooms[room]) {
 		rooms[room] = [];
 	}
-		
+
 	if (rooms[room].includes(userId)) {
 		return { roomError: 'User already in room.' };
 	}
@@ -34,7 +34,7 @@ const addUserToRoom = (userId, room) => {
  * @returns {object || string} - RoomError or room name.
  */
 const removeUserFromRoom = (userId, room) => {
-	
+
 	if (!rooms[room]) {
 		return { roomError: 'Room not found' };
 	}
@@ -42,13 +42,13 @@ const removeUserFromRoom = (userId, room) => {
 	if (!rooms[room].includes(userId)) {
 		return { roomError: 'User not found in room.' };
 	}
-	
-	rooms[room].splice(rooms[room].indexOf(userId), 1);
 
+	rooms[room].splice(rooms[room].indexOf(userId), 1);
+	
 	if (rooms[room].length === 0 && room !== 'public') {
 		delete rooms[room];
 	}
-	
+
 	return { room };
 };
 
@@ -56,7 +56,7 @@ const removeUserFromRoom = (userId, room) => {
  * @function fetchPublicRooms - Displays all rooms.
  * @returns {array} - rooms list.
  */
-const fetchPublicRooms = () => Object.keys(rooms);
+const fetchPublicRooms = () => Object.keys(rooms).map(key => ({ name: key, volume: rooms[key].length }));
 
 module.exports = {
 	addUserToRoom,

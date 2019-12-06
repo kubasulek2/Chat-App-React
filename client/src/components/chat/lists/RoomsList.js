@@ -48,14 +48,14 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 /* Component displays chat available rooms */
 const RoomsList = () => {
 	const classes = useStyles();
-	
+
 	/* Use Context. */
 	const { rooms, myself } = useContext(ChatInfoContext);
 	const { dispatchAppState } = useContext(DispatchContext);
 
 	/* Change room handler */
 	const handleRoomClick = (room) => {
-		
+
 		/* Emit socket event of room change */
 		socket.emit('switchRoom', { roomName: room, createNew: false }, (error) => {
 
@@ -66,16 +66,18 @@ const RoomsList = () => {
 	};
 
 	/* Map existing rooms. */
-	const roomsList = rooms.map((room) => (
+	const roomsList = Object.values(rooms).map((room) => (
 		<ListItem
-			key={room}
+			key={room.name}
 			className={`${ classes.room }`}
 			button
-			onClick={room === myself.room ? () => { } : () => handleRoomClick(room)}
+			onClick={room.name === myself.room ? () => { } : () => handleRoomClick(room.name)}
 		>
-			<ListItemText primary={room} classes={{
-				primary: room === myself.room ? `${ classes.active } ${ classes.listItem }` : classes.listItem
-			}} />
+			<ListItemText
+				primary={`${ room.name } (${ room.volume})`}
+				classes={{
+					primary: room.name === myself.room ? `${ classes.active } ${ classes.listItem }` : classes.listItem
+				}} />
 		</ListItem>
 	));
 

@@ -40,9 +40,31 @@ const useStyles = makeStyles(({ palette }) => ({
 	chatBadge: {
 		backgroundColor: palette.secondary.main,
 		top: 4,
-		right: -2,
+		right: -4,
+		'&::after': {
+			backgroundColor: palette.secondary.main,
+			position: 'absolute',
+			top: 0,
+			left: 0,
+			width: '100%',
+			height: '100%',
+			borderRadius: '50%',
+			animation: '$ripple 1.2s infinite ease-in-out',
+			content: '""',
+		},
+	},
+	'@keyframes ripple': {
+		'0%': {
+			transform: 'scale(1)',
+			opacity: 1,
+		},
+		'100%': {
+			transform: 'scale(2.4)',
+			opacity: 0,
+		},
+	},
 
-	}
+	
 }));
 
 /* Stateful Component displays List of chats when ChatsPanel is expanded. */
