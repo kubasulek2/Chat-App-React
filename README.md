@@ -3,7 +3,7 @@
 ### Cool Chat App made with react, and node.js
 
 #### Features:
-* Create custom rooms, join to existing ones.
+* Create own rooms, join to existing ones.
 * Enjoy public or private conversations.
 * Receive notification on new messages
 * Block annoying users.
